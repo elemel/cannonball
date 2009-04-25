@@ -14,7 +14,7 @@ class CannonballWindow(pyglet.window.Window):
 
         self.bodies = {}
         self.world = self.create_world()
-        self.camera = None
+        self.camera_pos = 0, 0
         self.camera_scale = 50
         self.min_camera_scale = 20
         self.max_camera_scale = 100
@@ -36,12 +36,13 @@ class CannonballWindow(pyglet.window.Window):
             self.camera_scale /= 10 ** dt
         self.camera_scale = max(self.min_camera_scale, self.camera_scale)
         self.camera_scale = min(self.camera_scale, self.max_camera_scale)
-        
-        self.bodies['cannonball'].ApplyTorque(torque * 1000)
+
+        cannonball = self.bodies['cannonball']
+        cannonball.ApplyTorque(torque * 1000)
         velocityIterations = 10
         positionIterations = 8
         self.world.Step(dt, velocityIterations, positionIterations)
-        self.camera = self.bodies['cannonball'].position
+        self.camera_pos = cannonball.position.x, cannonball.position.y
 
     def on_draw(self):
         aabb = b2AABB()
@@ -53,8 +54,8 @@ class CannonballWindow(pyglet.window.Window):
         glPushMatrix()
         glTranslated(self.width / 2, self.height / 2, 0)
         glScaled(self.camera_scale, self.camera_scale, 1)
-        if self.camera:
-            glTranslated(-self.camera.x, -self.camera.y, 0)
+        camera_x, camera_y = self.camera_pos
+        glTranslated(-camera_x, -camera_y, 0)
         for shape in shapes:
             self.draw_shape(shape)
         glPopMatrix()
