@@ -1,7 +1,8 @@
 from __future__ import division
 
-import pyglet, sys
+import pyglet, sys, math
 from pyglet.gl import *
+from Box2D import *
 
 class CannonballWindow(pyglet.window.Window):
     def __init__(self):
@@ -11,12 +12,66 @@ class CannonballWindow(pyglet.window.Window):
         glEnable(GL_BLEND)
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
 
+        self.bodies = {}
+        self.world = self.create_world()
+        self.camera = None
+
+        pyglet.clock.schedule_interval(self.step, 1 / 60)
+
+    def step(self, dt):
+        velocityIterations = 10
+        positionIterations = 8
+        self.world.Step(dt, velocityIterations, positionIterations)
+        self.camera = self.bodies['cannonball'].position
+
     def on_draw(self):
-        glColor3d(1, 0, 0)
+        aabb = b2AABB()
+        aabb.lowerBound = 0, 0
+        aabb.upperBound = 1000, 1000
+        count, shapes = self.world.Query(aabb, 100)
+
+        self.clear()
+        glPushMatrix()
+        glTranslated(self.width / 2, self.height / 2, 0)
+        glScaled(50, 50, 1)
+        if self.camera:
+            glTranslated(-self.camera.x, -self.camera.y, 0)
+        for shape in shapes:
+            self.draw_shape(shape)
+        glPopMatrix()
+
+    def draw_shape(self, shape):
+        glPushMatrix()
+        p = shape.GetBody().GetPosition()
+        a = shape.GetBody().GetAngle()
+        glTranslated(p.x, p.y, 0)
+        glRotated(a * 180 / math.pi, 0, 0, 1)
+        data = shape.GetUserData() or {}
+        color = data.get('color', (1, 1, 1))
+        glColor3d(*color)
+        polygon = shape.asPolygon()
+        circle = shape.asCircle()
+        if polygon:
+            self.draw_polygon(polygon)
+        elif circle:
+            p = circle.localPosition
+            glTranslated(p.x, p.y, 0)
+            glScaled(circle.radius, circle.radius, 1)
+            self.draw_circle(circle)
+        glPopMatrix()
+
+    def draw_polygon(self, polygon):
         glBegin(GL_POLYGON)
-        glVertex2d(0, 0)
-        glVertex2d(self.width / 2, self.height)
-        glVertex2d(self.width, 0)
+        for vertex in polygon.vertices:
+            glVertex2d(*vertex)
+        glEnd()
+
+    def draw_circle(self, circle):
+        triangle_count = 32
+        glBegin(GL_POLYGON)
+        for i in xrange(triangle_count):
+            a = 2 * math.pi * i / triangle_count
+            glVertex2d(math.cos(a), math.sin(a))
         glEnd()
 
     def on_close(self):
@@ -28,6 +83,45 @@ class CannonballWindow(pyglet.window.Window):
 
     def on_key_release(self, symbol, modifiers):
         pass
+
+    def create_world(self):
+        worldAABB = b2AABB()
+        worldAABB.lowerBound = 0, 0
+        worldAABB.upperBound = 1000, 1000
+        gravity = 0, -10
+        doSleep = True
+        world = b2World(worldAABB, gravity, doSleep)
+
+        groundBodyDef = b2BodyDef()
+        groundBodyDef.position = 100, 90
+        groundBody = world.CreateBody(groundBodyDef)
+        groundShapeDef = b2PolygonDef()
+        groundShapeDef.SetAsBox(50, 10)
+        shape = groundBody.CreateShape(groundShapeDef)
+        shape.SetUserData({'color': (0, 0.5, 1)})
+        groundBody.SetUserData({'name': 'ground'})
+        self.bodies['ground'] = groundBody
+
+        cannonballBodyDef = b2BodyDef()
+        cannonballBodyDef.position = 100, 120
+        cannonballBody = world.CreateBody(cannonballBodyDef)
+        cannonballShapeDef = b2CircleDef()
+        cannonballShapeDef.radius = 1
+        cannonballShapeDef.localPosition = 0, 0
+        cannonballShapeDef.density = 100
+        shape = cannonballBody.CreateShape(cannonballShapeDef)
+        shape.SetUserData({'color': (1, 1, 1)})
+        cannonballShapeDef.radius = 0.5
+        cannonballShapeDef.localPosition = 0, 0.5
+        cannonballShapeDef.density = 1
+        shape = cannonballBody.CreateShape(cannonballShapeDef)
+        shape.SetUserData({'color': (1, 0, 0)})
+        cannonballBody.SetMassFromShapes()
+        cannonballBody.SetUserData({'name': 'cannonball'})
+        cannonballBody.angularVelocity = -10
+        self.bodies['cannonball'] = cannonballBody
+
+        return world
 
 def main():
     window = CannonballWindow()
