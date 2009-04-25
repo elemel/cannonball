@@ -15,10 +15,18 @@ class CannonballWindow(pyglet.window.Window):
         self.bodies = {}
         self.world = self.create_world()
         self.camera = None
+        self.left = self.right = False
+        self.fire = False
 
         pyglet.clock.schedule_interval(self.step, 1 / 60)
 
     def step(self, dt):
+        torque = 0
+        if self.left:
+            torque += 1
+        if self.right:
+            torque -= 1
+        self.bodies['cannonball'].ApplyTorque(torque * 1000)
         velocityIterations = 10
         positionIterations = 8
         self.world.Step(dt, velocityIterations, positionIterations)
@@ -80,9 +88,18 @@ class CannonballWindow(pyglet.window.Window):
     def on_key_press(self, symbol, modifiers):
         if symbol == pyglet.window.key.ESCAPE:
             self.on_close()
+        if symbol == pyglet.window.key.LEFT:
+            self.left = True
+        if symbol == pyglet.window.key.RIGHT:
+            self.right = True
+        if symbol == pyglet.window.key.SPACE:
+            self.fire = True
 
     def on_key_release(self, symbol, modifiers):
-        pass
+        if symbol == pyglet.window.key.LEFT:
+            self.left = False
+        if symbol == pyglet.window.key.RIGHT:
+            self.right = False
 
     def create_world(self):
         worldAABB = b2AABB()
@@ -118,7 +135,7 @@ class CannonballWindow(pyglet.window.Window):
         shape.SetUserData({'color': (1, 0, 0)})
         cannonballBody.SetMassFromShapes()
         cannonballBody.SetUserData({'name': 'cannonball'})
-        cannonballBody.angularVelocity = -10
+        cannonballBody.angularVelocity = 0
         self.bodies['cannonball'] = cannonballBody
 
         return world
