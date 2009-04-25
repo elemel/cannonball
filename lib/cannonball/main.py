@@ -134,7 +134,7 @@ class CannonballWindow(pyglet.window.Window):
         groundShapeDef = b2PolygonDef()
         groundShapeDef.SetAsBox(50, 10)
         shape = groundBody.CreateShape(groundShapeDef)
-        shape.SetUserData({'color': (0, 0.5, 1)})
+        shape.SetUserData({'color': (0.5, 0.5, 0.5)})
         groundBody.SetUserData({'name': 'ground'})
         self.bodies['ground'] = groundBody
 
@@ -146,7 +146,7 @@ class CannonballWindow(pyglet.window.Window):
         cannonballShapeDef.localPosition = 0, 0
         cannonballShapeDef.density = 100
         shape = cannonballBody.CreateShape(cannonballShapeDef)
-        shape.SetUserData({'color': (1, 1, 1)})
+        shape.SetUserData({'color': (0.5, 1, 0)})
         cannonballShapeDef.radius = 0.5
         cannonballShapeDef.localPosition = 0, 0.5
         cannonballShapeDef.density = 1
