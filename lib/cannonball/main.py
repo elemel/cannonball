@@ -25,6 +25,8 @@ class CannonballWindow(pyglet.window.Window):
         pyglet.clock.schedule_interval(self.step, 1 / 60)
 
     def step(self, dt):
+        cannonball_body = self.bodies['cannonball']
+
         torque = 0
         if self.left:
             torque += 1
@@ -34,15 +36,21 @@ class CannonballWindow(pyglet.window.Window):
             self.camera_scale *= 10 ** dt
         if self.down:
             self.camera_scale /= 10 ** dt
+        if self.fire:
+            self.fire = False
+            a = cannonball_body.angle
+            v = b2Vec2(math.cos(a), math.sin(a))
+            self.create_shot(cannonball_body.position,
+                             cannonball_body.linearVelocity + 15 * v)
         self.camera_scale = max(self.min_camera_scale, self.camera_scale)
         self.camera_scale = min(self.camera_scale, self.max_camera_scale)
 
-        cannonball = self.bodies['cannonball']
-        cannonball.ApplyTorque(torque * 1000)
+        cannonball_body.ApplyTorque(torque * 1000)
         velocityIterations = 10
         positionIterations = 8
         self.world.Step(dt, velocityIterations, positionIterations)
-        self.camera_pos = cannonball.position.x, cannonball.position.y
+        self.camera_pos = (cannonball_body.position.x,
+                           cannonball_body.position.y)
 
     def on_draw(self):
         aabb = b2AABB()
@@ -146,11 +154,14 @@ class CannonballWindow(pyglet.window.Window):
         cannonballShapeDef.radius = 1
         cannonballShapeDef.localPosition = 0, 0
         cannonballShapeDef.density = 100
+        cannonballShapeDef.filter.groupIndex = -1
         shape = cannonballBody.CreateShape(cannonballShapeDef)
         shape.SetUserData({'color': (0.5, 1, 0)})
+        cannonballShapeDef = b2CircleDef()
         cannonballShapeDef.radius = 0.5
-        cannonballShapeDef.localPosition = 0, 0.5
+        cannonballShapeDef.localPosition = 0.5, 0
         cannonballShapeDef.density = 1
+        cannonballShapeDef.filter.groupIndex = -1
         shape = cannonballBody.CreateShape(cannonballShapeDef)
         shape.SetUserData({'color': (1, 0, 0)})
         cannonballBody.SetMassFromShapes()
@@ -159,6 +170,19 @@ class CannonballWindow(pyglet.window.Window):
         self.bodies['cannonball'] = cannonballBody
 
         return world
+
+    def create_shot(self, position, velocity):
+        body_def = b2BodyDef()
+        body_def.position = position
+        body = self.world.CreateBody(body_def)
+        body.linearVelocity = velocity
+        shape_def = b2CircleDef()
+        shape_def.radius = 0.5
+        shape_def.density = 100
+        shape_def.filter.groupIndex = -1
+        shape = body.CreateShape(shape_def)
+        shape.SetUserData({'color': (1, 0, 0)})
+        body.SetMassFromShapes()
 
 def main():
     window = CannonballWindow()
