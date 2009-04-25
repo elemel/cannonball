@@ -15,7 +15,11 @@ class CannonballWindow(pyglet.window.Window):
         self.bodies = {}
         self.world = self.create_world()
         self.camera = None
+        self.camera_scale = 50
+        self.min_camera_scale = 20
+        self.max_camera_scale = 100
         self.left = self.right = False
+        self.up = self.down = False
         self.fire = False
 
         pyglet.clock.schedule_interval(self.step, 1 / 60)
@@ -26,6 +30,13 @@ class CannonballWindow(pyglet.window.Window):
             torque += 1
         if self.right:
             torque -= 1
+        if self.up:
+            self.camera_scale *= 10 ** dt
+        if self.down:
+            self.camera_scale /= 10 ** dt
+        self.camera_scale = max(self.min_camera_scale, self.camera_scale)
+        self.camera_scale = min(self.camera_scale, self.max_camera_scale)
+        
         self.bodies['cannonball'].ApplyTorque(torque * 1000)
         velocityIterations = 10
         positionIterations = 8
@@ -41,7 +52,7 @@ class CannonballWindow(pyglet.window.Window):
         self.clear()
         glPushMatrix()
         glTranslated(self.width / 2, self.height / 2, 0)
-        glScaled(50, 50, 1)
+        glScaled(self.camera_scale, self.camera_scale, 1)
         if self.camera:
             glTranslated(-self.camera.x, -self.camera.y, 0)
         for shape in shapes:
@@ -92,6 +103,10 @@ class CannonballWindow(pyglet.window.Window):
             self.left = True
         if symbol == pyglet.window.key.RIGHT:
             self.right = True
+        if symbol == pyglet.window.key.UP:
+            self.up = True
+        if symbol == pyglet.window.key.DOWN:
+            self.down = True
         if symbol == pyglet.window.key.SPACE:
             self.fire = True
 
@@ -100,6 +115,10 @@ class CannonballWindow(pyglet.window.Window):
             self.left = False
         if symbol == pyglet.window.key.RIGHT:
             self.right = False
+        if symbol == pyglet.window.key.UP:
+            self.up = False
+        if symbol == pyglet.window.key.DOWN:
+            self.down = False
 
     def create_world(self):
         worldAABB = b2AABB()
