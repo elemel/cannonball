@@ -34,6 +34,7 @@ class CannonballWindow(pyglet.window.Window):
         self.camera_scale = 50
         self.min_camera_scale = 20
         self.max_camera_scale = 100
+        self.max_angular_velocity = 20
         self.left = self.right = False
         self.jumping = False
         self.braking = False
@@ -73,6 +74,10 @@ class CannonballWindow(pyglet.window.Window):
                                cannonball_body.linearVelocity + 15 * v)
         self.camera_scale = max(self.min_camera_scale, self.camera_scale)
         self.camera_scale = min(self.camera_scale, self.max_camera_scale)
+        cannonball_body.angularVelocity = max(cannonball_body.angularVelocity,
+                                              -self.max_angular_velocity)
+        cannonball_body.angularVelocity = min(cannonball_body.angularVelocity,
+                                              self.max_angular_velocity)
 
         cannonball_body.ApplyTorque(torque * 2000)
         velocityIterations = 10
