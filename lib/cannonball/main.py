@@ -35,8 +35,10 @@ class CannonballWindow(pyglet.window.Window):
         self.min_camera_scale = 20
         self.max_camera_scale = 100
         self.left = self.right = False
-        self.up = self.down = False
-        self.fire = False
+        self.jumping = False
+        self.braking = False
+        self.firing = False
+        self.zoom_in = self.zoom_out = False
         self.win = False
 
         self.contact_listener = CannonballContactListener(self)
@@ -52,12 +54,14 @@ class CannonballWindow(pyglet.window.Window):
             torque += 1
         if self.right:
             torque -= 1
-        if self.up:
+        if self.braking:
+            cannonball_body.angularVelocity = 0
+        if self.zoom_in:
             self.camera_scale *= 10 ** dt
-        if self.down:
+        if self.zoom_out:
             self.camera_scale /= 10 ** dt
-        if self.fire:
-            self.fire = False
+        if self.firing:
+            self.firing = False
             a = cannonball_body.angle
             v = b2Vec2(math.cos(a), math.sin(a))
             self.create_bullet(self.world, cannonball_body.position,
@@ -142,11 +146,15 @@ class CannonballWindow(pyglet.window.Window):
         if symbol == pyglet.window.key.RIGHT:
             self.right = True
         if symbol == pyglet.window.key.UP:
-            self.up = True
+            self.jumping = True
         if symbol == pyglet.window.key.DOWN:
-            self.down = True
+            self.braking = True
         if symbol == pyglet.window.key.SPACE:
-            self.fire = True
+            self.firing = True
+        if symbol == pyglet.window.key.PLUS:
+            self.zoom_in = True
+        if symbol == pyglet.window.key.MINUS:
+            self.zoom_out = True
 
     def on_key_release(self, symbol, modifiers):
         if symbol == pyglet.window.key.LEFT:
@@ -154,9 +162,13 @@ class CannonballWindow(pyglet.window.Window):
         if symbol == pyglet.window.key.RIGHT:
             self.right = False
         if symbol == pyglet.window.key.UP:
-            self.up = False
+            self.jumping = False
         if symbol == pyglet.window.key.DOWN:
-            self.down = False
+            self.braking = False
+        if symbol == pyglet.window.key.PLUS:
+            self.zoom_in = False
+        if symbol == pyglet.window.key.MINUS:
+            self.zoom_out = False
 
     def create_world(self):
         aabb = b2AABB()
