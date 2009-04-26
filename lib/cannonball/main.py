@@ -14,7 +14,10 @@ class CannonballWindow(pyglet.window.Window):
 
         self.bodies = {}
         self.world = self.create_world()
+        self.bodies['ground'] = self.create_ground(self.world)
         self.bodies['goal'] = self.create_goal(self.world, (110, 101))
+        self.bodies['cannonball'] = self.create_cannonball(self.world,
+                                                           (100, 110))
         self.camera_pos = 0, 0
         self.camera_scale = 50
         self.min_camera_scale = 20
@@ -138,58 +141,64 @@ class CannonballWindow(pyglet.window.Window):
             self.down = False
 
     def create_world(self):
-        worldAABB = b2AABB()
-        worldAABB.lowerBound = 0, 0
-        worldAABB.upperBound = 1000, 1000
+        aabb = b2AABB()
+        aabb.lowerBound = 0, 0
+        aabb.upperBound = 1000, 1000
         gravity = 0, -10
         doSleep = True
-        world = b2World(worldAABB, gravity, doSleep)
+        return b2World(aabb, gravity, doSleep)
 
-        groundBodyDef = b2BodyDef()
-        groundBodyDef.position = 100, 90
-        groundBody = world.CreateBody(groundBodyDef)
-        groundShapeDef = b2PolygonDef()
-        groundShapeDef.SetAsBox(50, 10)
-        shape = groundBody.CreateShape(groundShapeDef)
+    def create_ground(self, world):
+        body_def = b2BodyDef()
+        body_def.position = 100, 90
+        body = world.CreateBody(body_def)
+        body.SetUserData({'name': 'ground'})
+
+        shape_def = b2PolygonDef()
+        shape_def.SetAsBox(50, 10)
+        shape = body.CreateShape(shape_def)
         shape.SetUserData({'color': (0.5, 0.5, 0.5)})
-        groundBody.SetUserData({'name': 'ground'})
-        self.bodies['ground'] = groundBody
 
-        cannonballBodyDef = b2BodyDef()
-        cannonballBodyDef.position = 100, 120
-        cannonballBody = world.CreateBody(cannonballBodyDef)
-        cannonballShapeDef = b2CircleDef()
-        cannonballShapeDef.radius = 1
-        cannonballShapeDef.localPosition = 0, 0
-        cannonballShapeDef.density = 100
-        cannonballShapeDef.filter.groupIndex = -1
-        shape = cannonballBody.CreateShape(cannonballShapeDef)
+        return body
+
+    def create_cannonball(self, world, position):
+        body_def = b2BodyDef()
+        body_def.position = 100, 120
+        body = world.CreateBody(body_def)
+        body.SetUserData({'name': 'cannonball'})
+
+        shape_def = b2CircleDef()
+        shape_def.radius = 1
+        shape_def.localPosition = 0, 0
+        shape_def.density = 100
+        shape_def.filter.groupIndex = -1
+        shape = body.CreateShape(shape_def)
+
         shape.SetUserData({'color': (0.5, 1, 0)})
-        cannonballShapeDef = b2CircleDef()
-        cannonballShapeDef.radius = 0.5
-        cannonballShapeDef.localPosition = 0.5, 0
-        cannonballShapeDef.density = 1
-        cannonballShapeDef.filter.groupIndex = -1
-        shape = cannonballBody.CreateShape(cannonballShapeDef)
+        shape_def = b2CircleDef()
+        shape_def.radius = 0.5
+        shape_def.localPosition = 0.5, 0
+        shape_def.density = 1
+        shape_def.filter.groupIndex = -1
+        shape = body.CreateShape(shape_def)
         shape.SetUserData({'color': (1, 0, 0)})
-        cannonballBody.SetMassFromShapes()
-        cannonballBody.SetUserData({'name': 'cannonball'})
-        cannonballBody.angularVelocity = 0
-        self.bodies['cannonball'] = cannonballBody
 
-        return world
+        body.SetMassFromShapes()
+        return body
 
     def create_shot(self, world, position, velocity):
         body_def = b2BodyDef()
         body_def.position = position
         body = self.world.CreateBody(body_def)
         body.linearVelocity = velocity
+
         shape_def = b2CircleDef()
         shape_def.radius = 0.5
         shape_def.density = 100
         shape_def.filter.groupIndex = -1
         shape = body.CreateShape(shape_def)
         shape.SetUserData({'color': (1, 0, 0)})
+
         body.SetMassFromShapes()
         return body
 
@@ -198,11 +207,13 @@ class CannonballWindow(pyglet.window.Window):
         body_def.position = position
         body = world.CreateBody(body_def)
         body.SetUserData({'name': 'goal'})
+
         shape_def = b2CircleDef()
         shape_def.isSensor = True
         shape_def.radius = 0.5
         shape = body.CreateShape(shape_def)
         shape.SetUserData({'color': (1, 1, 0)})
+
         return body
 
     def add_contact(self, point):
