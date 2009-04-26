@@ -291,7 +291,7 @@ class CannonballWindow(pyglet.window.Window):
         other_data = other_body.GetUserData() or {}
         other_type = other_data.get('type')
         if other_type == 'brick':
-            other_body.ApplyImpulse(2000 * normal, point.position)
+            other_body.ApplyImpulse(5000 * normal, point.position)
 
 class CannonballContactListener(b2ContactListener):
     def __init__(self, window):
