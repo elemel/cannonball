@@ -44,6 +44,11 @@ class CannonballWindow(pyglet.window.Window):
         self.contact_listener = CannonballContactListener(self)
         self.world.SetContactListener(self.contact_listener)
 
+        self.circle_display_list = glGenLists(1)
+        glNewList(self.circle_display_list, GL_COMPILE)
+        self.draw_circle(256)
+        glEndList()
+
         pyglet.clock.schedule_interval(self.step, 1 / 60)
 
     def step(self, dt):
@@ -118,7 +123,7 @@ class CannonballWindow(pyglet.window.Window):
             p = circle.localPosition
             glTranslated(p.x, p.y, 0)
             glScaled(circle.radius, circle.radius, 1)
-            self.draw_circle(circle)
+            glCallList(self.circle_display_list)
         glPopMatrix()
 
     def draw_polygon(self, polygon):
@@ -127,8 +132,7 @@ class CannonballWindow(pyglet.window.Window):
             glVertex2d(*vertex)
         glEnd()
 
-    def draw_circle(self, circle):
-        triangle_count = 32
+    def draw_circle(self, triangle_count):
         glBegin(GL_POLYGON)
         for i in xrange(triangle_count):
             a = 2 * math.pi * i / triangle_count
