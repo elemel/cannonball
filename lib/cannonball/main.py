@@ -50,7 +50,7 @@ class CannonballWindow(pyglet.window.Window):
         self.camera_scale = max(self.min_camera_scale, self.camera_scale)
         self.camera_scale = min(self.camera_scale, self.max_camera_scale)
 
-        cannonball_body.ApplyTorque(torque * 1000)
+        cannonball_body.ApplyTorque(torque * 2000)
         velocityIterations = 10
         positionIterations = 8
         self.world.Step(dt, velocityIterations, positionIterations)
