@@ -12,12 +12,18 @@ class CannonballWindow(pyglet.window.Window):
         glEnable(GL_BLEND)
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
 
-        self.bodies = {}
         self.world = self.create_world()
+        self.bodies = {}
         self.bodies['ground'] = self.create_ground(self.world)
         self.bodies['goal'] = self.create_goal(self.world, (110, 101))
         self.bodies['cannonball'] = self.create_cannonball(self.world,
-                                                           (100, 110))
+                                                           (100, 101))
+        self.create_brick(self.world, (105, 101))
+        self.create_brick(self.world, (105, 102))
+        self.create_brick(self.world, (105, 103))
+        self.create_brick(self.world, (105, 104))
+        self.create_brick(self.world, (105, 105))
+
         self.camera_pos = 0, 0
         self.camera_scale = 50
         self.min_camera_scale = 20
@@ -163,7 +169,7 @@ class CannonballWindow(pyglet.window.Window):
 
     def create_cannonball(self, world, position):
         body_def = b2BodyDef()
-        body_def.position = 100, 120
+        body_def.position = position
         body = world.CreateBody(body_def)
         body.SetUserData({'name': 'cannonball'})
 
@@ -186,10 +192,24 @@ class CannonballWindow(pyglet.window.Window):
         body.SetMassFromShapes()
         return body
 
+    def create_brick(self, world, position):
+        body_def = b2BodyDef()
+        body_def.position = position
+        body = world.CreateBody(body_def)
+
+        shape_def = b2PolygonDef()
+        shape_def.SetAsBox(1, 0.5)
+        shape_def.density = 100
+        shape = body.CreateShape(shape_def)
+        shape.SetUserData({'color': (0, 0.5, 1)})
+
+        body.SetMassFromShapes()
+        return body
+
     def create_shot(self, world, position, velocity):
         body_def = b2BodyDef()
         body_def.position = position
-        body = self.world.CreateBody(body_def)
+        body = world.CreateBody(body_def)
         body.linearVelocity = velocity
 
         shape_def = b2CircleDef()
