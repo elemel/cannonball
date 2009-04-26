@@ -124,6 +124,11 @@ class CannonballWindow(pyglet.window.Window):
             glTranslated(p.x, p.y, 0)
             glScaled(circle.radius, circle.radius, 1)
             glCallList(self.circle_display_list)
+            if shape.GetBody() == self.bodies['cannonball']:
+                glColor3d(1, 0, 0)
+                glTranslated(0.5, 0, 0)
+                glScaled(0.5, 0.5, 1)
+                glCallList(self.circle_display_list)
         glPopMatrix()
 
     def draw_polygon(self, polygon):
@@ -206,15 +211,7 @@ class CannonballWindow(pyglet.window.Window):
         shape_def.localPosition = 0, 0
         shape_def.density = 100
         shape = body.CreateShape(shape_def)
-
         shape.SetUserData({'color': (0.5, 1, 0)})
-        shape_def = b2CircleDef()
-        shape_def.radius = 0.5
-        shape_def.localPosition = 0.5, 0
-        shape_def.density = 1
-        shape_def.filter.groupIndex = -1
-        shape = body.CreateShape(shape_def)
-        shape.SetUserData({'color': (1, 0, 0)})
 
         body.SetMassFromShapes()
         return body
