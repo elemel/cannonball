@@ -263,14 +263,17 @@ class CannonballWindow(pyglet.window.Window):
             self.win = True
         if (type_1 == 'bullet' and not point.shape2.isSensor and
             name_2 != 'cannonball'):
-            self.destroying.add(body_1)
-            if type_2 == 'brick':
-                self.destroying.add(body_2)
+            self.handle_bullet_collision(point, body_1, body_2, point.normal)
         if (type_2 == 'bullet' and not point.shape1.isSensor and
             name_1 != 'cannonball'):
-            self.destroying.add(body_2)
-            if type_1 == 'brick':
-                self.destroying.add(body_1)
+            self.handle_bullet_collision(point, body_2, body_1, -point.normal)
+
+    def handle_bullet_collision(self, point, bullet_body, other_body, normal):
+        self.destroying.add(bullet_body)
+        other_data = other_body.GetUserData() or {}
+        other_type = other_data.get('type')
+        if other_type == 'brick':
+            other_body.ApplyImpulse(2000 * normal, point.position)
 
 class CannonballContactListener(b2ContactListener):
     def __init__(self, window):
