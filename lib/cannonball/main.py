@@ -14,6 +14,7 @@ class CannonballWindow(pyglet.window.Window):
 
         self.world = self.create_world()
         self.bodies = {}
+        self.destroying = set()
         self.bodies['ground'] = self.create_ground(self.world)
         self.bodies['goal'] = self.create_goal(self.world, (110, 101))
         self.bodies['cannonball'] = self.create_cannonball(self.world,
@@ -23,6 +24,11 @@ class CannonballWindow(pyglet.window.Window):
         self.create_brick(self.world, (105, 103))
         self.create_brick(self.world, (105, 104))
         self.create_brick(self.world, (105, 105))
+        self.create_brick(self.world, (105, 106))
+        self.create_brick(self.world, (105, 107))
+        self.create_brick(self.world, (105, 108))
+        self.create_brick(self.world, (105, 109))
+        self.create_brick(self.world, (105, 110))
 
         self.camera_pos = 0, 0
         self.camera_scale = 50
@@ -54,8 +60,8 @@ class CannonballWindow(pyglet.window.Window):
             self.fire = False
             a = cannonball_body.angle
             v = b2Vec2(math.cos(a), math.sin(a))
-            self.create_shot(self.world, cannonball_body.position,
-                             cannonball_body.linearVelocity + 15 * v)
+            self.create_bullet(self.world, cannonball_body.position,
+                               cannonball_body.linearVelocity + 15 * v)
         self.camera_scale = max(self.min_camera_scale, self.camera_scale)
         self.camera_scale = min(self.camera_scale, self.max_camera_scale)
 
@@ -65,6 +71,12 @@ class CannonballWindow(pyglet.window.Window):
         self.world.Step(dt, velocityIterations, positionIterations)
         self.camera_pos = (cannonball_body.position.x,
                            cannonball_body.position.y)
+        for body in self.destroying:
+            data = body.GetUserData() or {}
+            if 'name' in data:
+                del self.bodies['name']
+            self.world.DestroyBody(body)
+        self.destroying.clear()
         if self.win:
             print 'You Win'
             self.on_close()
@@ -177,7 +189,6 @@ class CannonballWindow(pyglet.window.Window):
         shape_def.radius = 1
         shape_def.localPosition = 0, 0
         shape_def.density = 100
-        shape_def.filter.groupIndex = -1
         shape = body.CreateShape(shape_def)
 
         shape.SetUserData({'color': (0.5, 1, 0)})
@@ -196,6 +207,7 @@ class CannonballWindow(pyglet.window.Window):
         body_def = b2BodyDef()
         body_def.position = position
         body = world.CreateBody(body_def)
+        body.SetUserData({'type': 'brick'})
 
         shape_def = b2PolygonDef()
         shape_def.SetAsBox(1, 0.5)
@@ -206,16 +218,18 @@ class CannonballWindow(pyglet.window.Window):
         body.SetMassFromShapes()
         return body
 
-    def create_shot(self, world, position, velocity):
+    def create_bullet(self, world, position, velocity):
         body_def = b2BodyDef()
         body_def.position = position
+        body_def.isBullet = True
         body = world.CreateBody(body_def)
         body.linearVelocity = velocity
+        body.SetUserData({'type': 'bullet'})
 
         shape_def = b2CircleDef()
-        shape_def.radius = 0.5
+        shape_def.radius = 0.25
         shape_def.density = 100
-        shape_def.filter.groupIndex = -1
+        shape_def.isSensor = True
         shape = body.CreateShape(shape_def)
         shape.SetUserData({'color': (1, 0, 0)})
 
@@ -239,10 +253,24 @@ class CannonballWindow(pyglet.window.Window):
     def add_contact(self, point):
         body_1 = point.shape1.GetBody()
         body_2 = point.shape2.GetBody()
-        name_1 = (body_1.GetUserData() or {}).get('name')
-        name_2 = (body_2.GetUserData() or {}).get('name')
+        data_1 = body_1.GetUserData() or {}
+        data_2 = body_2.GetUserData() or {}
+        name_1 = data_1.get('name')
+        name_2 = data_2.get('name')
+        type_1 = data_1.get('type')
+        type_2 = data_2.get('type')
         if set([name_1, name_2]) == set(['cannonball', 'goal']):
             self.win = True
+        if (type_1 == 'bullet' and not point.shape2.isSensor and
+            name_2 != 'cannonball'):
+            self.destroying.add(body_1)
+            if type_2 == 'brick':
+                self.destroying.add(body_2)
+        if (type_2 == 'bullet' and not point.shape1.isSensor and
+            name_1 != 'cannonball'):
+            self.destroying.add(body_2)
+            if type_1 == 'brick':
+                self.destroying.add(body_1)
 
 class CannonballContactListener(b2ContactListener):
     def __init__(self, window):
