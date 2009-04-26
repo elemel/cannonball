@@ -14,6 +14,7 @@ class CannonballWindow(pyglet.window.Window):
 
         self.bodies = {}
         self.world = self.create_world()
+        self.bodies['goal'] = self.create_goal(self.world, (110, 101))
         self.camera_pos = 0, 0
         self.camera_scale = 50
         self.min_camera_scale = 20
@@ -21,6 +22,10 @@ class CannonballWindow(pyglet.window.Window):
         self.left = self.right = False
         self.up = self.down = False
         self.fire = False
+        self.win = False
+
+        self.contact_listener = CannonballContactListener(self)
+        self.world.SetContactListener(self.contact_listener)
 
         pyglet.clock.schedule_interval(self.step, 1 / 60)
 
@@ -40,7 +45,7 @@ class CannonballWindow(pyglet.window.Window):
             self.fire = False
             a = cannonball_body.angle
             v = b2Vec2(math.cos(a), math.sin(a))
-            self.create_shot(cannonball_body.position,
+            self.create_shot(self.world, cannonball_body.position,
                              cannonball_body.linearVelocity + 15 * v)
         self.camera_scale = max(self.min_camera_scale, self.camera_scale)
         self.camera_scale = min(self.camera_scale, self.max_camera_scale)
@@ -51,6 +56,9 @@ class CannonballWindow(pyglet.window.Window):
         self.world.Step(dt, velocityIterations, positionIterations)
         self.camera_pos = (cannonball_body.position.x,
                            cannonball_body.position.y)
+        if self.win:
+            print 'You Win'
+            self.on_close()
 
     def on_draw(self):
         aabb = b2AABB()
@@ -171,7 +179,7 @@ class CannonballWindow(pyglet.window.Window):
 
         return world
 
-    def create_shot(self, position, velocity):
+    def create_shot(self, world, position, velocity):
         body_def = b2BodyDef()
         body_def.position = position
         body = self.world.CreateBody(body_def)
@@ -183,6 +191,44 @@ class CannonballWindow(pyglet.window.Window):
         shape = body.CreateShape(shape_def)
         shape.SetUserData({'color': (1, 0, 0)})
         body.SetMassFromShapes()
+        return body
+
+    def create_goal(self, world, position):
+        body_def = b2BodyDef()
+        body_def.position = position
+        body = world.CreateBody(body_def)
+        body.SetUserData({'name': 'goal'})
+        shape_def = b2CircleDef()
+        shape_def.isSensor = True
+        shape_def.radius = 0.5
+        shape = body.CreateShape(shape_def)
+        shape.SetUserData({'color': (1, 1, 0)})
+        return body
+
+    def add_contact(self, point):
+        body_1 = point.shape1.GetBody()
+        body_2 = point.shape2.GetBody()
+        name_1 = (body_1.GetUserData() or {}).get('name')
+        name_2 = (body_2.GetUserData() or {}).get('name')
+        if set([name_1, name_2]) == set(['cannonball', 'goal']):
+            self.win = True
+
+class CannonballContactListener(b2ContactListener):
+    def __init__(self, window):
+        super(CannonballContactListener, self).__init__() 
+        self.window = window
+
+    def Add(self, point):
+        self.window.add_contact(point)
+
+    def Persist(self, point):
+        pass
+
+    def Remove(self, point):
+        pass
+
+    def Result(self, point):
+        pass
 
 def main():
     window = CannonballWindow()
