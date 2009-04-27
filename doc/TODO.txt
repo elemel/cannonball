@@ -1,0 +1,38 @@
+- Load SVG levels.
+- Damage system.
+- Particle-based explosions.
+- Particle-based water.
+- Optional z property for draw order.
+
+Rubber Ball
+
+- Bouncy. High jumps. Hit the brakes to stop bouncing?
+- Can fly with jet cannon.
+- Lightweight. Floats on water.
+- Good grip.
+- Damaged by explosive bullets.
+
+Metal Ball
+
+- Heavyweight. Cannot jump. Sinks to the bottom.
+- Can hover with jet cannon.
+- Great momentum once speed is up. Can be used as a battering ram.
+- Poor grip. Spikes to get good grip on mud and ice?
+- Invulnerable. Can use explosive bullets to jump.
+
+Grenade Launcher
+
+- Fires explosive bullets.
+
+Jet Engine
+
+- Fires jet particles.
+- Can be used to hover or fly.
+
+Stone Walls
+
+- Destructible.
+
+Metal Walls
+
+- Indestructible.
