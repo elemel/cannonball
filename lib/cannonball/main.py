@@ -3,6 +3,7 @@ from __future__ import division
 import pyglet, sys, math
 from pyglet.gl import *
 from Box2D import *
+from cannonball.svg import Document
 
 class CannonballWindow(pyglet.window.Window):
     def __init__(self):
@@ -311,6 +312,8 @@ class CannonballContactListener(b2ContactListener):
         pass
 
 def main():
+    if len(sys.argv) == 2:
+        level = Document(sys.argv[1])
     window = CannonballWindow()
     pyglet.app.run()
 
