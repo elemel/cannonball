@@ -85,7 +85,7 @@ class Path(object):
         for line in lines[1:]:
             args = line.split()
             assert int(args[0]) * 2 + 1 == len(args)
-            points = zip(args[1::1], args[2::1])
+            points = zip(args[1::2], args[2::2])
             points = [Point(float(x), float(y)) for x, y in points]
             paths.append(Path(points))
         return paths
