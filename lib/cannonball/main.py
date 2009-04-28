@@ -309,8 +309,10 @@ class CannonballContactListener(b2ContactListener):
         pass
 
 def main():
-    if len(sys.argv) == 2:
-        document = Document(sys.argv[1])
+    if len(sys.argv) != 2:
+        print 'Usage: cannonball <level>'
+        sys.exit(1)
+    document = Document(sys.argv[1])
     window = CannonballWindow(document)
     pyglet.app.run()
 
