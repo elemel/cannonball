@@ -62,7 +62,7 @@ class Path(object):
         self.points = points
 
     def __str__(self):
-        return 'M %s z' % (' C '.join('%g %g' % (p.x, p.y)
+        return 'M %s z' % (' L '.join('%g %g' % (p.x, p.y)
                                       for p in self.points))
 
     def __repr__(self):
