@@ -57,7 +57,6 @@ class Path(object):
             points.pop()
         points = [Point(*p) for p in points]
         self.points = points
-        print self.points
 
 class Point(object):
     def __init__(self, x, y):
