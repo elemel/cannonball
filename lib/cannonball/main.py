@@ -6,7 +6,7 @@ from Box2D import *
 from cannonball.svg import Document
 
 class CannonballWindow(pyglet.window.Window):
-    def __init__(self):
+    def __init__(self, document):
         pyglet.window.Window.__init__(self, fullscreen=True,
                                       caption="Cannonball")
         self.set_mouse_visible(False)
@@ -31,9 +31,21 @@ class CannonballWindow(pyglet.window.Window):
         self.create_brick(self.world, (105, 109))
         self.create_brick(self.world, (105, 110))
 
+        for layer in document.layers:
+            for group in layer.groups:
+                body_def = b2BodyDef()
+                body = self.world.CreateBody(body_def)
+                body.SetUserData({'type': 'platform'})
+                for path in group.paths:
+                    for c in path.path.convexify():
+                        shape_def = b2PolygonDef()
+                        shape_def.vertices = [(p.x, p.y) for p in c.points]
+                        shape = body.CreateShape(shape_def)
+                        shape.SetUserData({'color': (0, 0.5, 1)})
+
         self.camera_pos = 0, 0
         self.camera_scale = 50
-        self.min_camera_scale = 20
+        self.min_camera_scale = 0
         self.max_camera_scale = 100
         self.max_angular_velocity = 20
         self.left = self.right = False
@@ -313,8 +325,8 @@ class CannonballContactListener(b2ContactListener):
 
 def main():
     if len(sys.argv) == 2:
-        level = Document(sys.argv[1])
-    window = CannonballWindow()
+        document = Document(sys.argv[1])
+    window = CannonballWindow(document)
     pyglet.app.run()
 
 if __name__ == '__main__':
