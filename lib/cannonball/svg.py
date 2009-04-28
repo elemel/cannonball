@@ -1,4 +1,5 @@
 from xml.dom import minidom
+from subprocess import Popen, PIPE
 
 def parse_data(s):
     def parse_kv(kv):
@@ -45,8 +46,14 @@ class PathElement(object):
         self.path = Path(element.getAttribute('d'))
 
 class Path(object):
-    def __init__(self, s):
-        points = s.strip()
+    def __init__(self, points):
+        if type(points) in (str, unicode):
+            self.points = self._parse(points)
+        else:
+            self.points = list(points)
+
+    def _parse(self, points):
+        points = points.strip()
         if not points.startswith('M'):
             raise PathError('Path must start with "M" command')
         if not points.endswith('z'):
@@ -58,8 +65,7 @@ class Path(object):
         points = [[float(x) for x in p] for p in points]
         if points[0] == points[-1]:
             points.pop()
-        points = [Point(*p) for p in points]
-        self.points = points
+        return [Point(*p) for p in points]
 
     def __str__(self):
         return 'M %s z' % (' L '.join('%g %g' % (p.x, p.y)
@@ -67,6 +73,22 @@ class Path(object):
 
     def __repr__(self):
         return "Path('%s')" % self
+
+    def convexify(self):
+        p = Popen('convexify', stdin=PIPE, stdout=PIPE, stderr=PIPE)
+        stdin = '%d %s' % (len(self.points),
+                           ' '.join('%g %g' % (p.x, p.y) for p in self.points))
+        stdout, stderr = p.communicate(stdin)
+        lines = stdout.splitlines()
+        assert(int(lines[0])) + 1 == len(lines)
+        paths = []
+        for line in lines[1:]:
+            args = line.split()
+            assert int(args[0]) * 2 + 1 == len(args)
+            points = zip(args[1::1], args[2::1])
+            points = [Point(float(x), float(y)) for x, y in points]
+            paths.append(Path(points))
+        return paths
 
 class Point(object):
     def __init__(self, x, y):
