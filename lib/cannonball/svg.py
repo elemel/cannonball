@@ -18,32 +18,35 @@ class Document(object):
         self.document = minidom.parse(f)
         self.element = [n for n in self.document.childNodes
                         if n.nodeName == 'svg'][0]
-        self.layers = [Layer(n) for n in self.element.childNodes
+        self.layers = [LayerElement(n) for n in self.element.childNodes
                        if n.nodeName == 'g' and
                        n.getAttribute('inkscape:groupmode') == 'layer']
 
-class Layer(object):
+class LayerElement(object):
     def __init__(self, element):
         self.element = element
-        self.bodies = [Group(n) for n in element.childNodes
+        self.groups = [GroupElement(n) for n in element.childNodes
                        if n.nodeName == 'g']
 
-class Group(object):
+class GroupElement(object):
     def __init__(self, element):
         self.element = element
         self.data = parse_element_data(element)
-        self.paths = [Path(n) for n in element.childNodes
+        self.paths = [PathElement(n) for n in element.childNodes
                       if n.nodeName == 'path']
 
 class PathError(Exception):
     pass
 
-class Path(object):
+class PathElement(object):
     def __init__(self, element):
         self.element = element
         self.data = parse_element_data(element)
+        self.path = Path(element.getAttribute('d'))
 
-        points = element.getAttribute('d').strip()
+class Path(object):
+    def __init__(self, s):
+        points = s.strip()
         if not points.startswith('M'):
             raise PathError('Path must start with "M" command')
         if not points.endswith('z'):
@@ -57,6 +60,13 @@ class Path(object):
             points.pop()
         points = [Point(*p) for p in points]
         self.points = points
+
+    def __str__(self):
+        return 'M %s z' % (' C '.join('%g %g' % (p.x, p.y)
+                                      for p in self.points))
+
+    def __repr__(self):
+        return "Path('%s')" % self
 
 class Point(object):
     def __init__(self, x, y):
