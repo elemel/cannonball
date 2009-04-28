@@ -1,5 +1,5 @@
-partition: partition.cpp
-	g++ -o partition partition.cpp -lCGAL
+convexify: convexify.cpp
+	g++ -o convexify convexify.cpp -lCGAL
 
-install: partition
-	cp partition /usr/local/bin/cannonball-partition
+install: convexify
+	cp convexify /usr/local/bin/convexify
