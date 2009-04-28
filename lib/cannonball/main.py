@@ -1,9 +1,9 @@
 from __future__ import division
 
-import pyglet, sys, math
+import pyglet, sys, math, random
 from pyglet.gl import *
 from Box2D import *
-from cannonball.svg import Document
+from cannonball.svg import Document, Transform
 
 class CannonballWindow(pyglet.window.Window):
     def __init__(self, document):
@@ -16,21 +16,16 @@ class CannonballWindow(pyglet.window.Window):
         self.world = self.create_world()
         self.bodies = {}
         self.destroying = set()
-        self.bodies['ground'] = self.create_ground(self.world)
         self.bodies['goal'] = self.create_goal(self.world, (110, 101))
         self.bodies['cannonball'] = self.create_cannonball(self.world,
                                                            (100, 101))
-        self.create_brick(self.world, (105, 101))
-        self.create_brick(self.world, (105, 102))
-        self.create_brick(self.world, (105, 103))
-        self.create_brick(self.world, (105, 104))
-        self.create_brick(self.world, (105, 105))
-        self.create_brick(self.world, (105, 106))
-        self.create_brick(self.world, (105, 107))
-        self.create_brick(self.world, (105, 108))
-        self.create_brick(self.world, (105, 109))
-        self.create_brick(self.world, (105, 110))
 
+        for i in xrange(100, 130):
+            self.create_brick(self.world, (105, i))
+
+        transform = Transform('scale(0.2) translate(0 %g) scale(1 -1)' %
+                              float(document.element.getAttribute('height')))
+        color = 0, 0.5 * random.random(), 0.5 + 0.5 * random.random()
         for layer in document.layers:
             for group in layer.groups:
                 body_def = b2BodyDef()
@@ -39,9 +34,10 @@ class CannonballWindow(pyglet.window.Window):
                 for path in group.paths:
                     for c in path.path.convexify():
                         shape_def = b2PolygonDef()
-                        shape_def.vertices = [(p.x, p.y) for p in c.points]
+                        shape_def.vertices = [transform * (p.x, p.y)
+                                              for p in reversed(c.points)]
                         shape = body.CreateShape(shape_def)
-                        shape.SetUserData({'color': (0, 0.5, 1)})
+                        shape.SetUserData({'color': color})
 
         self.camera_pos = 0, 0
         self.camera_scale = 50
@@ -92,7 +88,7 @@ class CannonballWindow(pyglet.window.Window):
         cannonball_body.angularVelocity = min(cannonball_body.angularVelocity,
                                               self.max_angular_velocity)
 
-        cannonball_body.ApplyTorque(torque * 2000)
+        cannonball_body.ApplyTorque(torque * 10000)
         velocityIterations = 10
         positionIterations = 8
         self.world.Step(dt, velocityIterations, positionIterations)
@@ -205,19 +201,6 @@ class CannonballWindow(pyglet.window.Window):
         doSleep = True
         return b2World(aabb, gravity, doSleep)
 
-    def create_ground(self, world):
-        body_def = b2BodyDef()
-        body_def.position = 100, 90
-        body = world.CreateBody(body_def)
-        body.SetUserData({'name': 'ground'})
-
-        shape_def = b2PolygonDef()
-        shape_def.SetAsBox(50, 10)
-        shape = body.CreateShape(shape_def)
-        shape.SetUserData({'color': (0.5, 0.5, 0.5)})
-
-        return body
-
     def create_cannonball(self, world, position):
         body_def = b2BodyDef()
         body_def.position = position
@@ -228,6 +211,7 @@ class CannonballWindow(pyglet.window.Window):
         shape_def.radius = 1
         shape_def.localPosition = 0, 0
         shape_def.density = 100
+        shape_def.friction = 10
         shape = body.CreateShape(shape_def)
         shape.SetUserData({'color': (0.5, 1, 0)})
 
@@ -244,7 +228,8 @@ class CannonballWindow(pyglet.window.Window):
         shape_def.SetAsBox(1, 0.5)
         shape_def.density = 100
         shape = body.CreateShape(shape_def)
-        shape.SetUserData({'color': (0, 0.5, 1)})
+        color = 0, 0.5 * random.random(), 0.5 + 0.5 * random.random()
+        shape.SetUserData({'color': color})
 
         body.SetMassFromShapes()
         return body
