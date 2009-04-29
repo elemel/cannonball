@@ -5,6 +5,9 @@ from pyglet.gl import *
 from Box2D import *
 from cannonball.svg import Document, Transform
 
+def parse_color(s):
+    return int(s[1:3], 16) / 255, int(s[3:5], 16) / 255, int(s[5:7], 16) / 255
+
 class CannonballWindow(pyglet.window.Window):
     def __init__(self, document):
         pyglet.window.Window.__init__(self, fullscreen=True,
@@ -25,13 +28,13 @@ class CannonballWindow(pyglet.window.Window):
 
         transform = Transform('scale(0.2) translate(0 %g) scale(1 -1)' %
                               float(document.element.getAttribute('height')))
-        color = 0, 0.5 * random.random(), 0.5 + 0.5 * random.random()
         for layer in document.layers:
             for group in layer.groups:
                 body_def = b2BodyDef()
                 body = self.world.CreateBody(body_def)
                 body.SetUserData({'type': 'platform'})
                 for path in group.paths:
+                    color = parse_color(path.data.get('fill', '#ffffff'))
                     for c in path.path.convexify():
                         shape_def = b2PolygonDef()
                         shape_def.vertices = [transform * (p.x, p.y)

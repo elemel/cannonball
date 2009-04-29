@@ -27,15 +27,15 @@
   </defs>
   <sodipodi:namedview
      inkscape:document-units="px"
-     pagecolor="#ffffff"
+     pagecolor="#75ff75"
      bordercolor="#666666"
-     borderopacity="1.0"
-     inkscape:pageopacity="0.0"
+     borderopacity="1"
+     inkscape:pageopacity="0"
      inkscape:pageshadow="2"
      inkscape:zoom="0.43415836"
      inkscape:cx="490"
      inkscape:cy="380"
-     inkscape:current-layer="layer1"
+     inkscape:current-layer="g2442"
      id="namedview2407"
      showgrid="false"
      inkscape:window-width="645"
@@ -59,12 +59,12 @@
      id="layer1">
     <g
        id="g2442"
-       transform="translate(0,-4)">
+       transform="translate(0,-2)">
       <path
          sodipodi:nodetypes="cssssssssssssssssss"
          id="path2440"
          d="M 255.66708,306.46616 C 302.71397,312.0442 306.97091,310.88948 347.79936,297.25292 C 371.25245,289.41967 394.25871,294.68178 407.81516,308.64236 C 422.83532,324.11027 427.3971,349.71553 430.71841,368.65544 C 438.43918,412.68348 458.22411,423.51077 495.21101,442.36126 C 521.34805,455.68209 573.93961,451.90379 598.09094,432.7747 C 619.95177,415.4598 637.36496,381.8928 640.31935,366.35213 C 649.46861,318.22522 630.4403,286.74878 656.44251,248.88347 C 669.04378,230.53306 702.22538,223.17234 727.86799,223.37659 C 758.48819,223.62049 790.71136,233.19318 813.06738,248.88348 C 842.74169,269.71003 839.76921,317.13179 827.03431,364.08828 C 817.02775,400.98475 800.9937,437.59395 790.0343,460.78773 C 776.40436,489.63329 761.78724,514.99402 740.19594,533.18048 C 720.84905,549.47647 695.90254,560.01218 661.04912,562.13324 C 591.73481,566.35147 551.39241,586.61041 465.26802,569.04315 C 406.174,556.98942 369.02697,536.69703 310.94644,520.67371 C 274.47766,510.61265 227.00857,481.13589 221.11747,440.05796 C 217.69149,416.16902 206.10728,376.02114 208.34342,345.85818 C 210.21095,320.66745 221.71794,302.44103 255.66708,306.46616 z"
-         style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+         style="fill:#0058a5;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;fill-opacity:1" />
     </g>
   </g>
 </svg>
