@@ -43,9 +43,9 @@ class CannonballWindow(pyglet.window.Window):
                         shape.SetUserData({'color': color})
 
         self.camera_pos = 0, 0
-        self.camera_scale = 50
-        self.min_camera_scale = 0
-        self.max_camera_scale = 100
+        self.camera_scale = 20
+        self.min_camera_scale = 10
+        self.max_camera_scale = 50
         self.max_angular_velocity = 20
         self.left = self.right = False
         self.jumping = False
