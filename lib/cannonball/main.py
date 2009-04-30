@@ -1,9 +1,13 @@
 from __future__ import division
 
-import pyglet, sys, math, random
+import pyglet, sys, math, random, os
 from pyglet.gl import *
 from Box2D import *
 from cannonball.svg import Document, Transform
+
+root = os.path.abspath(__file__)
+for _ in xrange(3):
+    root = os.path.dirname(root)
 
 def parse_color(s):
     return int(s[1:3], 16) / 255, int(s[3:5], 16) / 255, int(s[5:7], 16) / 255
@@ -18,6 +22,8 @@ class CannonballWindow(pyglet.window.Window):
         namedview = document.element.getElementsByTagName('sodipodi:namedview')[0]
         self.clear_color = parse_color(namedview.getAttribute('pagecolor') or
                                        '#000000') + (0,)
+
+        self.textures = self._load_textures()
 
         self.world = self.create_world()
         self.bodies = {}
@@ -43,7 +49,7 @@ class CannonballWindow(pyglet.window.Window):
 
         self.camera_pos = 0, 0
         self.camera_scale = 20
-        self.min_camera_scale = 0 # 10
+        self.min_camera_scale = 10
         self.max_camera_scale = 50
         self.max_angular_velocity = 20
         self.left = self.right = False
@@ -71,6 +77,7 @@ class CannonballWindow(pyglet.window.Window):
         for path in group.paths:
             path_transform = group_transform * path.transform
             color = parse_color(path.data.get('fill', '#ffffff'))
+            material = path.data.get('material')
             for c in path.path.convexify():
                 shape_def = b2PolygonDef()
                 shape_def.vertices = [path_transform * (p.x, p.y)
@@ -79,9 +86,19 @@ class CannonballWindow(pyglet.window.Window):
                     shape_def.isSensor = True
                 shape_def.density = density
                 shape = body.CreateShape(shape_def)
-                shape.SetUserData({'color': color})
+                shape.SetUserData({'color': color, 'material': material})
         body.SetMassFromShapes()
         return body
+
+    def _load_textures(self):
+        textures = {}
+        textures['stone'] = self._load_texture('petrified-seabed')
+        return textures
+
+    def _load_texture(self, name):
+        path = os.path.join(root, 'data', 'textures', name + '.jpg')
+        image = pyglet.image.load(path)
+        return image.get_texture()
 
     def step(self, dt):
         cannonball_body = self.bodies['cannonball']
@@ -150,12 +167,18 @@ class CannonballWindow(pyglet.window.Window):
         glTranslated(p.x, p.y, 0)
         glRotated(a * 180 / math.pi, 0, 0, 1)
         data = shape.GetUserData() or {}
-        color = data.get('color', (1, 1, 1))
-        glColor3d(*color)
+        material = shape.GetUserData().get('material')
+        if material:
+            texture = self.textures[material]
+            glColor3d(1, 1, 1)
+        else:
+            texture = None
+            color = data.get('color', (1, 1, 1))
+            glColor3d(*color)
         polygon = shape.asPolygon()
         circle = shape.asCircle()
         if polygon:
-            self.draw_polygon(polygon)
+            self.draw_polygon(polygon, texture)
         elif circle:
             p = circle.localPosition
             glTranslated(p.x, p.y, 0)
@@ -168,11 +191,18 @@ class CannonballWindow(pyglet.window.Window):
                 glCallList(self.circle_display_list)
         glPopMatrix()
 
-    def draw_polygon(self, polygon):
+    def draw_polygon(self, polygon, texture):
+        if texture:
+            glEnable(texture.target)
+            glBindTexture(texture.target, texture.id)
         glBegin(GL_POLYGON)
-        for vertex in polygon.vertices:
-            glVertex2d(*vertex)
+        for x, y in polygon.vertices:
+            if texture:
+                glTexCoord2d(x * 0.1, y * 0.1)
+            glVertex2d(x, y)
         glEnd()
+        if texture:
+            glDisable(texture.target)
 
     def draw_circle(self, triangle_count):
         glBegin(GL_POLYGON)
