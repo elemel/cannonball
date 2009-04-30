@@ -27,23 +27,8 @@ class CannonballWindow(pyglet.window.Window):
                               float(document.element.getAttribute('height')))
         for layer in document.layers:
             for group in layer.groups:
-                group_transform = transform * group.transform
-                body_def = b2BodyDef()
-                body = self.world.CreateBody(body_def)
-                body.SetUserData({'type': 'platform'})
+                body = self._create_body(group, transform)
                 self.bodies[group.id] = body
-                for path in group.paths:
-                    path_transform = group_transform * path.transform
-                    color = parse_color(path.data.get('fill', '#ffffff'))
-                    for c in path.path.convexify():
-                        shape_def = b2PolygonDef()
-                        shape_def.vertices = [path_transform * (p.x, p.y)
-                                              for p in reversed(c.points)]
-                        if path.data.get('sensor') == 'true':
-                            shape_def.isSensor = True
-                        shape = body.CreateShape(shape_def)
-                        shape.SetUserData({'color': color})
-                body.SetMassFromShapes()
 
         start_position = self.bodies['start'].position
         self.bodies['cannonball'] = self.create_cannonball(self.world,
@@ -70,6 +55,25 @@ class CannonballWindow(pyglet.window.Window):
         glEndList()
 
         pyglet.clock.schedule_interval(self.step, 1 / 60)
+
+    def _create_body(self, group, transform):
+        group_transform = transform * group.transform
+        body_def = b2BodyDef()
+        body = self.world.CreateBody(body_def)
+        body.SetUserData({'type': 'platform'})
+        for path in group.paths:
+            path_transform = group_transform * path.transform
+            color = parse_color(path.data.get('fill', '#ffffff'))
+            for c in path.path.convexify():
+                shape_def = b2PolygonDef()
+                shape_def.vertices = [path_transform * (p.x, p.y)
+                                      for p in reversed(c.points)]
+                if path.data.get('sensor') == 'true':
+                    shape_def.isSensor = True
+                shape = body.CreateShape(shape_def)
+                shape.SetUserData({'color': color})
+        body.SetMassFromShapes()
+        return body
 
     def step(self, dt):
         cannonball_body = self.bodies['cannonball']
