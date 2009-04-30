@@ -15,6 +15,9 @@ class CannonballWindow(pyglet.window.Window):
         self.set_mouse_visible(False)
         glEnable(GL_BLEND)
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
+        namedview = document.element.getElementsByTagName('sodipodi:namedview')[0]
+        self.clear_color = parse_color(namedview.getAttribute('pagecolor') or
+                                       '#000000') + (0,)
 
         self.world = self.create_world()
         self.bodies = {}
@@ -113,6 +116,7 @@ class CannonballWindow(pyglet.window.Window):
         aabb.upperBound = 1000, 1000
         count, shapes = self.world.Query(aabb, 100)
 
+        glClearColor(*self.clear_color)
         self.clear()
         glPushMatrix()
         glTranslated(self.width / 2, self.height / 2, 0)
