@@ -3,14 +3,17 @@ from subprocess import Popen, PIPE
 import numpy
 
 def parse_data(s):
-    def parse_kv(kv):
-        k, v = kv.split(':')
-        return k.strip(), v.strip()
-    return dict(parse_kv(kv) for kv in s.split(';') if kv.strip())
+    try:
+        def parse_kv(kv):
+            k, v = kv.split(':')
+            return k.strip(), v.strip()
+        return dict(parse_kv(kv) for kv in s.split(';') if kv.strip())
+    except:
+        return {}
 
 def parse_element_data(element):
     data = {}
-    for name in ('style', 'label'):
+    for name in ('style', 'inkscape:label'):
         value = element.getAttribute(name)
         data.update(parse_data(value))
     return data
@@ -32,10 +35,12 @@ class LayerElement(object):
 
 class GroupElement(object):
     def __init__(self, element):
+        self.id = element.getAttribute('id')
         self.element = element
         self.data = parse_element_data(element)
         self.paths = [PathElement(n) for n in element.childNodes
                       if n.nodeName == 'path']
+        self.transform = Transform(self.element.getAttribute('transform'))
 
 class PathError(Exception):
     pass
@@ -45,6 +50,7 @@ class PathElement(object):
         self.element = element
         self.data = parse_element_data(element)
         self.path = Path(element.getAttribute('d'))
+        self.transform = Transform(self.element.getAttribute('transform'))
 
 class Path(object):
     def __init__(self, points):
@@ -61,6 +67,7 @@ class Path(object):
             raise PathError('Path must end with "z" command')
         points = points.strip('Mz')
         points = points.replace(',', ' ')
+        points = points.replace('L', 'C')
         points = points.split('C')
         points = [p.split()[-2:] for p in points]
         points = [[float(x) for x in p] for p in points]

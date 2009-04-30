@@ -22,32 +22,28 @@ class CannonballWindow(pyglet.window.Window):
         self.world = self.create_world()
         self.bodies = {}
         self.destroying = set()
-        self.bodies['goal'] = self.create_goal(self.world, (110, 101))
-        self.bodies['cannonball'] = self.create_cannonball(self.world,
-                                                           (100, 101))
 
         for i in xrange(100, 130):
             self.create_brick(self.world, (105, i))
 
+        start_position = 0, 0
         transform = Transform('scale(0.2) translate(0 %g) scale(1 -1)' %
                               float(document.element.getAttribute('height')))
         for layer in document.layers:
             for group in layer.groups:
-                body_def = b2BodyDef()
-                body = self.world.CreateBody(body_def)
-                body.SetUserData({'type': 'platform'})
-                for path in group.paths:
-                    color = parse_color(path.data.get('fill', '#ffffff'))
-                    for c in path.path.convexify():
-                        shape_def = b2PolygonDef()
-                        shape_def.vertices = [transform * (p.x, p.y)
-                                              for p in reversed(c.points)]
-                        shape = body.CreateShape(shape_def)
-                        shape.SetUserData({'color': color})
+                if group.id == 'start':
+                    body = self._create_body(self.world, group, transform, 1)
+                    start_position = body.GetWorldCenter().tuple()
+                    self.world.DestroyBody(body)
+                body = self._create_body(self.world, group, transform)
+                self.bodies[group.id] = body
+
+        self.bodies['cannonball'] = self.create_cannonball(self.world,
+                                                           start_position)
 
         self.camera_pos = 0, 0
         self.camera_scale = 20
-        self.min_camera_scale = 10
+        self.min_camera_scale = 0 # 10
         self.max_camera_scale = 50
         self.max_angular_velocity = 20
         self.left = self.right = False
@@ -66,6 +62,26 @@ class CannonballWindow(pyglet.window.Window):
         glEndList()
 
         pyglet.clock.schedule_interval(self.step, 1 / 60)
+
+    def _create_body(self, world, group, transform, density=0):
+        group_transform = transform * group.transform
+        body_def = b2BodyDef()
+        body = world.CreateBody(body_def)
+        body.SetUserData({'type': 'platform'})
+        for path in group.paths:
+            path_transform = group_transform * path.transform
+            color = parse_color(path.data.get('fill', '#ffffff'))
+            for c in path.path.convexify():
+                shape_def = b2PolygonDef()
+                shape_def.vertices = [path_transform * (p.x, p.y)
+                                      for p in reversed(c.points)]
+                if path.data.get('sensor') == 'true':
+                    shape_def.isSensor = True
+                shape_def.density = density
+                shape = body.CreateShape(shape_def)
+                shape.SetUserData({'color': color})
+        body.SetMassFromShapes()
+        return body
 
     def step(self, dt):
         cannonball_body = self.bodies['cannonball']
