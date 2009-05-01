@@ -32,10 +32,10 @@
      borderopacity="1"
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.86831673"
+     inkscape:zoom="0.43415837"
      inkscape:cx="490"
      inkscape:cy="380"
-     inkscape:current-layer="g2442"
+     inkscape:current-layer="layer1"
      id="namedview2407"
      showgrid="false"
      inkscape:window-width="645"
@@ -108,6 +108,33 @@
          style="fill:#f2ff00;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-linecap:square;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
          sodipodi:type="star"
          inkscape:label="sensor: true" />
+    </g>
+    <g
+       transform="matrix(0.9855955,-0.1691195,0.1691195,0.9855955,-58.554838,78.065467)"
+       id="g3157">
+      <path
+         style="fill:#f2ff00;fill-opacity:1;stroke:#000000;stroke-width:0.74609971;stroke-linecap:square;stroke-miterlimit:4;stroke-opacity:1"
+         d="M 466.29273,338.2822 L 585.16694,338.2822 L 585.16694,352.35595 L 466.29273,352.35595 L 466.29273,338.2822 z"
+         id="rect2385"
+         inkscape:label="material: metal" />
+    </g>
+    <g
+       transform="matrix(0.9769179,0.2136147,-0.2136147,0.9769179,-246.35192,75.628323)"
+       id="g3175">
+      <path
+         style="fill:#f2ff00;fill-opacity:1;stroke:#000000;stroke-width:0.74609971;stroke-linecap:square;stroke-miterlimit:4;stroke-opacity:1"
+         d="M 466.29273,338.2822 L 585.16694,338.2822 L 585.16694,352.35595 L 466.29273,352.35595 L 466.29273,338.2822 z"
+         id="path3177"
+         inkscape:label="material: metal" />
+    </g>
+    <g
+       transform="matrix(0.9606925,-0.2776142,0.2776142,0.9606925,-336.53338,416.88744)"
+       id="g3179">
+      <path
+         style="fill:#f2ff00;fill-opacity:1;stroke:#000000;stroke-width:0.74609971;stroke-linecap:square;stroke-miterlimit:4;stroke-opacity:1"
+         d="M 466.29273,338.2822 L 585.16694,338.2822 L 585.16694,352.35595 L 466.29273,352.35595 L 466.29273,338.2822 z"
+         id="path3181"
+         inkscape:label="material: metal" />
     </g>
   </g>
 </svg>
