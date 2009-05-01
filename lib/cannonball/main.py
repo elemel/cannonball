@@ -266,7 +266,7 @@ class CannonballWindow(pyglet.window.Window):
         shape_def.density = 100
         shape_def.friction = 10
         shape = body.CreateShape(shape_def)
-        shape.SetUserData({'color': (0.5, 1, 0)})
+        shape.SetUserData({'color': (0, 0, 0)})
 
         body.SetMassFromShapes()
         return body
