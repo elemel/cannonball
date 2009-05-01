@@ -59,7 +59,7 @@
      id="layer1">
     <g
        id="g2442"
-       transform="translate(64,-44)">
+       transform="translate(90,-50)">
       <path
          sodipodi:nodetypes="csssssssssssssssss"
          id="path2440"
@@ -69,7 +69,7 @@
     </g>
     <g
        id="start"
-       transform="translate(500.05479,-129.58267)"
+       transform="translate(526.05479,-135.58267)"
        inkscape:label="#g2393">
       <path
          d="M 307.49148,290.343 L 302.03171,287.92051 L 296.94089,291.0448 L 297.55765,285.10365 L 293.01313,281.22746 L 298.85408,279.97811 L 301.13623,274.45821 L 304.12938,279.62721 L 310.08434,280.09192 L 306.09326,284.53588 L 307.49148,290.343 z"
@@ -90,7 +90,7 @@
     </g>
     <g
        id="goal"
-       transform="translate(90.36488,313.97951)"
+       transform="translate(116.36488,307.97951)"
        inkscape:label="#g2396">
       <path
          d="M 745.11984,205.12064 L 741.379,200.99697 L 735.86128,201.74081 L 738.62714,196.90877 L 736.21464,191.89097 L 741.66487,193.02828 L 745.69159,189.18327 L 746.29415,194.7182 L 751.1953,197.35966 L 746.11747,199.64312 L 745.11984,205.12064 z"
@@ -110,7 +110,7 @@
          inkscape:label="sensor: true" />
     </g>
     <g
-       transform="matrix(0.9769179,0.2136147,-0.2136147,0.9769179,-202.35192,39.628323)"
+       transform="matrix(0.9769179,0.2136147,-0.2136147,0.9769179,-176.35192,33.628323)"
        id="g3175">
       <path
          style="fill:#f2ff00;fill-opacity:1;stroke:#000000;stroke-width:0.74609971;stroke-linecap:square;stroke-miterlimit:4;stroke-opacity:1"
@@ -119,7 +119,7 @@
          inkscape:label="material: metal" />
     </g>
     <g
-       transform="matrix(0.9899066,-0.1417202,0.1417202,0.9899066,-254.0554,280.92926)"
+       transform="matrix(0.9899066,-0.1417202,0.1417202,0.9899066,-228.0554,274.92926)"
        id="g3179">
       <path
          style="fill:#f2ff00;fill-opacity:1;stroke:#000000;stroke-width:0.74609971;stroke-linecap:square;stroke-miterlimit:4;stroke-opacity:1"
@@ -128,7 +128,7 @@
          inkscape:label="material: metal" />
     </g>
     <g
-       transform="matrix(0.9968426,-7.9401772e-2,7.9401772e-2,0.9968426,-375.71685,126.90946)"
+       transform="matrix(0.9968426,-7.9401772e-2,7.9401772e-2,0.9968426,-349.71685,120.90946)"
        id="g3183">
       <path
          style="fill:#f2ff00;fill-opacity:1;stroke:#000000;stroke-width:0.74609971;stroke-linecap:square;stroke-miterlimit:4;stroke-opacity:1"
@@ -137,7 +137,7 @@
          inkscape:label="material: metal" />
     </g>
     <g
-       transform="matrix(0.9941511,-0.1079965,0.1079965,0.9941511,-145.11575,294.89025)"
+       transform="matrix(0.9941511,-0.1079965,0.1079965,0.9941511,-119.11575,288.89025)"
        id="g3187">
       <path
          style="fill:#f2ff00;fill-opacity:1;stroke:#000000;stroke-width:0.74609971;stroke-linecap:square;stroke-miterlimit:4;stroke-opacity:1"
@@ -146,7 +146,7 @@
          inkscape:label="material: metal" />
     </g>
     <g
-       transform="matrix(0.9869053,0.1612996,-0.1612996,0.9869053,117.52477,176.54512)"
+       transform="matrix(0.9869053,0.1612996,-0.1612996,0.9869053,143.52477,170.54512)"
        id="g3191">
       <path
          style="fill:#f2ff00;fill-opacity:1;stroke:#000000;stroke-width:0.74609971;stroke-linecap:square;stroke-miterlimit:4;stroke-opacity:1"
@@ -155,7 +155,7 @@
          inkscape:label="material: metal" />
     </g>
     <g
-       transform="matrix(0.9961864,-8.7248665e-2,8.7248665e-2,0.9961864,192.6551,327.04249)"
+       transform="matrix(0.9961864,-8.7248665e-2,8.7248665e-2,0.9961864,218.6551,321.04249)"
        id="g3195">
       <path
          style="fill:#f2ff00;fill-opacity:1;stroke:#000000;stroke-width:0.74609971;stroke-linecap:square;stroke-miterlimit:4;stroke-opacity:1"
@@ -164,12 +164,21 @@
          inkscape:label="material: metal" />
     </g>
     <g
-       transform="matrix(0.9689407,-0.2472923,0.2472923,0.9689407,220.81204,360.70466)"
+       transform="matrix(0.9689407,-0.2472923,0.2472923,0.9689407,246.81204,354.70466)"
        id="g3199">
       <path
          style="fill:#f2ff00;fill-opacity:1;stroke:#000000;stroke-width:0.74609971;stroke-linecap:square;stroke-miterlimit:4;stroke-opacity:1"
          d="M 466.29273,338.2822 L 585.16694,338.2822 L 585.16694,352.35595 L 466.29273,352.35595 L 466.29273,338.2822 z"
          id="path3201"
+         inkscape:label="material: metal" />
+    </g>
+    <g
+       transform="matrix(0.9985835,5.3204779e-2,-5.3204779e-2,0.9985835,-337.8075,-19.359067)"
+       id="g3203">
+      <path
+         style="fill:#f2ff00;fill-opacity:1;stroke:#000000;stroke-width:0.74609971;stroke-linecap:square;stroke-miterlimit:4;stroke-opacity:1"
+         d="M 466.29273,338.2822 L 585.16694,338.2822 L 585.16694,352.35595 L 466.29273,352.35595 L 466.29273,338.2822 z"
+         id="path3205"
          inkscape:label="material: metal" />
     </g>
   </g>
