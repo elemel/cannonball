@@ -52,8 +52,6 @@ class CannonballWindow(pyglet.window.Window):
         self.max_camera_scale = 50
         self.max_angular_velocity = 20
         self.left = self.right = False
-        self.jumping = False
-        self.braking = False
         self.firing = False
         self.zoom_in = self.zoom_out = False
         self.win = False
@@ -107,7 +105,7 @@ class CannonballWindow(pyglet.window.Window):
             torque += 1
         if self.right:
             torque -= 1
-        if self.braking:
+        if self.left and self.right:
             cannonball_body.angularVelocity = 0
         if self.zoom_in:
             self.camera_scale *= 10 ** dt
@@ -221,10 +219,6 @@ class CannonballWindow(pyglet.window.Window):
             self.left = True
         if symbol == pyglet.window.key.RIGHT:
             self.right = True
-        if symbol == pyglet.window.key.UP:
-            self.jumping = True
-        if symbol == pyglet.window.key.DOWN:
-            self.braking = True
         if symbol == pyglet.window.key.SPACE:
             self.firing = True
         if symbol == pyglet.window.key.PLUS:
@@ -237,10 +231,6 @@ class CannonballWindow(pyglet.window.Window):
             self.left = False
         if symbol == pyglet.window.key.RIGHT:
             self.right = False
-        if symbol == pyglet.window.key.UP:
-            self.jumping = False
-        if symbol == pyglet.window.key.DOWN:
-            self.braking = False
         if symbol == pyglet.window.key.PLUS:
             self.zoom_in = False
         if symbol == pyglet.window.key.MINUS:
