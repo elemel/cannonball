@@ -73,7 +73,7 @@ class CannonballWindow(pyglet.window.Window):
         group_transform = transform * group.transform
         body_def = b2BodyDef()
         body = world.CreateBody(body_def)
-        body.SetUserData({'type': 'platform'})
+        body.SetUserData({'id': group.id})
         for path in group.paths:
             path_transform = group_transform * path.transform
             color = parse_color(path.data.get('fill', '#ffffff'))
@@ -258,7 +258,7 @@ class CannonballWindow(pyglet.window.Window):
         body_def = b2BodyDef()
         body_def.position = position
         body = world.CreateBody(body_def)
-        body.SetUserData({'name': 'cannonball'})
+        body.SetUserData({'id': 'cannonball'})
 
         shape_def = b2CircleDef()
         shape_def.radius = 1
@@ -305,36 +305,22 @@ class CannonballWindow(pyglet.window.Window):
         body.SetMassFromShapes()
         return body
 
-    def create_goal(self, world, position):
-        body_def = b2BodyDef()
-        body_def.position = position
-        body = world.CreateBody(body_def)
-        body.SetUserData({'name': 'goal'})
-
-        shape_def = b2CircleDef()
-        shape_def.isSensor = True
-        shape_def.radius = 0.5
-        shape = body.CreateShape(shape_def)
-        shape.SetUserData({'color': (1, 1, 0)})
-
-        return body
-
     def add_contact(self, point):
         body_1 = point.shape1.GetBody()
         body_2 = point.shape2.GetBody()
         data_1 = body_1.GetUserData() or {}
         data_2 = body_2.GetUserData() or {}
-        name_1 = data_1.get('name')
-        name_2 = data_2.get('name')
+        id_1 = data_1.get('id')
+        id_2 = data_2.get('id')
         type_1 = data_1.get('type')
         type_2 = data_2.get('type')
-        if set([name_1, name_2]) == set(['cannonball', 'goal']):
+        if set([id_1, id_2]) == set(['cannonball', 'goal']):
             self.win = True
         if (type_1 == 'bullet' and not point.shape2.isSensor and
-            name_2 != 'cannonball'):
+            id_2 != 'cannonball'):
             self.handle_bullet_collision(point, body_1, body_2, point.normal)
         if (type_2 == 'bullet' and not point.shape1.isSensor and
-            name_1 != 'cannonball'):
+            id_1 != 'cannonball'):
             self.handle_bullet_collision(point, body_2, body_1, -point.normal)
 
     def handle_bullet_collision(self, point, bullet_body, other_body, normal):
