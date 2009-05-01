@@ -5,6 +5,7 @@ from pyglet.gl import *
 from Box2D import *
 from cannonball.svg import Document, Transform
 from cannonball.material import *
+from cannonball.cannon import *
 
 root = os.path.abspath(__file__)
 for _ in xrange(3):
@@ -30,6 +31,7 @@ class CannonballWindow(pyglet.window.Window):
         self.world = self.create_world()
         self.bodies = {}
         self.destroying = set()
+        self.cannon = GrenadeLauncher()
 
         start_position = 0, 0
         transform = Transform('scale(0.2) translate(0 %g) scale(1 -1)' %
@@ -112,11 +114,7 @@ class CannonballWindow(pyglet.window.Window):
         if self.zoom_out:
             self.camera_scale /= 10 ** dt
         if self.firing:
-            self.firing = False
-            a = cannonball_body.angle
-            v = b2Vec2(math.cos(a), math.sin(a))
-            self.create_bullet(self.world, cannonball_body.position,
-                               cannonball_body.linearVelocity + 15 * v)
+            self.cannon.fire(cannonball_body, self.world)
         self.camera_scale = max(self.min_camera_scale, self.camera_scale)
         self.camera_scale = min(self.camera_scale, self.max_camera_scale)
         cannonball_body.angularVelocity = max(cannonball_body.angularVelocity,
@@ -183,7 +181,7 @@ class CannonballWindow(pyglet.window.Window):
             glScaled(circle.radius, circle.radius, 1)
             glCallList(self.circle_display_list)
             if shape.GetBody() == self.bodies['cannonball']:
-                glColor3d(1, 0, 0)
+                glColor3d(*self.cannon.color)
                 glTranslated(0.5, 0, 0)
                 glScaled(0.5, 0.5, 1)
                 glCallList(self.circle_display_list)
@@ -231,6 +229,8 @@ class CannonballWindow(pyglet.window.Window):
             self.left = False
         if symbol == pyglet.window.key.RIGHT:
             self.right = False
+        if symbol == pyglet.window.key.SPACE:
+            self.firing = False
         if symbol == pyglet.window.key.PLUS:
             self.zoom_in = False
         if symbol == pyglet.window.key.MINUS:
@@ -261,24 +261,6 @@ class CannonballWindow(pyglet.window.Window):
         body.SetMassFromShapes()
         return body
 
-    def create_bullet(self, world, position, velocity):
-        body_def = b2BodyDef()
-        body_def.position = position
-        body_def.isBullet = True
-        body = world.CreateBody(body_def)
-        body.linearVelocity = velocity
-        body.SetUserData({'type': 'bullet'})
-
-        shape_def = b2CircleDef()
-        shape_def.radius = 0.25
-        shape_def.density = 100
-        shape_def.isSensor = True
-        shape = body.CreateShape(shape_def)
-        shape.SetUserData({'color': (1, 0, 0)})
-
-        body.SetMassFromShapes()
-        return body
-
     def add_contact(self, point):
         body_1 = point.shape1.GetBody()
         body_2 = point.shape2.GetBody()
@@ -290,15 +272,16 @@ class CannonballWindow(pyglet.window.Window):
         type_2 = data_2.get('type')
         if set([id_1, id_2]) == set(['cannonball', 'goal']):
             self.win = True
-        if (type_1 == 'bullet' and not point.shape2.isSensor and
+        if (type_1 == 'grenade' and not point.shape2.isSensor and
             id_2 != 'cannonball'):
-            self.handle_bullet_collision(point, body_1, body_2, point.normal)
-        if (type_2 == 'bullet' and not point.shape1.isSensor and
+            self.handle_grenade_collision(point, body_1, body_2, point.normal)
+        if (type_2 == 'grenade' and not point.shape1.isSensor and
             id_1 != 'cannonball'):
-            self.handle_bullet_collision(point, body_2, body_1, -point.normal)
+            self.handle_grenade_collision(point, body_2, body_1, -point.normal)
 
-    def handle_bullet_collision(self, point, bullet_body, other_body, normal):
-        self.destroying.add(bullet_body)
+    def handle_grenade_collision(self, point, grenade_body, other_body,
+                                 normal):
+        self.destroying.add(grenade_body)
         x, y = point.position.tuple()
         aabb = b2AABB()
         aabb.lowerBound = x - 1, y - 1
