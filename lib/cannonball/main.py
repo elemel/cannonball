@@ -29,9 +29,6 @@ class CannonballWindow(pyglet.window.Window):
         self.bodies = {}
         self.destroying = set()
 
-        for i in xrange(100, 130):
-            self.create_brick(self.world, (105, i))
-
         start_position = 0, 0
         transform = Transform('scale(0.2) translate(0 %g) scale(1 -1)' %
                               float(document.element.getAttribute('height')))
@@ -267,22 +264,6 @@ class CannonballWindow(pyglet.window.Window):
         shape_def.friction = 10
         shape = body.CreateShape(shape_def)
         shape.SetUserData({'color': (0.5, 1, 0)})
-
-        body.SetMassFromShapes()
-        return body
-
-    def create_brick(self, world, position):
-        body_def = b2BodyDef()
-        body_def.position = position
-        body = world.CreateBody(body_def)
-        body.SetUserData({'type': 'brick'})
-
-        shape_def = b2PolygonDef()
-        shape_def.SetAsBox(1, 0.5)
-        shape_def.density = 100
-        shape = body.CreateShape(shape_def)
-        color = 0, 0.5 * random.random(), 0.5 + 0.5 * random.random()
-        shape.SetUserData({'color': color})
 
         body.SetMassFromShapes()
         return body
