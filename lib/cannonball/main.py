@@ -4,6 +4,7 @@ import pyglet, sys, math, random, os
 from pyglet.gl import *
 from Box2D import *
 from cannonball.svg import Document, Transform
+from cannonball.material import *
 
 root = os.path.abspath(__file__)
 for _ in xrange(3):
@@ -24,6 +25,7 @@ class CannonballWindow(pyglet.window.Window):
                                        '#000000') + (0,)
 
         self.textures = self._load_textures()
+        self.materials = dict(stone=Stone(), metal=Metal())
 
         self.world = self.create_world()
         self.bodies = {}
@@ -88,8 +90,8 @@ class CannonballWindow(pyglet.window.Window):
         return body
 
     def _load_textures(self):
-        textures = {}
-        textures['stone'] = self._load_texture('petrified-seabed')
+        names = ['petrified-seabed', 'rust-peel']
+        return dict((name, self._load_texture(name)) for name in names)
         return textures
 
     def _load_texture(self, name):
@@ -166,7 +168,8 @@ class CannonballWindow(pyglet.window.Window):
         data = shape.GetUserData() or {}
         material = shape.GetUserData().get('material')
         if material:
-            texture = self.textures[material]
+            material_obj = self.materials[material]
+            texture = self.textures[material_obj.texture]
             glColor3d(1, 1, 1)
         else:
             texture = None
