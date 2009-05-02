@@ -31,7 +31,9 @@ class CannonballWindow(pyglet.window.Window):
         self.world = self.create_world()
         self.bodies = {}
         self.destroying = set()
-        self.cannon = GrenadeLauncher()
+        self.cannon_factories = [GrenadeLauncher, JetEngine]
+        self.cannon_index = 0
+        self.cannon = self.cannon_factories[self.cannon_index]()
 
         start_position = 0, 0
         transform = Transform('scale(0.2) translate(0 %g) scale(1 -1)' %
@@ -54,6 +56,7 @@ class CannonballWindow(pyglet.window.Window):
         self.max_camera_scale = 50
         self.max_angular_velocity = 20
         self.left = self.right = False
+        self.switch_cannon = False
         self.firing = False
         self.zoom_in = self.zoom_out = False
         self.win = False
@@ -109,6 +112,11 @@ class CannonballWindow(pyglet.window.Window):
             torque -= 1
         if self.left and self.right:
             cannonball_body.angularVelocity = 0
+        if self.switch_cannon:
+            self.switch_cannon = False
+            self.cannon_index += 1
+            self.cannon_index %= len(self.cannon_factories)
+            self.cannon = self.cannon_factories[self.cannon_index]()
         if self.zoom_in:
             self.camera_scale *= 10 ** dt
         if self.zoom_out:
@@ -217,6 +225,8 @@ class CannonballWindow(pyglet.window.Window):
             self.left = True
         if symbol == pyglet.window.key.RIGHT:
             self.right = True
+        if symbol == pyglet.window.key.TAB:
+            self.switch_cannon = True
         if symbol == pyglet.window.key.SPACE:
             self.firing = True
         if symbol == pyglet.window.key.PLUS:
@@ -255,6 +265,7 @@ class CannonballWindow(pyglet.window.Window):
         shape_def.localPosition = 0, 0
         shape_def.density = 100
         shape_def.friction = 10
+        shape_def.filter.groupIndex = -1
         shape = body.CreateShape(shape_def)
         shape.SetUserData({'color': (0, 0, 0)})
 
@@ -278,6 +289,10 @@ class CannonballWindow(pyglet.window.Window):
         if (type_2 == 'grenade' and not point.shape1.isSensor and
             id_1 != 'cannonball'):
             self.handle_grenade_collision(point, body_2, body_1, -point.normal)
+        if type_1 == 'jet-particle' and not point.shape2.isSensor:
+            self.destroying.add(body_1)
+        if type_2 == 'jet-particle' and not point.shape1.isSensor:
+            self.destroying.add(body_2)
 
     def handle_grenade_collision(self, point, grenade_body, other_body,
                                  normal):
