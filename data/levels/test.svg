@@ -13,7 +13,7 @@
    id="svg2403"
    sodipodi:version="0.32"
    inkscape:version="0.46"
-   sodipodi:docname="level.svg"
+   sodipodi:docname="test.svg"
    inkscape:output_extension="org.inkscape.output.svg.inkscape">
   <defs
      id="defs2405">
@@ -32,7 +32,7 @@
      borderopacity="1"
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.43415837"
+     inkscape:zoom="0.61399265"
      inkscape:cx="490"
      inkscape:cy="380"
      inkscape:current-layer="layer1"
@@ -59,13 +59,14 @@
      id="layer1">
     <g
        id="g2442"
-       transform="translate(90,-50)">
+       transform="translate(90,-50)"
+       inkscape:label="">
       <path
          sodipodi:nodetypes="csssssssssssssssss"
          id="path2440"
          d="M 269.79023,304.16285 C 306.6512,310.05582 327.26217,312.59384 355.14241,329.37212 C 373.46109,340.39627 399.44745,384.56681 412.59526,398.59843 C 438.74249,426.50332 464.20456,433.35155 493.21101,442.36126 C 522.41782,451.4332 553.51316,447.29718 577.66449,428.16809 C 599.52532,410.85319 623.63434,381.71508 632.56108,368.65544 C 652.07522,340.10664 673.35479,302.87193 691.29542,276.52316 C 703.82393,258.12299 719.80349,236.99219 745.4461,237.19644 C 776.0663,237.44034 788.71136,233.19318 811.06738,248.88348 C 840.74169,269.71003 837.76921,317.13179 825.03431,364.08828 C 815.02775,400.98475 798.9937,437.59395 788.0343,460.78773 C 774.40436,489.63329 748.27071,512.69071 726.67941,530.87717 C 707.33252,547.17316 672.91699,562.02142 638.31936,566.73985 C 573.61166,575.56469 551.06443,573.2633 463.26802,569.04315 C 404.174,566.20265 364.72366,543.60695 308.94644,520.67371 C 273.95732,506.28766 234.2218,478.83258 219.11747,440.05796 C 210.35768,417.57052 204.10728,376.02114 206.34342,345.85818 C 208.21095,320.66745 236.05734,298.76997 269.79023,304.16285 z"
          style="fill:#0058a5;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-         inkscape:label="material: stone" />
+         inkscape:label="material: stone; static: true" />
     </g>
     <g
        id="start"
@@ -180,6 +181,94 @@
          d="M 466.29273,338.2822 L 585.16694,338.2822 L 585.16694,352.35595 L 466.29273,352.35595 L 466.29273,338.2822 z"
          id="path3205"
          inkscape:label="material: metal" />
+    </g>
+    <g
+       id="g2403"
+       style="fill:#ffda00;fill-opacity:1"
+       inkscape:label="static: false"
+       transform="matrix(0.9673841,-0.2533137,0.2533137,0.9673841,-58.973599,124.97058)"
+       inkscape:transform-center-x="-0.26232115"
+       inkscape:transform-center-y="-7.3145298">
+      <path
+         inkscape:label="material: stone"
+         sodipodi:nodetypes="ccccc"
+         id="path2401"
+         d="M 426.11179,248.88348 C 441.46717,236.59918 456.82255,224.31487 472.17793,212.03057 C 483.69447,228.92149 495.211,245.81241 506.72754,262.70333 C 496.74654,272.68433 486.76554,282.66532 476.78454,292.64632 C 459.89362,278.05871 443.00271,263.47109 426.11179,248.88348 z"
+         style="fill:#ffda00;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+    </g>
+    <g
+       id="g3176"
+       style="fill:#ffda00;fill-opacity:1"
+       inkscape:label="static: false"
+       transform="matrix(0.9997776,2.109299e-2,-2.109299e-2,0.9997776,33.086406,-53.333349)"
+       inkscape:transform-center-x="-45.23987"
+       inkscape:transform-center-y="-45.243508">
+      <path
+         inkscape:label="material: stone"
+         sodipodi:nodetypes="ccccc"
+         id="path3178"
+         d="M 426.11179,248.88348 C 441.46717,236.59918 456.82255,224.31487 472.17793,212.03057 C 483.69447,228.92149 495.211,245.81241 506.72754,262.70333 C 496.74654,272.68433 486.76554,282.66532 476.78454,292.64632 C 459.89362,278.05871 443.00271,263.47109 426.11179,248.88348 z"
+         style="fill:#ffda00;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+    </g>
+    <g
+       id="g3180"
+       style="fill:#ffda00;fill-opacity:1"
+       inkscape:label="static: false"
+       transform="matrix(0.9681374,0.2504206,-0.2504206,0.9681374,154.46725,-184.24046)">
+      <path
+         inkscape:label="material: stone"
+         sodipodi:nodetypes="ccccc"
+         id="path3182"
+         d="M 426.11179,248.88348 C 441.46717,236.59918 456.82255,224.31487 472.17793,212.03057 C 483.69447,228.92149 495.211,245.81241 506.72754,262.70333 C 496.74654,272.68433 486.76554,282.66532 476.78454,292.64632 C 459.89362,278.05871 443.00271,263.47109 426.11179,248.88348 z"
+         style="fill:#ffda00;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+    </g>
+    <g
+       id="g3184"
+       style="fill:#ffda00;fill-opacity:1"
+       inkscape:label="static: false"
+       transform="matrix(0.8498629,0.5270041,-0.5270041,0.8498629,335.54161,-301.35553)">
+      <path
+         inkscape:label="material: stone"
+         sodipodi:nodetypes="ccccc"
+         id="path3186"
+         d="M 426.11179,248.88348 C 441.46717,236.59918 456.82255,224.31487 472.17793,212.03057 C 483.69447,228.92149 495.211,245.81241 506.72754,262.70333 C 496.74654,272.68433 486.76554,282.66532 476.78454,292.64632 C 459.89362,278.05871 443.00271,263.47109 426.11179,248.88348 z"
+         style="fill:#ffda00;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+    </g>
+    <g
+       id="g3188"
+       style="fill:#ffda00;fill-opacity:1"
+       inkscape:label="static: false"
+       transform="matrix(0.7191751,0.6948291,-0.6948291,0.7191751,495.10565,-349.54658)">
+      <path
+         inkscape:label="material: stone"
+         sodipodi:nodetypes="ccccc"
+         id="path3190"
+         d="M 426.11179,248.88348 C 441.46717,236.59918 456.82255,224.31487 472.17793,212.03057 C 483.69447,228.92149 495.211,245.81241 506.72754,262.70333 C 496.74654,272.68433 486.76554,282.66532 476.78454,292.64632 C 459.89362,278.05871 443.00271,263.47109 426.11179,248.88348 z"
+         style="fill:#ffda00;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+    </g>
+    <g
+       id="g3192"
+       style="fill:#ffda00;fill-opacity:1"
+       inkscape:label="static: false"
+       transform="matrix(0.2119303,0.9772849,-0.9772849,0.2119303,909.20599,-311.24764)">
+      <path
+         inkscape:label="material: stone"
+         sodipodi:nodetypes="ccccc"
+         id="path3194"
+         d="M 426.11179,248.88348 C 441.46717,236.59918 456.82255,224.31487 472.17793,212.03057 C 483.69447,228.92149 495.211,245.81241 506.72754,262.70333 C 496.74654,272.68433 486.76554,282.66532 476.78454,292.64632 C 459.89362,278.05871 443.00271,263.47109 426.11179,248.88348 z"
+         style="fill:#ffda00;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+    </g>
+    <g
+       id="g3196"
+       style="fill:#ffda00;fill-opacity:1"
+       inkscape:label="static: false"
+       transform="matrix(0.4607648,0.8875225,-0.8875225,0.4607648,719.6454,-360.6346)">
+      <path
+         inkscape:label="material: stone"
+         sodipodi:nodetypes="ccccc"
+         id="path3198"
+         d="M 426.11179,248.88348 C 441.46717,236.59918 456.82255,224.31487 472.17793,212.03057 C 483.69447,228.92149 495.211,245.81241 506.72754,262.70333 C 496.74654,272.68433 486.76554,282.66532 476.78454,292.64632 C 459.89362,278.05871 443.00271,263.47109 426.11179,248.88348 z"
+         style="fill:#ffda00;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
     </g>
   </g>
 </svg>

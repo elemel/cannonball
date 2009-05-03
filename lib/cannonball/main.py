@@ -71,7 +71,7 @@ class CannonballWindow(pyglet.window.Window):
 
         pyglet.clock.schedule_interval(self.step, 1 / 60)
 
-    def _create_body(self, world, group, transform, density=0):
+    def _create_body(self, world, group, transform, min_density=0):
         group_transform = transform * group.transform
         body_def = b2BodyDef()
         body = world.CreateBody(body_def)
@@ -86,7 +86,13 @@ class CannonballWindow(pyglet.window.Window):
                                       for p in reversed(c.points)]
                 if path.data.get('sensor') == 'true':
                     shape_def.isSensor = True
-                shape_def.density = density
+                if group.data.get('static') != 'false':
+                    density = 0
+                elif material:
+                    density = self.materials[material].density
+                else:
+                    density = 100
+                shape_def.density = max(density, min_density)
                 shape = body.CreateShape(shape_def)
                 shape.SetUserData({'color': color, 'material': material})
         body.SetMassFromShapes()
