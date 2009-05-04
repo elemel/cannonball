@@ -3,13 +3,10 @@ from __future__ import division
 import pyglet, sys, math, random, os
 from pyglet.gl import *
 from Box2D import *
-from cannonball.svg import Document, Transform
+from cannonball.svg import *
 from cannonball.material import *
 from cannonball.cannon import *
-from cannonball.asset import load_textures
-
-def parse_color(s):
-    return int(s[1:3], 16) / 255, int(s[3:5], 16) / 255, int(s[5:7], 16) / 255
+from cannonball.asset import *
 
 class CannonballWindow(pyglet.window.Window):
     def __init__(self, document):

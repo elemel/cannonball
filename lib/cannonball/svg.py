@@ -1,6 +1,11 @@
+from __future__ import division
+
 from xml.dom import minidom
 from subprocess import Popen, PIPE
 import numpy
+
+def parse_color(s):
+    return int(s[1:3], 16) / 255, int(s[3:5], 16) / 255, int(s[5:7], 16) / 255
 
 def parse_data(s):
     try:
