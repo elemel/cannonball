@@ -321,6 +321,7 @@ def main():
     if len(sys.argv) != 2:
         print 'Usage: cannonball <level>'
         sys.exit(1)
+    level = load_level(sys.argv[1])
     document = Document(sys.argv[1])
     window = CannonballWindow(document)
     pyglet.app.run()

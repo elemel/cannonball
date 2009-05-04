@@ -1,5 +1,6 @@
 import os, pyglet
 from xml.dom import minidom
+from Box2D import *
 from cannonball.svg import *
 
 def load_textures(root):
@@ -12,6 +13,38 @@ def load_textures(root):
                 image = pyglet.image.load(path)
                 textures[texture_name] = image.get_texture()
     return textures
+
+class Level(object):
+    def __init__(self, world):
+        self.world = world
+        self.bodies = {}
+
+def load_level(path, scale=0.2):
+    doc = minidom.parse(path)
+    root = [n for n in doc.childNodes if n.nodeName == 'svg'][0]
+    width = float(root.getAttribute('width')) * scale
+    height = float(root.getAttribute('height')) * scale
+    aabb = b2AABB()
+    aabb.lowerBound = 0, 0
+    aabb.upperBound = width, height
+    gravity = 0, -10
+    doSleep = True
+    world = b2World(aabb, gravity, doSleep)
+    level = Level(world)
+    transform = Transform('translate(0 %g) scale(%g) scale(1 -1)' %
+                          (height, scale))
+    load_layers(level, root, transform)
+    return level
+
+def load_layers(level, root, transform):
+    for layer in root.childNodes:
+        if (layer.nodeName == 'g' and
+            layer.getAttribute('inkscape:groupmode') == 'layer'):
+            for node in layer.childNodes:
+                load_body(level, node, transform)
+
+def load_body(level, node, transform):
+    pass
 
 def parse_data(s):
     try:
