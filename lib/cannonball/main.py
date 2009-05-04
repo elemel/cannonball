@@ -7,6 +7,7 @@ from cannonball.svg import *
 from cannonball.material import *
 from cannonball.cannon import *
 from cannonball.asset import *
+from cannonball import config
 
 class CannonballWindow(pyglet.window.Window):
     def __init__(self, document):
@@ -19,7 +20,8 @@ class CannonballWindow(pyglet.window.Window):
         self.clear_color = parse_color(namedview.getAttribute('pagecolor') or
                                        '#000000') + (0,)
 
-        self.textures = load_textures()
+        self.textures = load_textures(os.path.join(config.root, 'data',
+                                                   'textures'))
         self.materials = dict(stone=Stone(), metal=Metal())
 
         self.world = self.create_world()

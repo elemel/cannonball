@@ -1,16 +1,17 @@
 import os, pyglet
 from xml.dom import minidom
-from cannonball import config
 from cannonball.svg import *
 
-def load_textures():
-    names = ['petrified-seabed', 'rust-peel']
-    return dict((name, load_texture(name)) for name in names)
-
-def load_texture(name):
-    path = os.path.join(config.root, 'data', 'textures', name + '.jpg')
-    image = pyglet.image.load(path)
-    return image.get_texture()
+def load_textures(root):
+    textures = {}
+    for dir_name, _, file_names in os.walk(root):
+        for file_name in file_names:
+            name, ext = os.path.splitext(file_name)
+            if ext == '.jpg':
+                path = os.path.join(dir_name, file_name)
+                image = pyglet.image.load(path)
+                textures[name] = image.get_texture()
+    return textures
 
 def parse_data(s):
     try:
