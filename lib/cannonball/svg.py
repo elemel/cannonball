@@ -70,10 +70,10 @@ class Path(object):
         points = points.replace('L', 'C')
         points = points.split('C')
         points = [p.split()[-2:] for p in points]
-        points = [[float(x) for x in p] for p in points]
+        points = [(float(x), float(y)) for x, y in points]
         if points[0] == points[-1]:
             points.pop()
-        return [Point(*p) for p in points]
+        return points
 
     def __str__(self):
         return 'M %s z' % (' L '.join('%g %g' % (p.x, p.y)
@@ -85,7 +85,7 @@ class Path(object):
     def convexify(self):
         p = Popen('convexify', stdin=PIPE, stdout=PIPE, stderr=PIPE)
         stdin = '%d %s' % (len(self.points),
-                           ' '.join('%g %g' % (p.x, p.y) for p in self.points))
+                           ' '.join('%g %g' % (x, y) for x, y in self.points))
         stdout, stderr = p.communicate(stdin)
         lines = stdout.splitlines()
         assert(int(lines[0])) + 1 == len(lines)
@@ -94,20 +94,9 @@ class Path(object):
             args = line.split()
             assert int(args[0]) * 2 + 1 == len(args)
             points = zip(args[1::2], args[2::2])
-            points = [Point(float(x), float(y)) for x, y in points]
+            points = [(float(x), float(y)) for x, y in points]
             paths.append(Path(points))
         return paths
-
-class Point(object):
-    def __init__(self, x, y):
-        self.x = x
-        self.y = y
-
-    def __str__(self):
-        return '(%g, %g)' % (self.x, self.y)
-
-    def __repr__(self):
-        return 'Point(%g, %g)' % (self.x, self.y)
 
 class Transform(object):
     def __init__(self, arg=''):

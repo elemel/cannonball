@@ -82,8 +82,8 @@ class CannonballWindow(pyglet.window.Window):
             material = path.data.get('material')
             for c in path.path.convexify():
                 shape_def = b2PolygonDef()
-                shape_def.vertices = [path_transform * (p.x, p.y)
-                                      for p in reversed(c.points)]
+                shape_def.vertices = [path_transform * (x, y)
+                                      for x, y in reversed(c.points)]
                 if path.data.get('sensor') == 'true':
                     shape_def.isSensor = True
                 if group.data.get('static') != 'false':
