@@ -6,10 +6,7 @@ from Box2D import *
 from cannonball.svg import Document, Transform
 from cannonball.material import *
 from cannonball.cannon import *
-
-root = os.path.abspath(__file__)
-for _ in xrange(3):
-    root = os.path.dirname(root)
+from cannonball.asset import load_textures
 
 def parse_color(s):
     return int(s[1:3], 16) / 255, int(s[3:5], 16) / 255, int(s[5:7], 16) / 255
@@ -25,7 +22,7 @@ class CannonballWindow(pyglet.window.Window):
         self.clear_color = parse_color(namedview.getAttribute('pagecolor') or
                                        '#000000') + (0,)
 
-        self.textures = self._load_textures()
+        self.textures = load_textures()
         self.materials = dict(stone=Stone(), metal=Metal())
 
         self.world = self.create_world()
@@ -97,16 +94,6 @@ class CannonballWindow(pyglet.window.Window):
                 shape.SetUserData({'color': color, 'material': material})
         body.SetMassFromShapes()
         return body
-
-    def _load_textures(self):
-        names = ['petrified-seabed', 'rust-peel']
-        return dict((name, self._load_texture(name)) for name in names)
-        return textures
-
-    def _load_texture(self, name):
-        path = os.path.join(root, 'data', 'textures', name + '.jpg')
-        image = pyglet.image.load(path)
-        return image.get_texture()
 
     def step(self, dt):
         cannonball_body = self.bodies['cannonball']
