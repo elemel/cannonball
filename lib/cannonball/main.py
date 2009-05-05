@@ -4,47 +4,35 @@ import pyglet, sys, math, random, os
 from pyglet.gl import *
 from Box2D import *
 from cannonball.svg import *
-from cannonball.material import *
 from cannonball.cannon import *
 from cannonball.asset import *
 from cannonball import config
 
 class CannonballWindow(pyglet.window.Window):
-    def __init__(self, document):
+    def __init__(self, level):
+        self.level = level
         pyglet.window.Window.__init__(self, fullscreen=True,
                                       caption="Cannonball")
         self.set_mouse_visible(False)
         glEnable(GL_BLEND)
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
-        namedview = document.element.getElementsByTagName('sodipodi:namedview')[0]
-        self.clear_color = parse_color(namedview.getAttribute('pagecolor') or
-                                       '#000000') + (0,)
 
         self.textures = load_textures(os.path.join(config.root, 'data',
                                                    'textures'))
-        self.materials = dict(stone=Stone(), metal=Metal())
 
-        self.world = self.create_world()
-        self.bodies = {}
         self.destroying = set()
         self.cannon_factories = [GrenadeLauncher, JetEngine]
         self.cannon_index = 0
         self.cannon = self.cannon_factories[self.cannon_index]()
 
-        start_position = 0, 0
-        transform = Transform('scale(0.2) translate(0 %g) scale(1 -1)' %
-                              float(document.element.getAttribute('height')))
-        for layer in document.layers:
-            for group in layer.groups:
-                if group.id == 'start':
-                    body = self._create_body(self.world, group, transform, 1)
-                    start_position = body.GetWorldCenter().tuple()
-                    self.world.DestroyBody(body)
-                body = self._create_body(self.world, group, transform)
-                self.bodies[group.id] = body
-
-        self.bodies['cannonball'] = self.create_cannonball(self.world,
-                                                           start_position)
+        start_body = self.level.bodies['start']
+        start_shapes = start_body.shapeList
+        start_pos = b2Vec2()
+        for shape in start_shapes:
+            start_pos += shape.GetCentroid()
+        start_pos *= 1 / len(start_shapes)
+        self.level.bodies['cannonball'] = self.create_cannonball(self.level.world,
+                                                                 start_pos)
 
         self.camera_pos = 0, 0
         self.camera_scale = 20
@@ -58,7 +46,7 @@ class CannonballWindow(pyglet.window.Window):
         self.win = False
 
         self.contact_listener = CannonballContactListener(self)
-        self.world.SetContactListener(self.contact_listener)
+        self.level.world.SetContactListener(self.contact_listener)
 
         self.circle_display_list = glGenLists(1)
         glNewList(self.circle_display_list, GL_COMPILE)
@@ -67,35 +55,8 @@ class CannonballWindow(pyglet.window.Window):
 
         pyglet.clock.schedule_interval(self.step, 1 / 60)
 
-    def _create_body(self, world, group, transform, min_density=0):
-        group_transform = transform * group.transform
-        body_def = b2BodyDef()
-        body = world.CreateBody(body_def)
-        body.SetUserData({'id': group.id})
-        for path in group.paths:
-            path_transform = group_transform * path.transform
-            color = parse_color(path.data.get('fill', '#ffffff'))
-            material = path.data.get('material')
-            for c in path.path.convexify():
-                shape_def = b2PolygonDef()
-                shape_def.vertices = [path_transform * (x, y)
-                                      for x, y in reversed(c.points)]
-                if path.data.get('sensor') == 'true':
-                    shape_def.isSensor = True
-                if group.data.get('static') != 'false':
-                    density = 0
-                elif material:
-                    density = self.materials[material].density
-                else:
-                    density = 100
-                shape_def.density = max(density, min_density)
-                shape = body.CreateShape(shape_def)
-                shape.SetUserData({'color': color, 'material': material})
-        body.SetMassFromShapes()
-        return body
-
     def step(self, dt):
-        cannonball_body = self.bodies['cannonball']
+        cannonball_body = self.level.bodies['cannonball']
 
         torque = 0
         if self.left:
@@ -114,7 +75,7 @@ class CannonballWindow(pyglet.window.Window):
         if self.zoom_out:
             self.camera_scale /= 10 ** dt
         if self.firing:
-            self.cannon.fire(cannonball_body, self.world)
+            self.cannon.fire(cannonball_body, self.level.world)
         self.camera_scale = max(self.min_camera_scale, self.camera_scale)
         self.camera_scale = min(self.camera_scale, self.max_camera_scale)
         cannonball_body.angularVelocity = max(cannonball_body.angularVelocity,
@@ -125,14 +86,14 @@ class CannonballWindow(pyglet.window.Window):
         cannonball_body.ApplyTorque(torque * 10000)
         velocityIterations = 10
         positionIterations = 8
-        self.world.Step(dt, velocityIterations, positionIterations)
+        self.level.world.Step(dt, velocityIterations, positionIterations)
         self.camera_pos = (cannonball_body.position.x,
                            cannonball_body.position.y)
         for body in self.destroying:
             data = body.GetUserData() or {}
             if 'name' in data:
                 del self.bodies['name']
-            self.world.DestroyBody(body)
+            self.level.world.DestroyBody(body)
         self.destroying.clear()
         if self.win:
             print 'You Win'
@@ -142,9 +103,10 @@ class CannonballWindow(pyglet.window.Window):
         aabb = b2AABB()
         aabb.lowerBound = 0, 0
         aabb.upperBound = 1000, 1000
-        count, shapes = self.world.Query(aabb, 100)
+        count, shapes = self.level.world.Query(aabb, 100)
 
-        glClearColor(*self.clear_color)
+        r, g, b = self.level.background_color
+        glClearColor(r, g, b, 1)
         self.clear()
         glPushMatrix()
         glTranslated(self.width / 2, self.height / 2, 0)
@@ -164,7 +126,7 @@ class CannonballWindow(pyglet.window.Window):
         data = shape.GetUserData() or {}
         material = shape.GetUserData().get('material')
         if material:
-            material_obj = self.materials[material]
+            material_obj = self.level.materials[material]
             texture = self.textures[material_obj.texture]
             glColor3d(1, 1, 1)
         else:
@@ -180,7 +142,7 @@ class CannonballWindow(pyglet.window.Window):
             glTranslated(p.x, p.y, 0)
             glScaled(circle.radius, circle.radius, 1)
             glCallList(self.circle_display_list)
-            if shape.GetBody() == self.bodies['cannonball']:
+            if shape.GetBody() == self.level.bodies['cannonball']:
                 glColor3d(*self.cannon.color)
                 glTranslated(0.5, 0, 0)
                 glScaled(0.5, 0.5, 1)
@@ -238,14 +200,6 @@ class CannonballWindow(pyglet.window.Window):
         if symbol == pyglet.window.key.MINUS:
             self.zoom_out = False
 
-    def create_world(self):
-        aabb = b2AABB()
-        aabb.lowerBound = 0, 0
-        aabb.upperBound = 1000, 1000
-        gravity = 0, -10
-        doSleep = True
-        return b2World(aabb, gravity, doSleep)
-
     def create_cannonball(self, world, position):
         body_def = b2BodyDef()
         body_def.position = position
@@ -293,7 +247,7 @@ class CannonballWindow(pyglet.window.Window):
         aabb = b2AABB()
         aabb.lowerBound = x - 1, y - 1
         aabb.upperBound = x + 1, y + 1
-        count, shapes = self.world.Query(aabb, 100)
+        count, shapes = self.level.world.Query(aabb, 100)
         bodies = set(s.GetBody() for s in shapes)
         for body in bodies:
             offset = point.position - body.GetWorldCenter()
@@ -322,8 +276,7 @@ def main():
         print 'Usage: cannonball <level>'
         sys.exit(1)
     level = load_level(sys.argv[1])
-    document = Document(sys.argv[1])
-    window = CannonballWindow(document)
+    window = CannonballWindow(level)
     pyglet.app.run()
 
 if __name__ == '__main__':

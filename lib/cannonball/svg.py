@@ -33,8 +33,8 @@ class Path(object):
         return points
 
     def __str__(self):
-        return 'M %s z' % (' L '.join('%g %g' % (p.x, p.y)
-                                      for p in self.points))
+        return 'M %s z' % (' L '.join('%g %g' % (x, y)
+                                      for x, y in self.points))
 
     def __repr__(self):
         return "Path('%s')" % self

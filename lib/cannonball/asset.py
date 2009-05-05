@@ -2,6 +2,7 @@ import os, pyglet
 from xml.dom import minidom
 from Box2D import *
 from cannonball.svg import *
+from cannonball.material import *
 
 def load_textures(root):
     textures = {}
@@ -18,10 +19,14 @@ class Level(object):
     def __init__(self, world):
         self.world = world
         self.bodies = {}
+        self.background_color = 0, 0, 0
+        self.materials = dict(stone=Stone(), metal=Metal())
 
 def load_level(path, scale=0.2):
     doc = minidom.parse(path)
     root = [n for n in doc.childNodes if n.nodeName == 'svg'][0]
+    named_view = root.getElementsByTagName('sodipodi:namedview')[0]
+    page_color = parse_color(named_view.getAttribute('pagecolor') or '#000000')
     width = float(root.getAttribute('width')) * scale
     height = float(root.getAttribute('height')) * scale
     aabb = b2AABB()
@@ -31,6 +36,7 @@ def load_level(path, scale=0.2):
     doSleep = True
     world = b2World(aabb, gravity, doSleep)
     level = Level(world)
+    level.background_color = page_color
     transform = Transform('translate(0 %g) scale(%g) scale(1 -1)' %
                           (height, scale))
     load_layers(level, root, transform)
@@ -41,10 +47,49 @@ def load_layers(level, root, transform):
         if (layer.nodeName == 'g' and
             layer.getAttribute('inkscape:groupmode') == 'layer'):
             for node in layer.childNodes:
-                load_body(level, node, transform)
+                if node.nodeName in ('g', 'path'):
+                    load_body(level, node, transform)
 
 def load_body(level, node, transform):
-    pass
+    data = parse_element_data(node)
+    data['id'] = node.getAttribute('id')
+    body_def = b2BodyDef()
+    body = level.world.CreateBody(body_def)
+    body.SetUserData(data)
+    level.bodies[data['id']] = body
+    load_shapes(level, body, node, transform)
+    body.SetMassFromShapes()
+
+def load_shapes(level, body, node, transform):
+    transform = transform * Transform(node.getAttribute('transform'))
+    if node.nodeName == 'g':
+        for child in node.childNodes:
+            if child.nodeName in ('g', 'path'):
+                load_shapes(level, body, child, transform)
+    elif node.nodeName == 'path':
+        load_shape(level, body, node, transform)
+
+def load_shape(level, body, node, transform):
+    body_data = body.GetUserData() or {}
+    data = parse_element_data(node)
+    color = parse_color(data.get('fill', '#ffffff'))
+    material = data.get('material')
+    path = Path(node.getAttribute('d'))
+    for subpath in path.convexify():
+        shape_def = b2PolygonDef()
+        shape_def.vertices = [transform * (x, y)
+                              for x, y in reversed(subpath.points)]
+        if data.get('sensor') == 'true':
+            shape_def.isSensor = True
+        if body_data.get('static') != 'false':
+            density = 0
+        elif material:
+            density = level.materials[material].density
+        else:
+            density = 100
+        shape_def.density = density
+        shape = body.CreateShape(shape_def)
+        shape.SetUserData({'color': color, 'material': material})
 
 def parse_data(s):
     try:
@@ -61,34 +106,3 @@ def parse_element_data(element):
         value = element.getAttribute(name)
         data.update(parse_data(value))
     return data
-
-class Document(object):
-    def __init__(self, f):
-        self.document = minidom.parse(f)
-        self.element = [n for n in self.document.childNodes
-                        if n.nodeName == 'svg'][0]
-        self.layers = [LayerElement(n) for n in self.element.childNodes
-                       if n.nodeName == 'g' and
-                       n.getAttribute('inkscape:groupmode') == 'layer']
-
-class LayerElement(object):
-    def __init__(self, element):
-        self.element = element
-        self.groups = [GroupElement(n) for n in element.childNodes
-                       if n.nodeName == 'g']
-
-class GroupElement(object):
-    def __init__(self, element):
-        self.id = element.getAttribute('id')
-        self.element = element
-        self.data = parse_element_data(element)
-        self.paths = [PathElement(n) for n in element.childNodes
-                      if n.nodeName == 'path']
-        self.transform = Transform(self.element.getAttribute('transform'))
-
-class PathElement(object):
-    def __init__(self, element):
-        self.element = element
-        self.data = parse_element_data(element)
-        self.path = Path(element.getAttribute('d'))
-        self.transform = Transform(self.element.getAttribute('transform'))
