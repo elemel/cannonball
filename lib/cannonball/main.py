@@ -58,13 +58,22 @@ class CannonballWindow(pyglet.window.Window):
     def step(self, dt):
         cannonball_body = self.level.bodies['cannonball']
 
-        torque = 0
-        if self.left:
-            torque += 1
-        if self.right:
-            torque -= 1
-        if self.left and self.right:
-            cannonball_body.angularVelocity = 0
+        def sign(x):
+            return x / abs(x) if x else 0
+
+        av = cannonball_body.angularVelocity
+        max_av = config.cannonball_max_angular_velocity
+        max_aa = config.cannonball_max_angular_acceleration
+        roll = self.left - self.right
+        if roll:
+            av += roll * max_aa * dt
+            av = sign(av) * min(abs(av), max_av)
+        elif av:
+            av = sign(av) * max(abs(av) - max_aa * dt, 0)
+
+        cannonball_body.angularVelocity = av
+        cannonball_body.WakeUp()
+        
         if self.switch_cannon:
             self.switch_cannon = False
             self.cannon_index += 1
@@ -78,12 +87,6 @@ class CannonballWindow(pyglet.window.Window):
             self.cannon.fire(cannonball_body, self.level.world)
         self.camera_scale = max(self.min_camera_scale, self.camera_scale)
         self.camera_scale = min(self.camera_scale, self.max_camera_scale)
-        cannonball_body.angularVelocity = max(cannonball_body.angularVelocity,
-                                              -self.max_angular_velocity)
-        cannonball_body.angularVelocity = min(cannonball_body.angularVelocity,
-                                              self.max_angular_velocity)
-
-        cannonball_body.ApplyTorque(torque * 10000)
         velocityIterations = 10
         positionIterations = 8
         self.level.world.Step(dt, velocityIterations, positionIterations)
@@ -210,12 +213,16 @@ class CannonballWindow(pyglet.window.Window):
         shape_def.radius = 1
         shape_def.localPosition = 0, 0
         shape_def.density = 100
-        shape_def.friction = 10
+        shape_def.friction = 5
+        shape_def.restitution = 0.5
         shape_def.filter.groupIndex = -1
         shape = body.CreateShape(shape_def)
         shape.SetUserData({'color': (0, 0, 0)})
 
         body.SetMassFromShapes()
+        massData = body.massData
+        massData.I = 1e9
+        body.massData = massData
         return body
 
     def add_contact(self, point):
