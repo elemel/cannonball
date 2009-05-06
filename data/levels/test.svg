@@ -32,15 +32,15 @@
      borderopacity="1"
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.61399265"
-     inkscape:cx="490"
-     inkscape:cy="380"
-     inkscape:current-layer="g2442"
+     inkscape:zoom="0.43415837"
+     inkscape:cx="707.49237"
+     inkscape:cy="503.83864"
+     inkscape:current-layer="layer1"
      id="namedview2407"
      showgrid="false"
      inkscape:window-width="645"
      inkscape:window-height="717"
-     inkscape:window-x="-5"
+     inkscape:window-x="216"
      inkscape:window-y="0" />
   <metadata
      id="metadata2409">
@@ -70,7 +70,7 @@
     </g>
     <g
        id="start"
-       transform="translate(526.05479,-135.58267)"
+       transform="translate(-161.88817,30.910198)"
        inkscape:label="#g2393">
       <path
          d="M 307.49148,290.343 L 302.03171,287.92051 L 296.94089,291.0448 L 297.55765,285.10365 L 293.01313,281.22746 L 298.85408,279.97811 L 301.13623,274.45821 L 304.12938,279.62721 L 310.08434,280.09192 L 306.09326,284.53588 L 307.49148,290.343 z"
@@ -174,7 +174,7 @@
          inkscape:label="material: metal" />
     </g>
     <g
-       transform="matrix(0.9985835,5.3204779e-2,-5.3204779e-2,0.9985835,-337.8075,-19.359067)"
+       transform="matrix(0.9999411,1.0845045e-2,-1.0845045e-2,0.9999411,-353.14884,2.4419149)"
        id="g3203">
       <path
          style="fill:#f2ff00;fill-opacity:1;stroke:#000000;stroke-width:0.74609971;stroke-linecap:square;stroke-miterlimit:4;stroke-opacity:1"
@@ -269,6 +269,174 @@
          id="path3198"
          d="M 426.11179,248.88348 C 441.46717,236.59918 456.82255,224.31487 472.17793,212.03057 C 483.69447,228.92149 495.211,245.81241 506.72754,262.70333 C 496.74654,272.68433 486.76554,282.66532 476.78454,292.64632 C 459.89362,278.05871 443.00271,263.47109 426.11179,248.88348 z"
          style="fill:#ffda00;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+    </g>
+    <g
+       id="g2415"
+       style="fill:#ffda00;fill-opacity:1"
+       inkscape:label="static: false"
+       transform="matrix(-3.2361278e-2,-1.7976035,2.9773242,0.2224122,-2716.6447,3006.3528)"
+       inkscape:transform-center-x="24.978684"
+       inkscape:transform-center-y="-7.8142027">
+      <path
+         inkscape:label="material: stone"
+         sodipodi:nodetypes="ccccc"
+         id="path2433"
+         d="M 1611.0901,997.64664 L 1611.9148,1004.2654 L 1608.0431,1004.1625 L 1607.247,997.58734 L 1611.0901,997.64664 z"
+         style="fill:#ffda00;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.09881832px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+    </g>
+    <g
+       id="g2477"
+       style="fill:#ffda00;fill-opacity:1"
+       inkscape:label="static: false"
+       transform="matrix(-3.2361278e-2,-1.7976035,2.9773242,0.2224122,-2714.9485,2996.1331)"
+       inkscape:transform-center-x="24.978646"
+       inkscape:transform-center-y="-7.8141737">
+      <path
+         inkscape:label="material: stone"
+         sodipodi:nodetypes="ccccc"
+         id="path2479"
+         d="M 1611.0901,997.64664 L 1611.9148,1004.2654 L 1608.0431,1004.1625 L 1607.247,997.58734 L 1611.0901,997.64664 z"
+         style="fill:#ffda00;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.09881832px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+    </g>
+    <g
+       id="g2481"
+       style="fill:#ffda00;fill-opacity:1"
+       inkscape:label="static: false"
+       transform="matrix(-3.2361278e-2,-1.7976035,2.9773242,0.2224122,-2716.0875,2985.5351)"
+       inkscape:transform-center-x="24.978598"
+       inkscape:transform-center-y="-7.8142197">
+      <path
+         inkscape:label="material: stone"
+         sodipodi:nodetypes="ccccc"
+         id="path2483"
+         d="M 1611.0901,997.64664 L 1611.9148,1004.2654 L 1608.0431,1004.1625 L 1607.247,997.58734 L 1611.0901,997.64664 z"
+         style="fill:#ffda00;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.09881832px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+    </g>
+    <g
+       id="g2485"
+       style="fill:#ffda00;fill-opacity:1"
+       inkscape:label="static: false"
+       transform="matrix(-3.2361278e-2,-1.7976035,2.9773242,0.2224122,-2716.1713,2974.6264)"
+       inkscape:transform-center-x="24.978604"
+       inkscape:transform-center-y="-7.8141955">
+      <path
+         inkscape:label="material: stone"
+         sodipodi:nodetypes="ccccc"
+         id="path2487"
+         d="M 1611.0901,997.64664 L 1611.9148,1004.2654 L 1608.0431,1004.1625 L 1607.247,997.58734 L 1611.0901,997.64664 z"
+         style="fill:#ffda00;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.09881832px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+    </g>
+    <g
+       id="g2489"
+       style="fill:#ffda00;fill-opacity:1"
+       inkscape:label="static: false"
+       transform="matrix(-3.2361278e-2,-1.7976035,2.9773242,0.2224122,-2714.4752,2964.4067)"
+       inkscape:transform-center-x="24.978666"
+       inkscape:transform-center-y="-7.8141664">
+      <path
+         inkscape:label="material: stone"
+         sodipodi:nodetypes="ccccc"
+         id="path2491"
+         d="M 1611.0901,997.64664 L 1611.9148,1004.2654 L 1608.0431,1004.1625 L 1607.247,997.58734 L 1611.0901,997.64664 z"
+         style="fill:#ffda00;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.09881832px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+    </g>
+    <g
+       id="g2493"
+       style="fill:#ffda00;fill-opacity:1"
+       inkscape:label="static: false"
+       transform="matrix(-3.2361278e-2,-1.7976035,2.9773242,0.2224122,-2715.6142,2953.8087)"
+       inkscape:transform-center-x="24.978618"
+       inkscape:transform-center-y="-7.8142125">
+      <path
+         inkscape:label="material: stone"
+         sodipodi:nodetypes="ccccc"
+         id="path2495"
+         d="M 1611.0901,997.64664 L 1611.9148,1004.2654 L 1608.0431,1004.1625 L 1607.247,997.58734 L 1611.0901,997.64664 z"
+         style="fill:#ffda00;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.09881832px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+    </g>
+    <g
+       id="g2497"
+       style="fill:#ffda00;fill-opacity:1"
+       inkscape:label="static: false"
+       transform="matrix(-3.2361278e-2,-1.7976035,2.9773242,0.2224122,-2717.1747,2941.3032)"
+       inkscape:transform-center-x="24.978684"
+       inkscape:transform-center-y="-7.8142027">
+      <path
+         inkscape:label="material: stone"
+         sodipodi:nodetypes="ccccc"
+         id="path2499"
+         d="M 1611.0901,997.64664 L 1611.9148,1004.2654 L 1608.0431,1004.1625 L 1607.247,997.58734 L 1611.0901,997.64664 z"
+         style="fill:#ffda00;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.09881832px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+    </g>
+    <g
+       id="g2501"
+       style="fill:#ffda00;fill-opacity:1"
+       inkscape:label="static: false"
+       transform="matrix(-3.2361278e-2,-1.7976035,2.9773242,0.2224122,-2715.4785,2931.0835)"
+       inkscape:transform-center-x="24.978646"
+       inkscape:transform-center-y="-7.8141737">
+      <path
+         inkscape:label="material: stone"
+         sodipodi:nodetypes="ccccc"
+         id="path2503"
+         d="M 1611.0901,997.64664 L 1611.9148,1004.2654 L 1608.0431,1004.1625 L 1607.247,997.58734 L 1611.0901,997.64664 z"
+         style="fill:#ffda00;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.09881832px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+    </g>
+    <g
+       id="g2505"
+       style="fill:#ffda00;fill-opacity:1"
+       inkscape:label="static: false"
+       transform="matrix(-3.2361278e-2,-1.7976035,2.9773242,0.2224122,-2716.6175,2920.4855)"
+       inkscape:transform-center-x="24.978598"
+       inkscape:transform-center-y="-7.8142197">
+      <path
+         inkscape:label="material: stone"
+         sodipodi:nodetypes="ccccc"
+         id="path2507"
+         d="M 1611.0901,997.64664 L 1611.9148,1004.2654 L 1608.0431,1004.1625 L 1607.247,997.58734 L 1611.0901,997.64664 z"
+         style="fill:#ffda00;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.09881832px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+    </g>
+    <g
+       id="g2509"
+       style="fill:#ffda00;fill-opacity:1"
+       inkscape:label="static: false"
+       transform="matrix(-3.2361278e-2,-1.7976035,2.9773242,0.2224122,-2716.7013,2909.5768)"
+       inkscape:transform-center-x="24.978604"
+       inkscape:transform-center-y="-7.8141955">
+      <path
+         inkscape:label="material: stone"
+         sodipodi:nodetypes="ccccc"
+         id="path2511"
+         d="M 1611.0901,997.64664 L 1611.9148,1004.2654 L 1608.0431,1004.1625 L 1607.247,997.58734 L 1611.0901,997.64664 z"
+         style="fill:#ffda00;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.09881832px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+    </g>
+    <g
+       id="g2513"
+       style="fill:#ffda00;fill-opacity:1"
+       inkscape:label="static: false"
+       transform="matrix(-3.2361278e-2,-1.7976035,2.9773242,0.2224122,-2715.0052,2899.3571)"
+       inkscape:transform-center-x="24.978666"
+       inkscape:transform-center-y="-7.8141664">
+      <path
+         inkscape:label="material: stone"
+         sodipodi:nodetypes="ccccc"
+         id="path2515"
+         d="M 1611.0901,997.64664 L 1611.9148,1004.2654 L 1608.0431,1004.1625 L 1607.247,997.58734 L 1611.0901,997.64664 z"
+         style="fill:#ffda00;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.09881832px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+    </g>
+    <g
+       id="g2517"
+       style="fill:#ffda00;fill-opacity:1"
+       inkscape:label="static: false"
+       transform="matrix(-3.2361278e-2,-1.7976035,2.9773242,0.2224122,-2716.1442,2888.7591)"
+       inkscape:transform-center-x="24.978618"
+       inkscape:transform-center-y="-7.8142125">
+      <path
+         inkscape:label="material: stone"
+         sodipodi:nodetypes="ccccc"
+         id="path2519"
+         d="M 1611.0901,997.64664 L 1611.9148,1004.2654 L 1608.0431,1004.1625 L 1607.247,997.58734 L 1611.0901,997.64664 z"
+         style="fill:#ffda00;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.09881832px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
     </g>
   </g>
 </svg>
