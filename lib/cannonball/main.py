@@ -103,19 +103,30 @@ class CannonballWindow(pyglet.window.Window):
             self.on_close()
 
     def on_draw(self):
-        aabb = b2AABB()
-        aabb.lowerBound = 0, 0
-        aabb.upperBound = 1000, 1000
-        count, shapes = self.level.world.Query(aabb, 100)
-
         r, g, b = self.level.background_color
         glClearColor(r, g, b, 1)
         self.clear()
-        glPushMatrix()
-        glTranslated(self.width / 2, self.height / 2, 0)
-        glScaled(self.camera_scale, self.camera_scale, 1)
+
         camera_x, camera_y = self.camera_pos
-        glTranslated(-camera_x, -camera_y, 0)
+
+        glMatrixMode(GL_PROJECTION)
+        glLoadIdentity()
+        aspect_ratio = self.width / self.height
+        height = 30
+        width = aspect_ratio * height
+        min_x = camera_x - width / 2
+        min_y = camera_y - height / 2
+        max_x = camera_x + width / 2
+        max_y = camera_y + height / 2
+        glOrtho(min_x, max_x, min_y, max_y, -1, 1)
+        glMatrixMode(GL_MODELVIEW)
+
+        aabb = b2AABB()
+        aabb.lowerBound = min_x, min_y
+        aabb.upperBound = max_x, max_y
+        count, shapes = self.level.world.Query(aabb, 1000)
+
+        glPushMatrix()
         for shape in shapes:
             self.draw_shape(shape)
         glPopMatrix()
