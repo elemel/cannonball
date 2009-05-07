@@ -3,6 +3,7 @@ from xml.dom import minidom
 from Box2D import *
 from cannonball.svg import *
 from cannonball.material import *
+from cannonball.agent import Agent
 
 def load_textures(root):
     textures = {}
@@ -18,7 +19,7 @@ def load_textures(root):
 class Level(object):
     def __init__(self, world):
         self.world = world
-        self.bodies = {}
+        self.agents = {}
         self.background_color = 0, 0, 0
         self.materials = dict(stone=Stone(), metal=Metal())
 
@@ -52,25 +53,26 @@ def load_layers(level, root, transform):
 
 def load_body(level, node, transform):
     data = parse_element_data(node)
-    data['id'] = node.getAttribute('id')
+    agent = Agent()
+    agent.id = node.getAttribute('id')
+    agent.static = data.get('static') != 'false'
+    level.agents[agent.id] = agent
     body_def = b2BodyDef()
-    body = level.world.CreateBody(body_def)
-    body.SetUserData(data)
-    level.bodies[data['id']] = body
-    load_shapes(level, body, node, transform)
-    body.SetMassFromShapes()
+    agent.body = level.world.CreateBody(body_def)
+    agent.body.SetUserData(agent)
+    load_shapes(level, agent, node, transform)
+    agent.body.SetMassFromShapes()
 
-def load_shapes(level, body, node, transform):
+def load_shapes(level, agent, node, transform):
     transform = transform * Transform(node.getAttribute('transform'))
     if node.nodeName == 'g':
         for child in node.childNodes:
             if child.nodeName in ('g', 'path'):
-                load_shapes(level, body, child, transform)
+                load_shapes(level, agent, child, transform)
     elif node.nodeName == 'path':
-        load_shape(level, body, node, transform)
+        load_shape(level, agent, node, transform)
 
-def load_shape(level, body, node, transform):
-    body_data = body.GetUserData() or {}
+def load_shape(level, agent, node, transform):
     data = parse_element_data(node)
     color = parse_color(data.get('fill', '#ffffff'))
     material = data.get('material')
@@ -81,14 +83,14 @@ def load_shape(level, body, node, transform):
                               for x, y in reversed(subpath.points)]
         if data.get('sensor') == 'true':
             shape_def.isSensor = True
-        if body_data.get('static') != 'false':
+        if agent.static:
             density = 0
         elif material:
             density = level.materials[material].density
         else:
             density = 100
         shape_def.density = density
-        shape = body.CreateShape(shape_def)
+        shape = agent.body.CreateShape(shape_def)
         shape.SetUserData({'color': color, 'material': material})
 
 def parse_data(s):

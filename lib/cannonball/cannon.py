@@ -22,15 +22,15 @@ class GrenadeLauncher(Cannon):
     def create_grenade(self, world, position, velocity):
         body_def = b2BodyDef()
         body_def.position = position
-        body_def.isBullet = True
         body = world.CreateBody(body_def)
         body.linearVelocity = velocity
         body.SetUserData({'type': 'grenade'})
 
         shape_def = b2CircleDef()
         shape_def.radius = 0.25
-        shape_def.density = 100
-        shape_def.isSensor = True
+        shape_def.density = 200
+        shape_def.restitution = 0.5
+        shape_def.filter.groupIndex = -1
         shape = body.CreateShape(shape_def)
         shape.SetUserData({'color': (1, 0, 0)})
 
@@ -58,7 +58,6 @@ class JetEngine(Cannon):
     def create_jet_particle(self, world, position, velocity):
         body_def = b2BodyDef()
         body_def.position = position
-        body_def.isBullet = True
         body = world.CreateBody(body_def)
         body.linearVelocity = velocity
         body.SetUserData({'type': 'jet-particle'})
@@ -66,6 +65,7 @@ class JetEngine(Cannon):
         shape_def = b2CircleDef()
         shape_def.radius = 0.1
         shape_def.density = 100
+        shape_def.restitution = 0.5
         shape_def.filter.groupIndex = -1
         shape = body.CreateShape(shape_def)
         shape.SetUserData({'color': (1, 1, 1)})

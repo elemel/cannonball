@@ -25,14 +25,13 @@ class CannonballWindow(pyglet.window.Window):
         self.cannon_index = 0
         self.cannon = self.cannon_factories[self.cannon_index]()
 
-        start_body = self.level.bodies['start']
-        start_shapes = start_body.shapeList
+        start = self.level.agents['start']
+        start_shapes = start.body.shapeList
         start_pos = b2Vec2()
         for shape in start_shapes:
             start_pos += shape.GetCentroid()
         start_pos *= 1 / len(start_shapes)
-        self.level.bodies['cannonball'] = self.create_cannonball(self.level.world,
-                                                                 start_pos)
+        self.create_cannonball(self.level, start_pos)
 
         self.camera_pos = 0, 0
         self.camera_scale = 20
@@ -56,12 +55,12 @@ class CannonballWindow(pyglet.window.Window):
         pyglet.clock.schedule_interval(self.step, 1 / 60)
 
     def step(self, dt):
-        cannonball_body = self.level.bodies['cannonball']
+        cannonball = self.level.agents['cannonball']
 
         def sign(x):
             return x / abs(x) if x else 0
 
-        av = cannonball_body.angularVelocity
+        av = cannonball.body.angularVelocity
         max_av = config.cannonball_max_angular_velocity
         max_aa = config.cannonball_max_angular_acceleration
         roll = self.left - self.right
@@ -71,8 +70,8 @@ class CannonballWindow(pyglet.window.Window):
         elif av:
             av = sign(av) * max(abs(av) - max_aa * dt, 0)
 
-        cannonball_body.angularVelocity = av
-        cannonball_body.WakeUp()
+        cannonball.body.angularVelocity = av
+        cannonball.body.WakeUp()
         
         if self.switch_cannon:
             self.switch_cannon = False
@@ -84,14 +83,14 @@ class CannonballWindow(pyglet.window.Window):
         if self.zoom_out:
             self.camera_scale /= 10 ** dt
         if self.firing:
-            self.cannon.fire(cannonball_body, self.level.world)
+            self.cannon.fire(cannonball.body, self.level.world)
         self.camera_scale = max(self.min_camera_scale, self.camera_scale)
         self.camera_scale = min(self.camera_scale, self.max_camera_scale)
         velocityIterations = 10
         positionIterations = 8
         self.level.world.Step(dt, velocityIterations, positionIterations)
-        self.camera_pos = (cannonball_body.position.x,
-                           cannonball_body.position.y)
+        self.camera_pos = (cannonball.body.position.x,
+                           cannonball.body.position.y)
         for body in self.destroying:
             data = body.GetUserData() or {}
             if 'name' in data:
@@ -156,7 +155,7 @@ class CannonballWindow(pyglet.window.Window):
             glTranslated(p.x, p.y, 0)
             glScaled(circle.radius, circle.radius, 1)
             glCallList(self.circle_display_list)
-            if shape.GetBody() == self.level.bodies['cannonball']:
+            if shape.GetBody() == self.level.agents['cannonball'].body:
                 glColor3d(*self.cannon.color)
                 glTranslated(0.5, 0, 0)
                 glScaled(0.5, 0.5, 1)
@@ -214,11 +213,15 @@ class CannonballWindow(pyglet.window.Window):
         if symbol == pyglet.window.key.MINUS:
             self.zoom_out = False
 
-    def create_cannonball(self, world, position):
+    def create_cannonball(self, level, pos):
+        cannonball = Agent()
+        cannonball.id = 'cannonball'
+        level.agents['cannonball'] = cannonball
+
         body_def = b2BodyDef()
-        body_def.position = position
-        body = world.CreateBody(body_def)
-        body.SetUserData({'id': 'cannonball'})
+        body_def.position = pos
+        cannonball.body = level.world.CreateBody(body_def)
+        cannonball.body.SetUserData(cannonball)
 
         shape_def = b2CircleDef()
         shape_def.radius = 1
@@ -227,14 +230,13 @@ class CannonballWindow(pyglet.window.Window):
         shape_def.friction = 5
         shape_def.restitution = 0.5
         shape_def.filter.groupIndex = -1
-        shape = body.CreateShape(shape_def)
+        shape = cannonball.body.CreateShape(shape_def)
         shape.SetUserData({'color': (0, 0, 0)})
 
-        body.SetMassFromShapes()
-        massData = body.massData
+        cannonball.body.SetMassFromShapes()
+        massData = cannonball.body.massData
         massData.I = 1e9
-        body.massData = massData
-        return body
+        cannonball.body.massData = massData
 
     def add_contact(self, point):
         body_1 = point.shape1.GetBody()
@@ -278,7 +280,7 @@ class CannonballContactListener(b2ContactListener):
         self.window = window
 
     def Add(self, point):
-        self.window.add_contact(point)
+        pass # self.window.add_contact(point)
 
     def Persist(self, point):
         pass
