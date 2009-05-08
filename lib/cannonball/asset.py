@@ -22,6 +22,12 @@ class Level(object):
         self.agents = {}
         self.background_color = 0, 0, 0
         self.materials = dict(stone=Stone(), metal=Metal())
+        self.destroying = set()
+
+    def queue_destroy(self, agent, delay):
+        def destroy(dt):
+            self.destroying.add(agent)
+        pyglet.clock.schedule_once(destroy, delay)
 
 def load_level(path, scale=0.2):
     doc = minidom.parse(path)
