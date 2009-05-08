@@ -239,40 +239,12 @@ class CannonballWindow(pyglet.window.Window):
         cannonball.body.massData = massData
 
     def add_contact(self, point):
-        body_1 = point.shape1.GetBody()
-        body_2 = point.shape2.GetBody()
-        data_1 = body_1.GetUserData() or {}
-        data_2 = body_2.GetUserData() or {}
-        id_1 = data_1.get('id')
-        id_2 = data_2.get('id')
-        type_1 = data_1.get('type')
-        type_2 = data_2.get('type')
-        if set([id_1, id_2]) == set(['cannonball', 'goal']):
-            self.win = True
-        if (type_1 == 'grenade' and not point.shape2.isSensor and
-            id_2 != 'cannonball'):
-            self.handle_grenade_collision(point, body_1, body_2, point.normal)
-        if (type_2 == 'grenade' and not point.shape1.isSensor and
-            id_1 != 'cannonball'):
-            self.handle_grenade_collision(point, body_2, body_1, -point.normal)
-        if type_1 == 'jet-particle' and not point.shape2.isSensor:
-            self.destroying.add(body_1)
-        if type_2 == 'jet-particle' and not point.shape1.isSensor:
-            self.destroying.add(body_2)
-
-    def handle_grenade_collision(self, point, grenade_body, other_body,
-                                 normal):
-        self.destroying.add(grenade_body)
-        x, y = point.position.tuple()
-        aabb = b2AABB()
-        aabb.lowerBound = x - 1, y - 1
-        aabb.upperBound = x + 1, y + 1
-        count, shapes = self.level.world.Query(aabb, 100)
-        bodies = set(s.GetBody() for s in shapes)
-        for body in bodies:
-            offset = point.position - body.GetWorldCenter()
-            offset.Normalize()
-            body.ApplyImpulse(-offset * 5000, body.GetWorldCenter())
+        agent_1 = point.shape1.GetBody().GetUserData()
+        agent_2 = point.shape2.GetBody().GetUserData()
+        if agent_1:
+            agent_1.add_contact(point)
+        if agent_2:
+            agent_2.add_contact(point)
 
 class CannonballContactListener(b2ContactListener):
     def __init__(self, window):
@@ -280,7 +252,7 @@ class CannonballContactListener(b2ContactListener):
         self.window = window
 
     def Add(self, point):
-        pass # self.window.add_contact(point)
+        self.window.add_contact(point)
 
     def Persist(self, point):
         pass

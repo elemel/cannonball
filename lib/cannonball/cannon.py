@@ -24,7 +24,6 @@ class GrenadeLauncher(Cannon):
         body_def.position = position
         body = world.CreateBody(body_def)
         body.linearVelocity = velocity
-        body.SetUserData({'type': 'grenade'})
 
         shape_def = b2CircleDef()
         shape_def.radius = 0.25
@@ -60,7 +59,6 @@ class JetEngine(Cannon):
         body_def.position = position
         body = world.CreateBody(body_def)
         body.linearVelocity = velocity
-        body.SetUserData({'type': 'jet-particle'})
 
         shape_def = b2CircleDef()
         shape_def.radius = 0.1
