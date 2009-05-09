@@ -5,7 +5,7 @@ from pyglet.gl import *
 from Box2D import *
 from cannonball.svg import *
 from cannonball.cannon import *
-from cannonball.asset import *
+from cannonball.content import *
 from cannonball import config
 
 class CannonballWindow(pyglet.window.Window):
@@ -17,7 +17,7 @@ class CannonballWindow(pyglet.window.Window):
         glEnable(GL_BLEND)
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
 
-        self.textures = load_textures(os.path.join(config.root, 'data',
+        self.textures = load_textures(os.path.join(config.root, 'content',
                                                    'textures'))
 
         self.cannon_factories = [GrenadeLauncher, JetEngine]
