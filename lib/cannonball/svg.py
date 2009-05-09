@@ -1,7 +1,25 @@
 from __future__ import division
 
-from subprocess import Popen, PIPE
 import numpy
+
+def polygon_area(points):
+    """
+    http://local.wasp.uwa.edu.au/~pbourke/geometry/clockwise/
+    """
+    n = len(points)
+    a = 0
+    for i in xrange(n):
+        j = (i + 1) % n
+        x, y = points[i]
+        nx, ny = points[j]
+        a += x * ny - nx * y
+    return a / 2.0
+
+def point_in_triangle(p1, p2, p3, p):
+    for a, b in [(p1, p2), (p2, p3), (p3, p1)]:
+        if polygon_area((a, b, p)) < 0:
+            return False
+    return True
 
 def parse_color(s):
     return int(s[1:3], 16) / 255, int(s[3:5], 16) / 255, int(s[5:7], 16) / 255
@@ -39,21 +57,26 @@ class Path(object):
     def __repr__(self):
         return "Path('%s')" % self
 
-    def convexify(self):
-        p = Popen('convexify', stdin=PIPE, stdout=PIPE, stderr=PIPE)
-        stdin = '%d %s' % (len(self.points),
-                           ' '.join('%g %g' % (x, y) for x, y in self.points))
-        stdout, stderr = p.communicate(stdin)
-        lines = stdout.splitlines()
-        assert(int(lines[0])) + 1 == len(lines)
-        paths = []
-        for line in lines[1:]:
-            args = line.split()
-            assert int(args[0]) * 2 + 1 == len(args)
-            points = zip(args[1::2], args[2::2])
-            points = [(float(x), float(y)) for x, y in points]
-            paths.append(Path(points))
-        return paths
+    def triangulate(self):
+        points = list(self.points)
+        if polygon_area(points) < 0:
+            points.reverse()
+        triangles = []
+        while len(points) > 2:
+            n = len(points)
+            for i in xrange(n):
+                tri = points[(i-1) % n], points[i], points[(i+1) % n]
+                lp, cp, rp = tri
+                is_convex_vertice = polygon_area([lp, cp, rp]) > 0
+                if is_convex_vertice and all(not point_in_triangle(rp, cp, lp, p)
+                                             for p in points
+                                             if p not in tri):
+                    del points[i]
+                    triangles.append((lp, cp, rp))
+                    break
+            else:
+                raise RuntimeError('Cannot triangulate path')
+        return triangles
 
 class Transform(object):
     def __init__(self, arg=''):

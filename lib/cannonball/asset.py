@@ -83,10 +83,10 @@ def load_shape(level, agent, node, transform):
     color = parse_color(data.get('fill', '#ffffff'))
     material = data.get('material')
     path = Path(node.getAttribute('d'))
-    for subpath in path.convexify():
+    for triangle in path.triangulate():
+        triangle = [transform * (x, y) for x, y in reversed(triangle)]
         shape_def = b2PolygonDef()
-        shape_def.vertices = [transform * (x, y)
-                              for x, y in reversed(subpath.points)]
+        shape_def.vertices = triangle
         if data.get('sensor') == 'true':
             shape_def.isSensor = True
         if agent.static:
