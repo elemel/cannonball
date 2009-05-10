@@ -15,6 +15,8 @@ class CannonballWindow(pyglet.window.Window):
                                       caption="Cannonball")
         self.set_mouse_visible(False)
         glEnable(GL_BLEND)
+        glEnable(GL_LINE_SMOOTH)
+        glHint(GL_LINE_SMOOTH_HINT, GL_NICEST)
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
 
         self.textures = load_textures(os.path.join(config.root, 'content',
@@ -186,8 +188,16 @@ class CannonballWindow(pyglet.window.Window):
         if texture:
             glEnable(texture.target)
             glBindTexture(texture.target, texture.id)
+        vertices = list(polygon.vertices)
+        vertices.append(vertices[0])
         glBegin(GL_POLYGON)
-        for x, y in polygon.vertices:
+        for x, y in vertices:
+            if texture:
+                glTexCoord2d(x * 0.1, y * 0.1)
+            glVertex2d(x, y)
+        glEnd()
+        glBegin(GL_LINE_STRIP)
+        for x, y in vertices:
             if texture:
                 glTexCoord2d(x * 0.1, y * 0.1)
             glVertex2d(x, y)
@@ -197,7 +207,12 @@ class CannonballWindow(pyglet.window.Window):
 
     def draw_circle(self, triangle_count):
         glBegin(GL_POLYGON)
-        for i in xrange(triangle_count):
+        for i in xrange(triangle_count + 1):
+            a = 2 * math.pi * i / triangle_count
+            glVertex2d(math.cos(a), math.sin(a))
+        glEnd()
+        glBegin(GL_LINE_STRIP)
+        for i in xrange(triangle_count + 1):
             a = 2 * math.pi * i / triangle_count
             glVertex2d(math.cos(a), math.sin(a))
         glEnd()

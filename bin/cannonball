@@ -4,4 +4,4 @@ dir=`dirname $0`/..
 root=${CANNONBALL_ROOT-$dir}
 lib=$root/lib
 
-PYTHONPATH=$PYTHONPATH:$lib python -m cannonball.main $*
+PYTHONPATH=$PYTHONPATH:$lib python -O -m cannonball.main $*
