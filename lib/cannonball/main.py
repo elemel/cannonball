@@ -310,6 +310,8 @@ def main():
         print 'Usage: cannonball <level>'
         sys.exit(1)
     level = load_level(sys.argv[1])
+    agent_root = os.path.join(config.root, 'content', 'agents')
+    level.agent_factories = load_agent_factories(agent_root)
     window = CannonballWindow(level)
     pyglet.app.run()
 

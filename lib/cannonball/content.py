@@ -1,9 +1,12 @@
-import os, pyglet
-from xml.dom import minidom
-from Box2D import *
-from cannonball.svg import *
-from cannonball.material import *
 from cannonball.agent import Agent
+from cannonball.material import *
+from cannonball.svg import *
+
+from Box2D import *
+import imp
+import os
+import pyglet
+from xml.dom import minidom
 
 def load_textures(root):
     textures = {}
@@ -16,10 +19,23 @@ def load_textures(root):
                 textures[texture_name] = image.get_texture()
     return textures
 
+def load_agent_factories(root):
+    agent_factories = {}
+    for dir_path, _, file_names in os.walk(root):
+        for file_name in file_names:
+            module_name, ext = os.path.splitext(file_name)
+            if ext == '.py':
+                module_info = imp.find_module(module_name, [dir_path])
+                module = imp.load_module(module_name, *module_info)
+                cls = getattr(module, module_name)
+                agent_factories[module_name] = cls
+    return agent_factories
+
 class Level(object):
     def __init__(self, world):
         self.world = world
         self.agents = {}
+        self.agent_factories = {}
         self.background_color = 0, 0, 0
         self.materials = dict(stone=Stone(), metal=Metal())
         self.destroying = set()

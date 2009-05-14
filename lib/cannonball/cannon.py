@@ -21,7 +21,8 @@ class GrenadeLauncher(Cannon):
             self.min_fire_time = time.time() + self.cooldown
 
     def create_grenade(self, level, position, velocity):
-        grenade = Grenade(level)
+        grenade_factory = level.agent_factories['Grenade']
+        grenade = grenade_factory(level)
         
         body_def = b2BodyDef()
         body_def.position = position
