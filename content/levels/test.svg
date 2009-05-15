@@ -32,9 +32,9 @@
      borderopacity="1"
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.43415837"
-     inkscape:cx="707.49237"
-     inkscape:cy="503.83864"
+     inkscape:zoom="1.7366335"
+     inkscape:cx="707.67318"
+     inkscape:cy="209.79307"
      inkscape:current-layer="layer1"
      id="namedview2407"
      showgrid="false"
@@ -92,7 +92,7 @@
     </g>
     <g
        id="goal"
-       transform="translate(116.36488,307.97951)"
+       transform="translate(84.118582,-49.03307)"
        inkscape:label="#g2396">
       <path
          d="M 745.11984,205.12064 L 741.379,200.99697 L 735.86128,201.74081 L 738.62714,196.90877 L 736.21464,191.89097 L 741.66487,193.02828 L 745.69159,189.18327 L 746.29415,194.7182 L 751.1953,197.35966 L 746.11747,199.64312 L 745.11984,205.12064 z"
@@ -438,6 +438,28 @@
          id="path2519"
          d="M 1611.0901,997.64664 L 1611.9148,1004.2654 L 1608.0431,1004.1625 L 1607.247,997.58734 L 1611.0901,997.64664 z"
          style="fill:#ffda00;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.09881832px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+    </g>
+    <g
+       id="g2439"
+       transform="matrix(0.7053186,0,0,0.7053186,636.87302,314.6218)"
+       inkscape:label="agent: JetEngineUpgrade"
+       style="fill:#ffffff;fill-opacity:1">
+      <path
+         d="M 307.49148,290.343 L 302.03171,287.92051 L 296.94089,291.0448 L 297.55765,285.10365 L 293.01313,281.22746 L 298.85408,279.97811 L 301.13623,274.45821 L 304.12938,279.62721 L 310.08434,280.09192 L 306.09326,284.53588 L 307.49148,290.343 z"
+         inkscape:randomized="0"
+         inkscape:rounded="0"
+         inkscape:flatsided="false"
+         sodipodi:arg2="1.5043766"
+         sodipodi:arg1="0.87605805"
+         sodipodi:r2="4.4973507"
+         sodipodi:r1="8.9947014"
+         sodipodi:cy="283.43307"
+         sodipodi:cx="301.73322"
+         sodipodi:sides="5"
+         id="path2441"
+         style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-linecap:square;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         sodipodi:type="star"
+         inkscape:label="sensor: true" />
     </g>
   </g>
 </svg>

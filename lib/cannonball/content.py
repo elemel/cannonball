@@ -45,7 +45,7 @@ class Level(object):
             self.destroying.add(agent)
         pyglet.clock.schedule_once(destroy, delay)
 
-def load_level(path, scale=0.2):
+def load_level(path, agent_factories, scale=0.2):
     doc = minidom.parse(path)
     root = [n for n in doc.childNodes if n.nodeName == 'svg'][0]
     named_view = root.getElementsByTagName('sodipodi:namedview')[0]
@@ -59,6 +59,7 @@ def load_level(path, scale=0.2):
     doSleep = True
     world = b2World(aabb, gravity, doSleep)
     level = Level(world)
+    level.agent_factories = agent_factories
     level.background_color = page_color
     transform = Transform('translate(0 %g) scale(%g) scale(1 -1)' %
                           (height, scale))
@@ -75,7 +76,11 @@ def load_layers(level, root, transform):
 
 def load_body(level, node, transform):
     data = parse_element_data(node)
-    agent = Agent()
+    if data.get('agent'):
+        agent_factory = level.agent_factories[data['agent']]
+        agent = agent_factory(level)
+    else:
+        agent = Agent()
     agent.id = node.getAttribute('id')
     agent.static = data.get('static') != 'false'
     level.agents[agent.id] = agent
