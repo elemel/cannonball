@@ -44,21 +44,6 @@ class JetEngine(Cannon):
             self.min_fire_time = time.time() + self.cooldown
 
     def create_jet_particle(self, level, position, velocity):
-        agent = Agent()
-        level.queue_destroy(agent, 0.5 + 0.5 * random.random())
-
-        body_def = b2BodyDef()
-        body_def.position = position
-        agent.body = level.world.CreateBody(body_def)
-        agent.body.userData = agent
-        agent.body.linearVelocity = velocity
-
-        shape_def = b2CircleDef()
-        shape_def.radius = 0.1
-        shape_def.density = 100
-        shape_def.restitution = 0.5
-        shape_def.filter.groupIndex = -1
-        shape = agent.body.CreateShape(shape_def)
-        shape.SetUserData({'color': (1, 1, 1)})
-
-        agent.body.SetMassFromShapes()
+        factory = level.agent_factories['JetParticle']
+        agent = factory(level)
+        agent.create_body(position, velocity)
