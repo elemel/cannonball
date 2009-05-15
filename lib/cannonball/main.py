@@ -43,7 +43,6 @@ class CannonballWindow(pyglet.window.Window):
         self.switch_cannon = False
         self.firing = False
         self.zoom_in = self.zoom_out = False
-        self.win = False
         self.contacts = set()
 
         self.contact_listener = CannonballContactListener(self)
@@ -98,9 +97,6 @@ class CannonballWindow(pyglet.window.Window):
         self.contacts.clear()
         self.level.world.Step(dt, velocityIterations, positionIterations)
         for agent_1, agent_2 in self.contacts:
-            if (set(a.id for a in (agent_1, agent_2)) ==
-                set(['cannonball', 'goal'])):
-                self.win = True
             agent_1.collide(agent_2)
             agent_2.collide(agent_1)
         if cannonball:
@@ -113,7 +109,7 @@ class CannonballWindow(pyglet.window.Window):
                 if agent.id:
                     del self.level.agents[agent.id]
         self.level.destroying.clear()
-        if self.win:
+        if cannonball and cannonball.won:
             print 'You Win'
             self.on_close()
         elif not cannonball:

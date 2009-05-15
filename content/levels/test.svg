@@ -34,7 +34,7 @@
      inkscape:pageshadow="2"
      inkscape:zoom="1.7366335"
      inkscape:cx="707.67318"
-     inkscape:cy="209.79307"
+     inkscape:cy="611.79594"
      inkscape:current-layer="layer1"
      id="namedview2407"
      showgrid="false"
@@ -93,7 +93,7 @@
     <g
        id="goal"
        transform="translate(84.118582,-49.03307)"
-       inkscape:label="#g2396">
+       inkscape:label="agent: Goal">
       <path
          d="M 745.11984,205.12064 L 741.379,200.99697 L 735.86128,201.74081 L 738.62714,196.90877 L 736.21464,191.89097 L 741.66487,193.02828 L 745.69159,189.18327 L 746.29415,194.7182 L 751.1953,197.35966 L 746.11747,199.64312 L 745.11984,205.12064 z"
          inkscape:randomized="0"

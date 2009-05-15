@@ -8,6 +8,8 @@ class Cannonball(Agent):
         self.level = level
         self.id = 'cannonball'
         self.level.agents[self.id] = self
+        self.won = False
+        self.lost = False
 
     def create_body(self, position):
         body_def = b2BodyDef()
