@@ -13,6 +13,24 @@ class Grenade(Agent):
             for _ in xrange(20):
                 self.create_shrapnel()
 
+    def create_body(self, position, velocity):
+        body_def = b2BodyDef()
+        body_def.position = position
+        self.body = self.level.world.CreateBody(body_def)
+        self.body.userData = self
+        self.body.linearVelocity = velocity
+        self.create_shapes()
+        self.body.SetMassFromShapes()
+
+    def create_shapes(self):
+        shape_def = b2CircleDef()
+        shape_def.radius = 0.25
+        shape_def.density = 200
+        shape_def.restitution = 0.5
+        shape_def.filter.groupIndex = -1
+        shape = self.body.CreateShape(shape_def)
+        shape.SetUserData({'color': (1, 0, 0)})
+
     def create_shrapnel(self):
         agent = Agent()
         self.level.queue_destroy(agent, 0.5 + 0.5 * random.random())

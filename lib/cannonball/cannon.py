@@ -23,22 +23,7 @@ class GrenadeLauncher(Cannon):
     def create_grenade(self, level, position, velocity):
         grenade_factory = level.agent_factories['Grenade']
         grenade = grenade_factory(level)
-        
-        body_def = b2BodyDef()
-        body_def.position = position
-        grenade.body = level.world.CreateBody(body_def)
-        grenade.body.userData = grenade
-        grenade.body.linearVelocity = velocity
-
-        shape_def = b2CircleDef()
-        shape_def.radius = 0.25
-        shape_def.density = 200
-        shape_def.restitution = 0.5
-        shape_def.filter.groupIndex = -1
-        shape = grenade.body.CreateShape(shape_def)
-        shape.SetUserData({'color': (1, 0, 0)})
-
-        grenade.body.SetMassFromShapes()
+        grenade.create_body(position, velocity)
 
 class JetEngine(Cannon):
     color = 1, 1, 1
