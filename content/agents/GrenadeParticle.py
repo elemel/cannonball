@@ -14,8 +14,8 @@ class GrenadeParticle(Agent):
         body_def.position = position
         self.body = self.level.world.CreateBody(body_def)
         self.body.userData = self
-        self.body.linearVelocity = (100 * (random.random() - 0.5),
-                                    100 * (random.random() - 0.5))
+        self.body.linearVelocity = (50 * (random.random() - 0.5),
+                                    50 * (random.random() - 0.5))
         self.create_shapes()
         self.body.SetMassFromShapes()
 

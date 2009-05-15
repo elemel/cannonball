@@ -12,14 +12,15 @@ class Cannonball(Agent):
         self.won = False
         self.lost = False
 
-        self.cannon_factories = [GrenadeLauncher, JetEngine]
+        self.cannon_factories = [GrenadeLauncher]
         self.cannon_index = 0
         self.cannon = self.cannon_factories[self.cannon_index]()
 
     def switch_cannon(self):
-        self.cannon_index += 1
-        self.cannon_index %= len(self.cannon_factories)
-        self.cannon = self.cannon_factories[self.cannon_index]()
+        if len(self.cannon_factories) >= 2:
+            self.cannon_index += 1
+            self.cannon_index %= len(self.cannon_factories)
+            self.cannon = self.cannon_factories[self.cannon_index]()
 
     def create_body(self, position):
         body_def = b2BodyDef()
