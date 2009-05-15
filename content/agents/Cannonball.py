@@ -1,6 +1,7 @@
 from Box2D import *
 import random
 from cannonball.agent import Agent
+from cannonball.cannon import *
 
 class Cannonball(Agent):
     def __init__(self, level):
@@ -10,6 +11,15 @@ class Cannonball(Agent):
         self.level.agents[self.id] = self
         self.won = False
         self.lost = False
+
+        self.cannon_factories = [GrenadeLauncher, JetEngine]
+        self.cannon_index = 0
+        self.cannon = self.cannon_factories[self.cannon_index]()
+
+    def switch_cannon(self):
+        self.cannon_index += 1
+        self.cannon_index %= len(self.cannon_factories)
+        self.cannon = self.cannon_factories[self.cannon_index]()
 
     def create_body(self, position):
         body_def = b2BodyDef()

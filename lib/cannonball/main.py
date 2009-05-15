@@ -22,10 +22,6 @@ class CannonballWindow(pyglet.window.Window):
         self.textures = load_textures(os.path.join(config.root, 'content',
                                                    'textures'))
 
-        self.cannon_factories = [GrenadeLauncher, JetEngine]
-        self.cannon_index = 0
-        self.cannon = self.cannon_factories[self.cannon_index]()
-
         start = self.level.agents['start']
         start_shapes = start.body.shapeList
         start_position = b2Vec2()
@@ -80,15 +76,13 @@ class CannonballWindow(pyglet.window.Window):
         
             if self.switch_cannon:
                 self.switch_cannon = False
-                self.cannon_index += 1
-                self.cannon_index %= len(self.cannon_factories)
-                self.cannon = self.cannon_factories[self.cannon_index]()
+                cannonball.switch_cannon()
             if self.zoom_in:
                 self.camera_scale *= 10 ** dt
             if self.zoom_out:
                 self.camera_scale /= 10 ** dt
             if self.firing:
-                self.cannon.fire(cannonball, self.level)
+                cannonball.cannon.fire(cannonball, self.level)
 
         self.camera_scale = max(self.min_camera_scale, self.camera_scale)
         self.camera_scale = min(self.camera_scale, self.max_camera_scale)
@@ -174,7 +168,8 @@ class CannonballWindow(pyglet.window.Window):
             glScaled(circle.radius, circle.radius, 1)
             glCallList(self.circle_display_list)
             if shape.GetBody().userData.id == 'cannonball':
-                glColor3d(*self.cannon.color)
+                cannonball = shape.GetBody().userData
+                glColor3d(*cannonball.cannon.color)
                 glTranslated(0.5, 0, 0)
                 glScaled(0.5, 0.5, 1)
                 glCallList(self.circle_display_list)
