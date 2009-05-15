@@ -28,11 +28,11 @@ class CannonballWindow(pyglet.window.Window):
 
         start = self.level.agents['start']
         start_shapes = start.body.shapeList
-        start_pos = b2Vec2()
+        start_position = b2Vec2()
         for shape in start_shapes:
-            start_pos += shape.GetCentroid()
-        start_pos *= 1 / len(start_shapes)
-        self.create_cannonball(self.level, start_pos)
+            start_position += shape.GetCentroid()
+        start_position *= 1 / len(start_shapes)
+        self.create_cannonball(start_position)
 
         self.camera_pos = 0, 0
         self.camera_scale = 20
@@ -248,30 +248,10 @@ class CannonballWindow(pyglet.window.Window):
         if symbol == pyglet.window.key.MINUS:
             self.zoom_out = False
 
-    def create_cannonball(self, level, pos):
-        cannonball = Agent()
-        cannonball.id = 'cannonball'
-        level.agents['cannonball'] = cannonball
-
-        body_def = b2BodyDef()
-        body_def.position = pos
-        cannonball.body = level.world.CreateBody(body_def)
-        cannonball.body.SetUserData(cannonball)
-
-        shape_def = b2CircleDef()
-        shape_def.radius = 1
-        shape_def.localPosition = 0, 0
-        shape_def.density = 100
-        shape_def.friction = 5
-        shape_def.restitution = 0.5
-        shape_def.filter.groupIndex = -1
-        shape = cannonball.body.CreateShape(shape_def)
-        shape.SetUserData({'color': (0, 0, 0)})
-
-        cannonball.body.SetMassFromShapes()
-        massData = cannonball.body.massData
-        massData.I = 1e9
-        cannonball.body.massData = massData
+    def create_cannonball(self, position):
+        factory = self.level.agent_factories['Cannonball']
+        agent = factory(self.level)
+        agent.create_body(position)
 
     def add_contact(self, point):
         agent_1 = point.shape1.GetBody().GetUserData()
