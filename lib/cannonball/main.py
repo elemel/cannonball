@@ -34,10 +34,6 @@ class CannonballWindow(pyglet.window.Window):
         self.camera_scale = 20
         self.min_camera_scale = 10
         self.max_camera_scale = 50
-        self.max_angular_velocity = 20
-        self.left = self.right = False
-        self.switch_cannon = False
-        self.firing = False
         self.zoom_in = self.zoom_out = False
         self.contacts = set()
 
@@ -66,33 +62,14 @@ class CannonballWindow(pyglet.window.Window):
     def step_physics(self, dt):
         cannonball = self.level.agents.get('cannonball')
 
-        def sign(x):
-            return x / abs(x) if x else 0
-
         if cannonball:
-            av = cannonball.body.angularVelocity
-            max_av = config.cannonball_max_angular_velocity
-            max_aa = config.cannonball_max_angular_acceleration
-            roll = self.left - self.right
-            if roll:
-                av += roll * max_aa * dt
-                av = sign(av) * min(abs(av), max_av)
-            elif av:
-                av = sign(av) * max(abs(av) - max_aa * dt, 0)
+            cannonball.step(dt)
 
-            cannonball.body.angularVelocity = av
-            cannonball.body.WakeUp()
-        
-            if self.switch_cannon:
-                self.switch_cannon = False
-                cannonball.switch_cannon()
-            if self.zoom_in:
-                self.camera_scale *= 10 ** dt
-            if self.zoom_out:
-                self.camera_scale /= 10 ** dt
-            if self.firing:
-                cannonball.cannon.fire(cannonball, self.level)
-
+        if self.zoom_in:
+            self.camera_scale *= 10 ** dt
+        if self.zoom_out:
+            self.camera_scale /= 10 ** dt
+ 
         self.camera_scale = max(self.min_camera_scale, self.camera_scale)
         self.camera_scale = min(self.camera_scale, self.max_camera_scale)
         velocityIterations = 10
@@ -223,26 +200,30 @@ class CannonballWindow(pyglet.window.Window):
     def on_key_press(self, symbol, modifiers):
         if symbol == pyglet.window.key.ESCAPE:
             self.on_close()
-        if symbol == pyglet.window.key.LEFT:
-            self.left = True
-        if symbol == pyglet.window.key.RIGHT:
-            self.right = True
-        if symbol == pyglet.window.key.TAB:
-            self.switch_cannon = True
-        if symbol == pyglet.window.key.SPACE:
-            self.firing = True
+        cannonball = self.level.agents.get('cannonball')
+        if cannonball:
+            if symbol == pyglet.window.key.LEFT:
+                cannonball.rolling_left = True
+            if symbol == pyglet.window.key.RIGHT:
+                cannonball.rolling_right = True
+            if symbol == pyglet.window.key.TAB:
+                cannonball.switching_cannon = True
+            if symbol == pyglet.window.key.SPACE:
+                cannonball.firing = True
         if symbol == pyglet.window.key.PLUS:
             self.zoom_in = True
         if symbol == pyglet.window.key.MINUS:
             self.zoom_out = True
 
     def on_key_release(self, symbol, modifiers):
-        if symbol == pyglet.window.key.LEFT:
-            self.left = False
-        if symbol == pyglet.window.key.RIGHT:
-            self.right = False
-        if symbol == pyglet.window.key.SPACE:
-            self.firing = False
+        cannonball = self.level.agents.get('cannonball')
+        if cannonball:
+            if symbol == pyglet.window.key.LEFT:
+                cannonball.rolling_left = False
+            if symbol == pyglet.window.key.RIGHT:
+                cannonball.rolling_right = False
+            if symbol == pyglet.window.key.SPACE:
+                cannonball.firing = False
         if symbol == pyglet.window.key.PLUS:
             self.zoom_in = False
         if symbol == pyglet.window.key.MINUS:

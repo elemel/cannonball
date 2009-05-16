@@ -3,7 +3,13 @@ import random
 from cannonball.agent import Agent
 from cannonball.cannon import *
 
+def sign(x):
+    return x / abs(x) if x else 0
+
 class Cannonball(Agent):
+    max_angular_velocity = 15
+    max_angular_acceleration = 10
+
     def __init__(self, level):
         super(Cannonball, self).__init__()
         self.level = level
@@ -15,6 +21,29 @@ class Cannonball(Agent):
         self.cannon_factories = [GrenadeLauncher]
         self.cannon_index = 0
         self.cannon = self.cannon_factories[self.cannon_index]()
+
+        self.rolling_left = False
+        self.rolling_right = False
+        self.switching_cannon = False
+        self.firing = False
+
+    def step(self, dt):
+        av = self.body.angularVelocity
+        roll = self.rolling_left - self.rolling_right
+        if roll:
+            av += roll * self.max_angular_acceleration * dt
+            av = sign(av) * min(abs(av), self.max_angular_velocity)
+        elif av:
+            av = sign(av) * max(abs(av) - self.max_angular_acceleration * dt,
+                                0)
+        self.body.angularVelocity = av
+        self.body.WakeUp()
+
+        if self.switching_cannon:
+            self.switching_cannon = False
+            self.switch_cannon()
+        if self.firing:
+            self.cannon.fire(self, self.level)
 
     def switch_cannon(self):
         if len(self.cannon_factories) >= 2:
