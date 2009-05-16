@@ -35,13 +35,6 @@ class CannonballWindow(pyglet.window.Window):
         textures = load_textures(texture_root)
         self.camera = Camera(self, self.level, textures)
 
-        self.contacts = set()
-        self.contact_listener = CannonballContactListener(self)
-        self.level.world.SetContactListener(self.contact_listener)
-
-        self.boundary_listener = CannonballBoundaryListener(self)
-        self.level.world.SetBoundaryListener(self.boundary_listener)
-
         self.time = 0
         self.physics_time = 0
         self.physics_dt = 1 / 60 
@@ -51,34 +44,18 @@ class CannonballWindow(pyglet.window.Window):
         self.time += dt
         while self.physics_time + self.physics_dt <= self.time:
             self.physics_time += self.physics_dt
-            self.step_physics(self.physics_dt)
-    
-    def step_physics(self, dt):
-        cannonball = self.level.agents.get('cannonball')
-        if cannonball:
-            cannonball.step(dt)
-        self.camera.step(dt)
-
-        velocityIterations = 10
-        positionIterations = 8
-        self.contacts.clear()
-        self.level.world.Step(dt, velocityIterations, positionIterations)
-        for agent_1, agent_2 in self.contacts:
-            agent_1.collide(agent_2)
-            agent_2.collide(agent_1)
-        for agent in self.level.destroying:
-            if agent.body:
-                self.level.world.DestroyBody(agent.body)
-                agent.body = None
-                if agent.id:
-                    del self.level.agents[agent.id]
-        self.level.destroying.clear()
-        if cannonball and cannonball.won:
-            print 'You Win'
-            self.on_close()
-        elif not cannonball:
-            print 'Game Over'
-            self.on_close()
+            self.camera.step(self.physics_dt)
+            self.level.step(self.physics_dt)
+ 
+            cannonball = self.level.agents.get('cannonball')
+            if cannonball and cannonball.won:
+                print 'You Win'
+                self.on_close()
+                break
+            elif not cannonball:
+                print 'Game Over'
+                self.on_close()
+                break
 
     def on_draw(self):
         r, g, b = self.level.background_color
@@ -107,38 +84,6 @@ class CannonballWindow(pyglet.window.Window):
         factory = self.level.agent_factories['Cannonball']
         agent = factory(self.level)
         agent.create_body(position)
-
-    def add_contact(self, point):
-        agent_1 = point.shape1.GetBody().GetUserData()
-        agent_2 = point.shape2.GetBody().GetUserData()
-        if agent_1 and agent_2:
-            self.contacts.add((agent_1, agent_2))
-
-class CannonballContactListener(b2ContactListener):
-    def __init__(self, window):
-        super(CannonballContactListener, self).__init__() 
-        self.window = window
-
-    def Add(self, point):
-        self.window.add_contact(point)
-
-    def Persist(self, point):
-        pass
-
-    def Remove(self, point):
-        pass
-
-    def Result(self, point):
-        pass
-
-class CannonballBoundaryListener(b2BoundaryListener):
-    def __init__(self, window):
-        super(CannonballBoundaryListener, self).__init__()
-        self.window = window
-
-    def Violation(self, body):
-        agent = body.userData
-        self.window.level.destroying.add(agent)
  
 def main():
     if len(sys.argv) != 2:
