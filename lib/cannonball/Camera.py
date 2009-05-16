@@ -25,7 +25,6 @@ class Camera(object):
         self.draw_circle(256)
         glEndList()
 
-
     def step(self, dt):
         if self.zooming_in:
             self.scale *= 10 ** dt
@@ -94,7 +93,11 @@ class Camera(object):
             glCallList(self.circle_display_list)
             if shape.GetBody().userData.id == 'cannonball':
                 cannonball = shape.GetBody().userData
-                glColor3d(*cannonball.cannon.color)
+                if cannonball.cannon:
+                    color = cannonball.cannon.color
+                else:
+                    color = 0.5, 0.5, 0.5
+                glColor3d(*color)
                 glTranslated(0.5, 0, 0)
                 glScaled(0.5, 0.5, 1)
                 glCallList(self.circle_display_list)

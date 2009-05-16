@@ -1,7 +1,6 @@
 from __future__ import division
 
 from cannonball.svg import *
-from cannonball.cannon import *
 from cannonball.content import *
 from cannonball import config
 from cannonball.Camera import *

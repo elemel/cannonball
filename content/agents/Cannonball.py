@@ -1,5 +1,4 @@
 from cannonball.agent import Agent
-from cannonball.cannon import *
 
 from Box2D import *
 import pyglet
@@ -20,9 +19,9 @@ class Cannonball(Agent):
         self.won = False
         self.lost = False
 
-        self.cannon_factories = [GrenadeLauncher]
-        self.cannon_index = 0
-        self.cannon = self.cannon_factories[self.cannon_index]()
+        self.cannon_factories = []
+        self.cannon_index = -1
+        self.cannon = None
 
         self.rolling_left = False
         self.rolling_right = False
@@ -44,14 +43,13 @@ class Cannonball(Agent):
         if self.switching_cannon:
             self.switching_cannon = False
             self.switch_cannon()
-        if self.firing:
+        if self.firing and self.cannon:
             self.cannon.fire(self, self.level)
 
     def switch_cannon(self):
-        if len(self.cannon_factories) >= 2:
-            self.cannon_index += 1
-            self.cannon_index %= len(self.cannon_factories)
-            self.cannon = self.cannon_factories[self.cannon_index]()
+        self.cannon_index += 1
+        self.cannon_index %= len(self.cannon_factories)
+        self.cannon = self.cannon_factories[self.cannon_index]()
 
     def create_body(self, position):
         body_def = b2BodyDef()
@@ -73,7 +71,6 @@ class Cannonball(Agent):
         shape_def.filter.groupIndex = -1
         shape = self.body.CreateShape(shape_def)
         shape.SetUserData({'color': (0, 0, 0)})
-
 
     def on_key_press(self, symbol, modifiers):
         if symbol == pyglet.window.key.LEFT:
