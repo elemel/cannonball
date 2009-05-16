@@ -52,9 +52,18 @@ class CannonballWindow(pyglet.window.Window):
         self.draw_circle(256)
         glEndList()
 
-        pyglet.clock.schedule_interval(self.step, 1 / 60)
+        self.time = 0
+        self.physics_time = 0
+        self.physics_dt = 1 / 60 
+        pyglet.clock.schedule_interval(self.step, self.physics_dt)
 
     def step(self, dt):
+        self.time += dt
+        while self.physics_time + self.physics_dt <= self.time:
+            self.physics_time += self.physics_dt
+            self.step_physics(self.physics_dt)
+    
+    def step_physics(self, dt):
         cannonball = self.level.agents.get('cannonball')
 
         def sign(x):
