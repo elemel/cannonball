@@ -200,34 +200,24 @@ class CannonballWindow(pyglet.window.Window):
     def on_key_press(self, symbol, modifiers):
         if symbol == pyglet.window.key.ESCAPE:
             self.on_close()
-        cannonball = self.level.agents.get('cannonball')
-        if cannonball:
-            if symbol == pyglet.window.key.LEFT:
-                cannonball.rolling_left = True
-            if symbol == pyglet.window.key.RIGHT:
-                cannonball.rolling_right = True
-            if symbol == pyglet.window.key.TAB:
-                cannonball.switching_cannon = True
-            if symbol == pyglet.window.key.SPACE:
-                cannonball.firing = True
         if symbol == pyglet.window.key.PLUS:
             self.zoom_in = True
         if symbol == pyglet.window.key.MINUS:
             self.zoom_out = True
 
-    def on_key_release(self, symbol, modifiers):
         cannonball = self.level.agents.get('cannonball')
         if cannonball:
-            if symbol == pyglet.window.key.LEFT:
-                cannonball.rolling_left = False
-            if symbol == pyglet.window.key.RIGHT:
-                cannonball.rolling_right = False
-            if symbol == pyglet.window.key.SPACE:
-                cannonball.firing = False
+            cannonball.on_key_press(symbol, modifiers)
+
+    def on_key_release(self, symbol, modifiers):
         if symbol == pyglet.window.key.PLUS:
             self.zoom_in = False
         if symbol == pyglet.window.key.MINUS:
             self.zoom_out = False
+
+        cannonball = self.level.agents.get('cannonball')
+        if cannonball:
+            cannonball.on_key_release(symbol, modifiers)
 
     def create_cannonball(self, position):
         factory = self.level.agent_factories['Cannonball']

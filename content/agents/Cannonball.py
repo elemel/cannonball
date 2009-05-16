@@ -1,7 +1,9 @@
-from Box2D import *
-import random
 from cannonball.agent import Agent
 from cannonball.cannon import *
+
+from Box2D import *
+import pyglet
+import random
 
 def sign(x):
     return x / abs(x) if x else 0
@@ -71,3 +73,22 @@ class Cannonball(Agent):
         shape_def.filter.groupIndex = -1
         shape = self.body.CreateShape(shape_def)
         shape.SetUserData({'color': (0, 0, 0)})
+
+
+    def on_key_press(self, symbol, modifiers):
+        if symbol == pyglet.window.key.LEFT:
+            self.rolling_left = True
+        if symbol == pyglet.window.key.RIGHT:
+            self.rolling_right = True
+        if symbol == pyglet.window.key.TAB:
+            self.switching_cannon = True
+        if symbol == pyglet.window.key.SPACE:
+            self.firing = True
+
+    def on_key_release(self, symbol, modifiers):
+        if symbol == pyglet.window.key.LEFT:
+            self.rolling_left = False
+        if symbol == pyglet.window.key.RIGHT:
+            self.rolling_right = False
+        if symbol == pyglet.window.key.SPACE:
+            self.firing = False
