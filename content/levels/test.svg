@@ -32,9 +32,9 @@
      borderopacity="1"
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.43415838"
-     inkscape:cx="707.67318"
-     inkscape:cy="287.51181"
+     inkscape:zoom="0.5"
+     inkscape:cx="592.10783"
+     inkscape:cy="195.37954"
      inkscape:current-layer="layer1"
      id="namedview2407"
      showgrid="false"
@@ -394,48 +394,6 @@
          inkscape:label="material: stone"
          sodipodi:nodetypes="ccccc"
          id="path2507"
-         d="M 1611.0901,997.64664 L 1611.9148,1004.2654 L 1608.0431,1004.1625 L 1607.247,997.58734 L 1611.0901,997.64664 z"
-         style="fill:#ffda00;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.09881832px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
-    </g>
-    <g
-       id="g2509"
-       style="fill:#ffda00;fill-opacity:1"
-       inkscape:label="static: false"
-       transform="matrix(-3.2361278e-2,-1.7976035,2.9773242,0.2224122,-2716.7013,2909.5768)"
-       inkscape:transform-center-x="24.978604"
-       inkscape:transform-center-y="-7.8141955">
-      <path
-         inkscape:label="material: stone"
-         sodipodi:nodetypes="ccccc"
-         id="path2511"
-         d="M 1611.0901,997.64664 L 1611.9148,1004.2654 L 1608.0431,1004.1625 L 1607.247,997.58734 L 1611.0901,997.64664 z"
-         style="fill:#ffda00;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.09881832px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
-    </g>
-    <g
-       id="g2513"
-       style="fill:#ffda00;fill-opacity:1"
-       inkscape:label="static: false"
-       transform="matrix(-3.2361278e-2,-1.7976035,2.9773242,0.2224122,-2715.0052,2899.3571)"
-       inkscape:transform-center-x="24.978666"
-       inkscape:transform-center-y="-7.8141664">
-      <path
-         inkscape:label="material: stone"
-         sodipodi:nodetypes="ccccc"
-         id="path2515"
-         d="M 1611.0901,997.64664 L 1611.9148,1004.2654 L 1608.0431,1004.1625 L 1607.247,997.58734 L 1611.0901,997.64664 z"
-         style="fill:#ffda00;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.09881832px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
-    </g>
-    <g
-       id="g2517"
-       style="fill:#ffda00;fill-opacity:1"
-       inkscape:label="static: false"
-       transform="matrix(-3.2361278e-2,-1.7976035,2.9773242,0.2224122,-2716.1442,2888.7591)"
-       inkscape:transform-center-x="24.978618"
-       inkscape:transform-center-y="-7.8142125">
-      <path
-         inkscape:label="material: stone"
-         sodipodi:nodetypes="ccccc"
-         id="path2519"
          d="M 1611.0901,997.64664 L 1611.9148,1004.2654 L 1608.0431,1004.1625 L 1607.247,997.58734 L 1611.0901,997.64664 z"
          style="fill:#ffda00;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.09881832px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
     </g>

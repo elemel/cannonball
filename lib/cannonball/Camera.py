@@ -50,13 +50,27 @@ class Camera(object):
         min_y = y - height / 2
         max_x = x + width / 2
         max_y = y + height / 2
+        world_aabb = self.level.world.GetWorldAABB()
+        if min_x < world_aabb.lowerBound.x:
+            max_x += world_aabb.lowerBound.x - min_x
+            min_x = world_aabb.lowerBound.x
+        elif max_x > world_aabb.upperBound.x:
+            min_x -= max_x - world_aabb.upperBound.x
+            max_x = world_aabb.upperBound.x
+        if min_y < world_aabb.lowerBound.y:
+            max_y += world_aabb.lowerBound.y - min_y
+            min_y = world_aabb.lowerBound.y
+        elif max_y > world_aabb.upperBound.y:
+            min_y -= max_y - world_aabb.upperBound.y
+            max_y = world_aabb.upperBound.y
+
         glOrtho(min_x, max_x, min_y, max_y, -1, 1)
         glMatrixMode(GL_MODELVIEW)
 
-        aabb = b2AABB()
-        aabb.lowerBound = min_x, min_y
-        aabb.upperBound = max_x, max_y
-        count, shapes = self.level.world.Query(aabb, 1000)
+        query_aabb = b2AABB()
+        query_aabb.lowerBound = min_x, min_y
+        query_aabb.upperBound = max_x, max_y
+        count, shapes = self.level.world.Query(query_aabb, 1000)
 
         def key(shape):
             return id(shape.GetBody())
