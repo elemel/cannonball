@@ -19,9 +19,9 @@ class Cannonball(Agent):
         self.won = False
         self.lost = False
 
-        self.cannon_factories = []
+        self.cannon_dict = {}
+        self.cannon_list = []
         self.cannon_index = -1
-        self.cannon = None
 
         self.rolling_left = False
         self.rolling_right = False
@@ -43,13 +43,23 @@ class Cannonball(Agent):
         if self.switching_cannon:
             self.switching_cannon = False
             self.switch_cannon()
-        if self.firing and self.cannon:
-            self.cannon.fire(self, self.level)
+        for cannon in self.cannon_list:
+            cannon.step(dt)
+
+    @property
+    def cannon(self):
+        if self.cannon_list:
+            return self.cannon_list[self.cannon_index % len(self.cannon_list)]
+        else:
+            return None
+
+    def add_cannon(self, name, cannon):
+        self.cannon_dict[name] = cannon
+        self.cannon_list.append(cannon)
+        self.cannon_index = len(self.cannon_list) - 1
 
     def switch_cannon(self):
         self.cannon_index += 1
-        self.cannon_index %= len(self.cannon_factories)
-        self.cannon = self.cannon_factories[self.cannon_index]()
 
     def create_body(self, position):
         body_def = b2BodyDef()

@@ -12,27 +12,35 @@ class JetEngineUpgrade(Agent):
     def collide(self, other):
         if not self in self.level.destroying and other.id == 'cannonball':
             self.level.destroying.add(self)
-            other.cannon_factories.append(JetEngine)
+            other.add_cannon('JetEngine', JetEngine(other))
 
 class JetEngine(object):
+    max_cooldown = 0.02
     color = 1, 1, 1
-    cooldown = 0.01
 
-    def __init__(self):
-        self.min_fire_time = time.time() + self.cooldown
+    def __init__(self, cannonball):
+        self.cannonball = cannonball
+        self.cooldown = 0
 
-    def fire(self, cannonball, level):
-        while self.min_fire_time < time.time():
-            a = cannonball.body.angle
-            v = b2Vec2(math.cos(a), math.sin(a))
-            cannonball.body.ApplyImpulse(-v * 200,
-                                         cannonball.body.GetWorldCenter())
-            v += b2Vec2(random.random() - 0.5, random.random() - 0.5)
-            v = cannonball.body.linearVelocity + 5 * v
-            self.create_jet_particle(level, cannonball.body.position, v)
-            self.min_fire_time = time.time() + self.cooldown
+    def step(self, dt):
+        self.cooldown -= dt
+        if self.cannonball.firing and self.cannonball.cannon is self:
+            while self.cooldown <= 0:
+                self.cooldown += self.max_cooldown
+                self.create_jet_particle()
+        self.cooldown = max(self.cooldown, 0)
 
-    def create_jet_particle(self, level, position, velocity):
+    def create_jet_particle(self):
+        level = self.cannonball.level
+        angle = self.cannonball.body.angle
+        unit = b2Vec2(math.cos(angle), math.sin(angle))
+        position = self.cannonball.body.position
+        linear_velocity = self.cannonball.body.linearVelocity + 5 * unit
+        linear_velocity += 5 * b2Vec2(random.random() - 0.5,
+                                      random.random() - 0.5)
         factory = level.agent_factories['JetParticle']
         agent = factory(level)
-        agent.create_body(position, velocity)
+        agent.create_body(position, linear_velocity)
+
+        self.cannonball.body.ApplyImpulse(-unit * 200,
+                                          self.cannonball.body.GetWorldCenter())
