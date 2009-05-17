@@ -47,8 +47,8 @@ def load_level(path, agent_factories, scale=0.2):
     level = Level(world)
     level.agent_factories = agent_factories
     level.background_color = page_color
-    transform = Transform('translate(0 %g) scale(%g) scale(1 -1)' %
-                          (height, scale))
+    transform = parse_transform('translate(0 %g) scale(%g) scale(1 -1)' %
+                                (height, scale))
     load_layers(level, root, transform)
     return level
 
@@ -77,7 +77,7 @@ def load_body(level, node, transform):
     agent.body.SetMassFromShapes()
 
 def load_shapes(level, agent, node, transform):
-    transform = transform * Transform(node.getAttribute('transform'))
+    transform = transform * parse_transform(node.getAttribute('transform'))
     if node.nodeName == 'g':
         for child in node.childNodes:
             if child.nodeName in ('g', 'path'):

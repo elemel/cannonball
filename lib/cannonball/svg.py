@@ -1,6 +1,6 @@
 from __future__ import division
 
-import numpy
+from math import cos, pi, sin, tan
 
 def polygon_area(points):
     """
@@ -78,96 +78,89 @@ class Path(object):
                 raise RuntimeError('Cannot triangulate path')
         return triangles
 
+def parse_transform(s):
+    """
+    >>> str(parse_transform('translate(3.14)'))
+    'Transform((1, 0, 0, 1, 3.14, 0))'
+    >>> str(parse_transform('translate(-3.14, 2.72)'))
+    'Transform((1, 0, 0, 1, -3.14, 2.72))'
+    >>> str(parse_transform('scale(3.14)'))
+    'Transform((3.14, 0, 0, 3.14, 0, 0))'
+    >>> str(parse_transform('scale(-3.14, 2.72)'))
+    'Transform((-3.14, 0, 0, 2.72, 0, 0))'
+    >>> str(parse_transform('rotate(45)'))
+    'Transform((0.707107, 0.707107, -0.707107, 0.707107, 0, 0))'
+    """
+    
+    transform = Transform()
+    for part in s.replace(',', ' ').split(')')[:-1]:
+        name, args = part.split('(')
+        name = name.strip()
+        args = [float(arg) for arg in args.split()]
+        if name == 'matrix':
+            transform *= Transform(args)
+        elif name == 'translate':
+            transform *= create_translate_transform(*args)
+        elif name == 'scale':
+            transform *= create_scale_transform(*args)
+        elif name == 'rotate':
+            transform *= create_rotate_transform(*args)
+        elif name == 'skewX':
+            transform *= create_skew_x_transform(*args)
+        elif name == 'skewY':
+            transform *= create_skew_y_transform(*args)
+        else:
+            raise ValueError('invalid transform name: ' + name)
+    return transform
+
+def create_translate_transform(tx, ty=0):
+    return Transform((1, 0, 0, 1, tx, ty))
+
+def create_scale_transform(sx, sy=None):
+    if sy is None:
+        sy = sx
+    return Transform((sx, 0, 0, sy, 0, 0))
+
+def create_rotate_transform(a, cx=None, cy=None):
+    a = a * pi / 180
+    if cx is None:
+        # Rotate around the current origin.
+        return Transform((cos(a), sin(a), -sin(a), cos(a), 0, 0))
+    else:
+        # Rotate around a point.
+        return (self._parse_translate(cx, cy) *
+                self._parse_rotate(a) *
+                self._parse_translate(-cx, -cy))
+
+def create_skew_x_transform(self, a):
+    a = a * pi / 180
+    return Transform((1, 0, tan(a), 1, 0, 0))
+
+def create_skew_y_transform(self, a):
+    a = a * pi / 180
+    return Transform((1, tan(a), 0, 1, 0, 0))
+
 class Transform(object):
-    def __init__(self, arg=''):
-        if type(arg) in (str, unicode):
-            self.matrix = self._parse(arg)
-        elif type(arg) is numpy.matrix:
-            self.matrix = arg.copy()
-        else:
-            raise TypeError()
-
-    def _parse(self, s):
-        matrix = numpy.mat(numpy.eye(3))
-        for transform in s.replace(',', ' ').split(')')[:-1]:
-            name, args = transform.split('(')
-            name = name.strip()
-            args = [float(arg) for arg in args.split()]
-            parse = getattr(self, '_parse_%s' % name)
-            matrix = matrix * parse(*args)
-        return matrix
-
-    def _parse_matrix(self, a, b, c, d, e, f):
-        return numpy.mat([[a, c, e],
-                          [b, d, f],
-                          [0, 0, 1]])
-
-    def _parse_translate(self, tx, ty=0):
-        """Parse a translation.
-        
-        >>> str(Transform('translate(3.14)'))
-        'matrix(1, 0, 0, 1, 3.14, 0)'
-        >>> str(Transform('translate(-3.14, 2.72)'))
-        'matrix(1, 0, 0, 1, -3.14, 2.72)'
-        """
-        
-        return self._parse_matrix(1, 0, 0, 1, tx, ty)
-
-    def _parse_scale(self, sx, sy=None):
-        """Parse a scale transform.
-        
-        >>> str(Transform('scale(3.14)'))
-        'matrix(3.14, 0, 0, 3.14, 0, 0)'
-        >>> str(Transform('scale(-3.14, 2.72)'))
-        'matrix(-3.14, 0, 0, 2.72, 0, 0)'
-        """
-
-        if sy is None:
-            sy = sx
-        return self._parse_matrix(sx, 0, 0, sy, 0, 0)
-
-    def _parse_rotate(self, a, cx=None, cy=None):
-        """Parse a rotation.
-        
-        >>> str(Transform('rotate(45)'))
-        'matrix(0.707107, 0.707107, -0.707107, 0.707107, 0, 0)'
-        """
-
-        a = a * numpy.pi / 180
-        if cx is None:
-            # Rotate around the current origin.
-            return self._parse_matrix(numpy.cos(a), numpy.sin(a),
-                                      -numpy.sin(a), numpy.cos(a), 0, 0)
-        else:
-            # Rotate around a point.
-            return (self._parse_translate(cx, cy) *
-                    self._parse_rotate(a) *
-                    self._parse_translate(-cx, -cy))
-
-    def _parse_skewX(self, a):
-        a = a * numpy.pi / 180
-        return self._parse_matrix(1, 0, numpy.tan(a), 1, 0, 0)
-
-    def _parse_skewY(self, a):
-        a = a * numpy.pi / 180
-        return self._parse_matrix(1, numpy.tan(a), 0, 1, 0, 0)
-
-    def __str__(self):
-        a, c, e = self.matrix[0, 0], self.matrix[0, 1], self.matrix[0, 2]
-        b, d, f = self.matrix[1, 0], self.matrix[1, 1], self.matrix[1, 2]
-        return 'matrix(%g, %g, %g, %g, %g, %g)' % (a, b, c, d, e, f)
-
-    def __repr__(self):
-        return "Transform('%s')" % self
+    def __init__(self, matrix=(1, 0, 0, 1, 0, 0)):
+        self.matrix = tuple(float(x) for x in matrix)
 
     def __mul__(self, other):
-        if type(other) is Transform:
-            return Transform(self.matrix * other.matrix)
-        elif type(other) in (tuple, list):
-            v = numpy.dot(self.matrix, tuple(other) + (1,))
-            return v[0, 0], v[0, 1]
-        else:
-            raise TypeError()
+        a, b, c, d, e, f = self.matrix
+        try:
+            x, y = other
+            return type(other)((a * x + c * y + e, b * x + d * y + f))
+        except:
+            a2, b2, c2, d2, e2, f2 = other.matrix
+            a3 = a * a2 + c * b2
+            b3 = b * a2 + d * b2
+            c3 = a * c2 + c * d2
+            d3 = b * c2 + d * d2
+            e3 = a * e2 + c * f2 + e
+            f3 = b * e2 + d * f2 + f
+            return Transform((a3, b3, c3, d3, e3, f3))
+
+    def __repr__(self):
+        return 'Transform((%g, %g, %g, %g, %g, %g))' % self.matrix
 
 def _test():
     import doctest
