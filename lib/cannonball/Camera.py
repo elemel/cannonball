@@ -71,21 +71,37 @@ class Camera(object):
         query_aabb.lowerBound = min_x, min_y
         query_aabb.upperBound = max_x, max_y
         count, shapes = self.level.world.Query(query_aabb, 1000)
+        agents = set(s.GetBody().userData for s in shapes)
+        for agent in agents:
+            self.draw_agent(agent)
 
-        def key(shape):
-            return id(shape.GetBody())
-
+    def draw_agent(self, agent):
         glPushMatrix()
-        for shape in sorted(shapes, key=key):
-            self.draw_shape(shape)
+        p = agent.body.GetPosition()
+        a = agent.body.GetAngle()
+        glTranslated(p.x, p.y, 0)
+        glRotated(a * 180 / math.pi, 0, 0, 1)
+        if agent.display_list is None:
+            agent.display_list = glGenLists(1)
+            glNewList(agent.display_list, GL_COMPILE)
+            for shape in agent.body.shapeList:
+                self.draw_shape(shape)
+            glEndList()
+        glCallList(agent.display_list)
+        if agent.id == 'cannonball':
+            glPushMatrix()
+            if agent.cannon:
+                color = agent.cannon.color
+            else:
+                color = 0.5, 0.5, 0.5
+            glColor3d(*color)
+            glTranslated(0.5, 0, 0)
+            glScaled(0.5, 0.5, 1)
+            glCallList(self.circle_display_list)
+            glPopMatrix()
         glPopMatrix()
 
     def draw_shape(self, shape):
-        glPushMatrix()
-        p = shape.GetBody().GetPosition()
-        a = shape.GetBody().GetAngle()
-        glTranslated(p.x, p.y, 0)
-        glRotated(a * 180 / math.pi, 0, 0, 1)
         data = shape.GetUserData() or {}
         material = shape.GetUserData().get('material')
         if material:
@@ -101,21 +117,12 @@ class Camera(object):
         if polygon:
             self.draw_polygon(polygon, texture)
         elif circle:
+            glPushMatrix()
             p = circle.localPosition
             glTranslated(p.x, p.y, 0)
             glScaled(circle.radius, circle.radius, 1)
             glCallList(self.circle_display_list)
-            if shape.GetBody().userData.id == 'cannonball':
-                cannonball = shape.GetBody().userData
-                if cannonball.cannon:
-                    color = cannonball.cannon.color
-                else:
-                    color = 0.5, 0.5, 0.5
-                glColor3d(*color)
-                glTranslated(0.5, 0, 0)
-                glScaled(0.5, 0.5, 1)
-                glCallList(self.circle_display_list)
-        glPopMatrix()
+            glPopMatrix()
 
     def draw_polygon(self, polygon, texture):
         if texture:

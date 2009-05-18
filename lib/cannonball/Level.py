@@ -1,6 +1,7 @@
 from cannonball.material import *
 
 import pyglet
+from pyglet.gl import *
 from Box2D import *
 
 class Level(object):
@@ -37,6 +38,9 @@ class Level(object):
                 agent.body = None
                 if agent.id:
                     del self.agents[agent.id]
+            if agent.display_list is not None:
+                glDeleteLists(agent.display_list, 1)
+                agent.display_list = None
         self.destroying.clear()
 
     def queue_destroy(self, agent, delay):
