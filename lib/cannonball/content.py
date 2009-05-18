@@ -89,7 +89,9 @@ def load_shape(level, agent, node, transform):
     data = parse_element_data(node)
     color = parse_color(data.get('fill', '#ffffff'))
     material = data.get('material')
-    path = Path(node.getAttribute('d'))
+    path = node.getAttribute('d')
+    path = linearize_path(path)
+    path = Path(path)
     for triangle in path.triangulate():
         triangle = [transform * (x, y) for x, y in reversed(triangle)]
         shape_def = b2PolygonDef()

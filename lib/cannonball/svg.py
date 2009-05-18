@@ -1,6 +1,7 @@
 from __future__ import division
 
 from math import cos, pi, sin, tan
+import re
 
 def polygon_area(points):
     """
@@ -20,6 +21,89 @@ def point_in_triangle(p1, p2, p3, p):
         if polygon_area((a, b, p)) < 0:
             return False
     return True
+
+def linearize_path(path):
+    """
+    Creates a path with only M and L. 
+    In path can contain M, L and C. 
+    """
+    new_path = []
+    for type, cs in get_path(path):
+        if type == 'M':
+            last_p = cs.next()
+            new_path.append('M %f,%f' % (last_p))
+        elif type == 'L':
+            last_p = cs.next()
+            new_path.append('L %f,%f' % (last_p))
+        elif type == 'C':
+            control_points = [last_p] + list(cs)
+            for p in bezier_points(control_points):
+                new_path.append('L %f,%f' % (p))
+            last_p = control_points[-1]
+        elif type == 'z':
+            new_path.append('z')
+    return ' '.join(new_path)
+
+def bezier_points(p, steps=5):
+    class SimpleVector(object):
+        def __init__(self, x, y):
+            self.x = x
+            self.y = y
+
+        def __add__(self, other):
+            return self.__class__(self.x + other.x, self.y + other.y)
+
+        def __sub__(self, other):
+            return self.__class__(self.x - other.x, self.y - other.y)
+
+        def __mul__(self, k):
+            return self.__class__(k * self.x, k * self.y)
+
+        def __iadd__(self, other):
+            self.x += other.x
+            self.y += other.y
+            return self
+
+        def __isub__(self, other):
+            self.x -= other.x
+            self.y -= other.y
+            return self
+
+        __rmul__ = __mul__
+    
+    def bezier_iter(p, steps):
+        """
+        http://www.niksula.cs.hut.fi/~hkankaan/Homepages/bezierfast.html
+        """
+        t = 1.0 / steps
+        t2 = t*t
+    
+        p0, p1, p2, p3 = p
+        f = p0
+        fd = 3 * (p1 - p0) * t
+        fdd_per_2 = 3 * (p0 - 2 * p1 + p2) * t2
+        fddd_per_2 = 3 * (3 * (p1 - p2) + p3 - p0) * t2 * t
+    
+        fddd = fddd_per_2 + fddd_per_2
+        fdd = fdd_per_2 + fdd_per_2
+        fddd_per_6 = fddd_per_2 * (1.0 / 3)
+    
+        for x in xrange(steps):
+            f += fd + fdd_per_2 + fddd_per_6
+            yield f
+            fd += fdd + fddd_per_2
+            fdd += fddd
+            fdd_per_2 += fddd_per_2
+
+    p = [SimpleVector(*t) for t in p]
+    return ((p.x, p.y) for p in bezier_iter(p, steps))
+
+def get_path(path):
+    regex = re.compile('([MLCz])([-\d., ]*)')
+    return ((match.group(1),
+            (tuple(float(c) for c in p.split(','))
+             for p in match.group(2).split()))
+             for match in regex.finditer(path))
 
 def parse_color(s):
     return int(s[1:3], 16) / 255, int(s[3:5], 16) / 255, int(s[5:7], 16) / 255
