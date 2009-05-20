@@ -7,10 +7,11 @@ from Box2D import *
 class Level(object):
     def __init__(self, world):
         self.world = world
-        self.agents = {}
+        self.agents = {}        
         self.agent_factories = {}
         self.background_color = 0, 0, 0
         self.materials = dict(stone=Stone(), metal=Metal())
+        self.textures = {}
         self.destroying = set()
 
         self.contacts = set()

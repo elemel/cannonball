@@ -3,10 +3,6 @@ import random
 from cannonball.agent import Agent
 
 class Grenade(Agent):
-    def __init__(self, level):
-        super(Grenade, self).__init__()
-        self.level = level
-
     def collide(self, other):
         if not self in self.level.destroying:
             self.level.destroying.add(self)

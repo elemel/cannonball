@@ -4,10 +4,6 @@ import random
 from cannonball.agent import Agent
 
 class GrenadeLauncherUpgrade(Agent):
-    def __init__(self, level):
-        super(GrenadeLauncherUpgrade, self).__init__()
-        self.level = level
-
     def collide(self, other):
         if not self in self.level.destroying and other.id == 'cannonball':
             self.level.destroying.add(self)

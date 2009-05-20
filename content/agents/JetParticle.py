@@ -3,10 +3,6 @@ import random
 from cannonball.agent import Agent
 
 class JetParticle(Agent):
-    def __init__(self, level):
-        super(JetParticle, self).__init__()
-        self.level = level
-
     def create_body(self, position, linear_velocity):
         self.level.queue_destroy(self, 0.5 + 0.5 * random.random())
         

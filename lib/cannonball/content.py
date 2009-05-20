@@ -66,7 +66,7 @@ def load_body(level, node, transform):
         agent_factory = level.agent_factories[data['agent']]
         agent = agent_factory(level)
     else:
-        agent = Agent()
+        agent = Agent(level)
     agent.id = node.getAttribute('id')
     agent.static = data.get('static') != 'false'
     level.agents[agent.id] = agent

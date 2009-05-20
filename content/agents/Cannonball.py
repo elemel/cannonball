@@ -12,8 +12,7 @@ class Cannonball(Agent):
     max_angular_acceleration = 10
 
     def __init__(self, level):
-        super(Cannonball, self).__init__()
-        self.level = level
+        super(Cannonball, self).__init__(level)
         self.id = 'cannonball'
         self.level.agents[self.id] = self
         self.won = False
