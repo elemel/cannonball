@@ -4,6 +4,8 @@ from math import cos, pi, sin, tan
 import re
 
 class Vector(object):
+    __slots__ = 'x', 'y'
+
     def __init__(self, x, y):
         self.x = x
         self.y = y
