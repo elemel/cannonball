@@ -93,7 +93,7 @@ def load_shape(level, agent, node, transform):
     path = linearize_path(path)
     path = Path(path)
     for triangle in path.triangulate():
-        triangle = [transform * (x, y) for x, y in reversed(triangle)]
+        triangle = [transform * (x, y) for x, y in reversed(triangle.vertices)]
         shape_def = b2PolygonDef()
         shape_def.vertices = triangle
         if data.get('sensor') == 'true':

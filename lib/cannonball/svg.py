@@ -57,6 +57,19 @@ class Triangle(object):
                 return False
         return True
 
+    @property
+    def area(self):
+        """
+        http://local.wasp.uwa.edu.au/~pbourke/geometry/clockwise/
+        """
+        result = 0
+        for i in xrange(len(self.vertices)):
+            j = (i + 1) % len(self.vertices)
+            x, y = self.vertices[i]
+            nx, ny = self.vertices[j]
+            result += x * ny - nx * y
+        return result / 2.0
+
 def linearize_path(path):
     """
     Creates a path with only M and L. 
@@ -158,14 +171,13 @@ class Path(object):
         while len(points) > 2:
             n = len(points)
             for i in xrange(n):
-                tri = points[(i-1) % n], points[i], points[(i+1) % n]
-                lp, cp, rp = tri
-                is_convex_vertice = Polygon([lp, cp, rp]).area > 0
-                if is_convex_vertice and all(not Triangle([rp, cp, lp]).contains(p)
+                triangle = Triangle([points[(i - 1) % n], points[i],
+                                     points[(i + 1) % n]])
+                if triangle.area > 0 and all(not triangle.contains(p)
                                              for p in points
-                                             if p not in tri):
+                                             if p not in triangle.vertices):
                     del points[i]
-                    triangles.append((lp, cp, rp))
+                    triangles.append(triangle)
                     break
             else:
                 raise RuntimeError('Cannot triangulate path')
