@@ -46,11 +46,16 @@ class Polygon(object):
             result += x * ny - nx * y
         return result / 2.0
 
-def point_in_triangle(p1, p2, p3, p):
-    for a, b in [(p1, p2), (p2, p3), (p3, p1)]:
-        if Polygon([a, b, p]).area < 0:
-            return False
-    return True
+class Triangle(object):
+    def __init__(self, vertices):
+        self.vertices = [tuple(v) for v in vertices]
+
+    def contains(self, point):
+        p1, p2, p3 = self.vertices
+        for a, b in [(p1, p2), (p2, p3), (p3, p1)]:
+            if Polygon([a, b, point]).area < 0:
+                return False
+        return True
 
 def linearize_path(path):
     """
@@ -156,7 +161,7 @@ class Path(object):
                 tri = points[(i-1) % n], points[i], points[(i+1) % n]
                 lp, cp, rp = tri
                 is_convex_vertice = Polygon([lp, cp, rp]).area > 0
-                if is_convex_vertice and all(not point_in_triangle(rp, cp, lp, p)
+                if is_convex_vertice and all(not Triangle([rp, cp, lp]).contains(p)
                                              for p in points
                                              if p not in tri):
                     del points[i]
