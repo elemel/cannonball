@@ -3,6 +3,7 @@ from cannonball.material import *
 import pyglet
 from pyglet.gl import *
 from Box2D import *
+from math import cos, pi, sin
 
 class Level(object):
     def __init__(self, world):
@@ -20,7 +21,12 @@ class Level(object):
 
         self.boundary_listener = CannonballBoundaryListener(self)
         self.world.SetBoundaryListener(self.boundary_listener)
-    
+
+        self.circle_display_list = glGenLists(1)
+        glNewList(self.circle_display_list, GL_COMPILE)
+        self._draw_circle()
+        glEndList()
+
     def step(self, dt):
         cannonball = self.agents.get('cannonball')
         if cannonball:
@@ -54,6 +60,18 @@ class Level(object):
         agent_2 = point.shape2.GetBody().GetUserData()
         if agent_1 and agent_2:
             self.contacts.add((agent_1, agent_2))
+
+    def draw_circle(self):
+        glCallList(self.circle_display_list)
+
+    def _draw_circle(self):
+        triangle_count = 256
+        for t in (GL_POLYGON, GL_LINE_STRIP):
+            glBegin(t)
+            for i in xrange(triangle_count + 1):
+                angle = 2 * pi * i / triangle_count
+                glVertex2d(cos(angle), sin(angle))
+            glEnd()
 
 class CannonballContactListener(b2ContactListener):
     def __init__(self, level):

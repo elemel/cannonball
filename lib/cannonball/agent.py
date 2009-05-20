@@ -35,7 +35,7 @@ class Agent(object):
             glColor3d(*color)
             glTranslated(0.5, 0, 0)
             glScaled(0.5, 0.5, 1)
-            self.draw_circle(32)
+            self.level.draw_circle()
             glPopMatrix()
         glPopMatrix()
 
@@ -59,7 +59,7 @@ class Agent(object):
             p = circle.localPosition
             glTranslated(p.x, p.y, 0)
             glScaled(circle.radius, circle.radius, 1)
-            self.draw_circle(128)
+            self.level.draw_circle()
             glPopMatrix()
 
     def draw_polygon(self, polygon, texture):
@@ -82,16 +82,4 @@ class Agent(object):
         glEnd()
         if texture:
             glDisable(texture.target)
-
-    def draw_circle(self, triangle_count):
-        glBegin(GL_POLYGON)
-        for i in xrange(triangle_count + 1):
-            a = 2 * math.pi * i / triangle_count
-            glVertex2d(math.cos(a), math.sin(a))
-        glEnd()
-        glBegin(GL_LINE_STRIP)
-        for i in xrange(triangle_count + 1):
-            a = 2 * math.pi * i / triangle_count
-            glVertex2d(math.cos(a), math.sin(a))
-        glEnd()
 
