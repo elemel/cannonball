@@ -18,23 +18,27 @@ class Vector(object):
         return type(self)(k * self.x, k * self.y)
 
     __rmul__ = __mul__
-    
-def polygon_area(points):
-    """
-    http://local.wasp.uwa.edu.au/~pbourke/geometry/clockwise/
-    """
-    n = len(points)
-    a = 0
-    for i in xrange(n):
-        j = (i + 1) % n
-        x, y = points[i]
-        nx, ny = points[j]
-        a += x * ny - nx * y
-    return a / 2.0
+
+class Polygon(object):
+    def __init__(self, vertices):
+        self.vertices = [tuple(v) for v in vertices]
+
+    @property
+    def area(self):
+        """
+        http://local.wasp.uwa.edu.au/~pbourke/geometry/clockwise/
+        """
+        result = 0
+        for i in xrange(len(self.vertices)):
+            j = (i + 1) % len(self.vertices)
+            x, y = self.vertices[i]
+            nx, ny = self.vertices[j]
+            result += x * ny - nx * y
+        return result / 2.0
 
 def point_in_triangle(p1, p2, p3, p):
     for a, b in [(p1, p2), (p2, p3), (p3, p1)]:
-        if polygon_area((a, b, p)) < 0:
+        if Polygon([a, b, p]).area < 0:
             return False
     return True
 
@@ -133,7 +137,7 @@ class Path(object):
 
     def triangulate(self):
         points = list(self.points)
-        if polygon_area(points) < 0:
+        if Polygon(points).area < 0:
             points.reverse()
         triangles = []
         while len(points) > 2:
@@ -141,7 +145,7 @@ class Path(object):
             for i in xrange(n):
                 tri = points[(i-1) % n], points[i], points[(i+1) % n]
                 lp, cp, rp = tri
-                is_convex_vertice = polygon_area([lp, cp, rp]) > 0
+                is_convex_vertice = Polygon([lp, cp, rp]).area > 0
                 if is_convex_vertice and all(not point_in_triangle(rp, cp, lp, p)
                                              for p in points
                                              if p not in tri):
