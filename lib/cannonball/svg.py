@@ -44,6 +44,9 @@ class Polygon(object):
                 return False
         return True
 
+    def __repr__(self):
+        return 'Polygon(%r)' % self.vertices
+
     @property
     def area(self):
         """
@@ -134,35 +137,44 @@ class Color(object):
         """
         return '#%2x%2x%2x' % (self.r, self.g, self.b)
 
+subpath_re = re.compile('M[^M]*')
+command_re = re.compile('[A-Za-z][^A-Za-z]*')
+
 def parse_path(s):
-    s = s.strip()
-    if not s.startswith('M'):
-        raise SVGError('Path must start with "M" command')
-    if not s.endswith('z'):
-        raise SVGError('Path must end with "z" command')
-    s = s.strip('Mz')
+    return Path(parse_subpath(p) for p in subpath_re.findall(s))
+
+def parse_subpath(s):
+    return Subpath(parse_command(c) for c in command_re.findall(s))
+
+def parse_command(s):
     s = s.replace(',', ' ')
-    s = s.replace('L', 'C')
-    points = s.split('C')
-    points = [p.split()[-2:] for p in points]
-    points = [(float(x), float(y)) for x, y in points]
-    if points[0] == points[-1]:
-        points.pop()
-    return Path(points)
+    name = s[0]
+    args = map(float, s[1:].split())
+    return Command(name, args)
 
 class Path(object):
-    def __init__(self, points):
-        self.points = list(tuple(p) for p in points)
+    def __init__(self, subpaths):
+        self.subpaths = list(subpaths)
 
     def __str__(self):
-        return 'M %s z' % (' L '.join('%g %g' % (x, y)
-                                      for x, y in self.points))
-
-    def __repr__(self):
-        return "Path('%s')" % self
+        return ' '.join(str(s) for s in self.subpaths)
 
     def triangulate(self):
-        points = list(self.points)
+        for subpath in self.subpaths:
+            for triangle in subpath.triangulate():
+                yield triangle
+
+class Subpath(object):
+    def __init__(self, commands):
+        self.commands = list(commands)
+
+    def __str__(self):
+        return ' '.join(str(c) for c in self.commands)
+
+    def triangulate(self):
+        points = [tuple(c.args[-2:]) for c in self.commands if c.args]
+        if points[0] == points[-1]:
+            points.pop()
         if Polygon(points).area < 0:
             points.reverse()
         triangles = []
@@ -180,6 +192,16 @@ class Path(object):
             else:
                 raise SVGError('Cannot triangulate path')
         return triangles
+
+class Command(object):
+    def __init__(self, name, args):
+        self.name = name
+        self.args = list(float(a) for a in args)
+
+    def __str__(self):
+        result = [self.name]
+        result.extend(str(a) for a in self.args)
+        return ' '.join(result)
 
 def parse_transform(s):
     """
