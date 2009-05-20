@@ -3,6 +3,22 @@ from __future__ import division
 from math import cos, pi, sin, tan
 import re
 
+class Vector(object):
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
+
+    def __add__(self, other):
+        return type(self)(self.x + other.x, self.y + other.y)
+
+    def __sub__(self, other):
+        return type(self)(self.x - other.x, self.y - other.y)
+
+    def __mul__(self, k):
+        return type(self)(k * self.x, k * self.y)
+
+    __rmul__ = __mul__
+    
 def polygon_area(points):
     """
     http://local.wasp.uwa.edu.au/~pbourke/geometry/clockwise/
@@ -45,32 +61,6 @@ def linearize_path(path):
     return ' '.join(new_path)
 
 def bezier_points(p, steps=5):
-    class SimpleVector(object):
-        def __init__(self, x, y):
-            self.x = x
-            self.y = y
-
-        def __add__(self, other):
-            return self.__class__(self.x + other.x, self.y + other.y)
-
-        def __sub__(self, other):
-            return self.__class__(self.x - other.x, self.y - other.y)
-
-        def __mul__(self, k):
-            return self.__class__(k * self.x, k * self.y)
-
-        def __iadd__(self, other):
-            self.x += other.x
-            self.y += other.y
-            return self
-
-        def __isub__(self, other):
-            self.x -= other.x
-            self.y -= other.y
-            return self
-
-        __rmul__ = __mul__
-    
     def bezier_iter(p, steps):
         """
         http://www.niksula.cs.hut.fi/~hkankaan/Homepages/bezierfast.html
@@ -95,7 +85,7 @@ def bezier_points(p, steps=5):
             fdd += fddd
             fdd_per_2 += fddd_per_2
 
-    p = [SimpleVector(*t) for t in p]
+    p = [Vector(*t) for t in p]
     return ((p.x, p.y) for p in bezier_iter(p, steps))
 
 def get_path(path):
