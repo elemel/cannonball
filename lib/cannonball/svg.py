@@ -4,11 +4,19 @@ from math import cos, pi, sin, tan
 import re
 
 class Vector(object):
-    __slots__ = 'x', 'y'
+    __slots__ = '__x', '__y'
 
     def __init__(self, x, y):
-        self.x = x
-        self.y = y
+        self.__x = x
+        self.__y = y
+
+    @property
+    def x(self):
+        return self.__x
+
+    @property
+    def y(self):
+        return self.__y
 
     def __add__(self, other):
         return type(self)(self.x + other.x, self.y + other.y)
