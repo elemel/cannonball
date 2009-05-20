@@ -62,7 +62,7 @@ class Cannonball(Agent):
     @property
     def cannon(self):
         if self.cannon_list:
-            return self.cannon_list[self.cannon_index % len(self.cannon_list)]
+            return self.cannon_list[self.cannon_index]
         else:
             return None
 
@@ -73,7 +73,7 @@ class Cannonball(Agent):
         self.dirty_display_list = True
 
     def switch_cannon(self):
-        self.cannon_index += 1
+        self.cannon_index = (self.cannon_index + 1) % len(self.cannon_list)
         self.dirty_display_list = True
 
     def create_body(self, position):
