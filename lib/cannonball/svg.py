@@ -33,23 +33,6 @@ class Polygon(object):
     def __init__(self, vertices):
         self.vertices = [tuple(v) for v in vertices]
 
-    @property
-    def area(self):
-        """
-        http://local.wasp.uwa.edu.au/~pbourke/geometry/clockwise/
-        """
-        result = 0
-        for i in xrange(len(self.vertices)):
-            j = (i + 1) % len(self.vertices)
-            x, y = self.vertices[i]
-            nx, ny = self.vertices[j]
-            result += x * ny - nx * y
-        return result / 2.0
-
-class Triangle(object):
-    def __init__(self, vertices):
-        self.vertices = [tuple(v) for v in vertices]
-
     def contains(self, point):
         p1, p2, p3 = self.vertices
         for a, b in [(p1, p2), (p2, p3), (p3, p1)]:
@@ -171,8 +154,8 @@ class Path(object):
         while len(points) > 2:
             n = len(points)
             for i in xrange(n):
-                triangle = Triangle([points[(i - 1) % n], points[i],
-                                     points[(i + 1) % n]])
+                triangle = Polygon([points[(i - 1) % n], points[i],
+                                    points[(i + 1) % n]])
                 if triangle.area > 0 and all(not triangle.contains(p)
                                              for p in points
                                              if p not in triangle.vertices):
