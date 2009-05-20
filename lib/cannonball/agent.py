@@ -8,7 +8,8 @@ class Agent(object):
         self.level = level
         self.id = None
         self.body = None
-        self.display_list = None
+        self.display_list = glGenLists(1)
+        self.dirty_display_list = True
         
     def collide(self, other):
         pass
@@ -19,23 +20,12 @@ class Agent(object):
         a = self.body.GetAngle()
         glTranslated(p.x, p.y, 0)
         glRotated(a * 180 / math.pi, 0, 0, 1)
-        if self.display_list is None:
-            self.display_list = glGenLists(1)
+        if self.dirty_display_list:
+            self.dirty_display_list = False
             glNewList(self.display_list, GL_COMPILE)
             self.draw_geometry()
             glEndList()
         glCallList(self.display_list)
-        if self.id == 'cannonball':
-            glPushMatrix()
-            if self.cannon:
-                color = self.cannon.color
-            else:
-                color = 0.5, 0.5, 0.5
-            glColor3d(*color)
-            glTranslated(0.5, 0, 0)
-            glScaled(0.5, 0.5, 1)
-            self.level.draw_circle()
-            glPopMatrix()
         glPopMatrix()
 
     def draw_geometry(self):

@@ -2,6 +2,7 @@ from cannonball.agent import Agent
 
 from Box2D import *
 import pyglet
+from pyglet.gl import *
 import random
 
 def sign(x):
@@ -45,6 +46,19 @@ class Cannonball(Agent):
         for cannon in self.cannon_list:
             cannon.step(dt)
 
+    def draw_geometry(self):
+        super(Cannonball, self).draw_geometry()
+        glPushMatrix()
+        if self.cannon:
+            color = self.cannon.color
+        else:
+            color = 0.5, 0.5, 0.5
+        glColor3d(*color)
+        glTranslated(0.5, 0, 0)
+        glScaled(0.5, 0.5, 1)
+        self.level.draw_circle()
+        glPopMatrix()
+
     @property
     def cannon(self):
         if self.cannon_list:
@@ -56,9 +70,11 @@ class Cannonball(Agent):
         self.cannon_dict[name] = cannon
         self.cannon_list.append(cannon)
         self.cannon_index = len(self.cannon_list) - 1
+        self.dirty_display_list = True
 
     def switch_cannon(self):
         self.cannon_index += 1
+        self.dirty_display_list = True
 
     def create_body(self, position):
         body_def = b2BodyDef()
