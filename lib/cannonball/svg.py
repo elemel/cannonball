@@ -3,6 +3,9 @@ from __future__ import division
 from math import cos, pi, sin, tan
 import re
 
+class SVGError(Exception):
+    pass
+
 class Vector(object):
     __slots__ = 'x', 'y'
 
@@ -114,9 +117,6 @@ def get_path(path):
 def parse_color(s):
     return int(s[1:3], 16) / 255, int(s[3:5], 16) / 255, int(s[5:7], 16) / 255
 
-class PathError(Exception):
-    pass
-
 class Path(object):
     def __init__(self, points):
         if type(points) in (str, unicode):
@@ -127,9 +127,9 @@ class Path(object):
     def _parse(self, points):
         points = points.strip()
         if not points.startswith('M'):
-            raise PathError('Path must start with "M" command')
+            raise SVGError('Path must start with "M" command')
         if not points.endswith('z'):
-            raise PathError('Path must end with "z" command')
+            raise SVGError('Path must end with "z" command')
         points = points.strip('Mz')
         points = points.replace(',', ' ')
         points = points.replace('L', 'C')
@@ -164,7 +164,7 @@ class Path(object):
                     triangles.append(triangle)
                     break
             else:
-                raise RuntimeError('Cannot triangulate path')
+                raise SVGError('Cannot triangulate path')
         return triangles
 
 def parse_transform(s):
@@ -199,7 +199,7 @@ def parse_transform(s):
         elif name == 'skewY':
             transform *= create_skew_y_transform(*args)
         else:
-            raise ValueError('invalid transform name: ' + name)
+            raise SVGError('invalid transform name: ' + name)
     return transform
 
 def create_translate_transform(tx, ty=0):
