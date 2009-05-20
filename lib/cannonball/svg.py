@@ -114,8 +114,25 @@ def get_path(path):
              for p in match.group(2).split()))
              for match in regex.finditer(path))
 
-def parse_color(s):
-    return int(s[1:3], 16) / 255, int(s[3:5], 16) / 255, int(s[5:7], 16) / 255
+class Color(object):
+    def __init__(self, s):
+        if s[0] ==  '#':
+            self.r, self.g, self.b = (int(s[1:3], 16), int(s[3:5], 16),
+                                      int(s[5:7], 16))
+        else:
+            raise SVGError('invalid color: %s' % s)
+
+    def __iter__(self):
+        yield self.r / 255
+        yield self.g / 255
+        yield self.b / 255
+
+    def __str__(self):
+        """
+        >>> str(Color('#abcdef'))
+        '#abcdef'
+        """
+        return '#%2x%2x%2x' % (self.r, self.g, self.b)
 
 class Path(object):
     def __init__(self, points):

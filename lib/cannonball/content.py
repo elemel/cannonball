@@ -35,7 +35,7 @@ def load_level(path, agent_factories, scale=0.2):
     doc = minidom.parse(path)
     root = [n for n in doc.childNodes if n.nodeName == 'svg'][0]
     named_view = root.getElementsByTagName('sodipodi:namedview')[0]
-    page_color = parse_color(named_view.getAttribute('pagecolor') or '#000000')
+    page_color = Color(named_view.getAttribute('pagecolor') or '#000000')
     width = float(root.getAttribute('width')) * scale
     height = float(root.getAttribute('height')) * scale
     aabb = b2AABB()
@@ -46,7 +46,7 @@ def load_level(path, agent_factories, scale=0.2):
     world = b2World(aabb, gravity, doSleep)
     level = Level(world)
     level.agent_factories = agent_factories
-    level.background_color = page_color
+    level.background_color = tuple(page_color)
     transform = parse_transform('translate(0 %g) scale(%g) scale(1 -1)' %
                                 (height, scale))
     load_layers(level, root, transform)
@@ -87,7 +87,7 @@ def load_shapes(level, agent, node, transform):
 
 def load_shape(level, agent, node, transform):
     data = parse_element_data(node)
-    color = parse_color(data.get('fill', '#ffffff'))
+    color = Color(data.get('fill', '#ffffff'))
     material = data.get('material')
     path = node.getAttribute('d')
     path = linearize_path(path)
@@ -106,7 +106,7 @@ def load_shape(level, agent, node, transform):
             density = 100
         shape_def.density = density
         shape = agent.body.CreateShape(shape_def)
-        shape.SetUserData({'color': color, 'material': material})
+        shape.SetUserData({'color': tuple(color), 'material': material})
 
 def parse_data(s):
     try:
