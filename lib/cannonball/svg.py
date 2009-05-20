@@ -21,6 +21,15 @@ class Vector(object):
 
     __rmul__ = __mul__
 
+    def __div__(self, k):
+        return type(self)(self.x / k, self.y / k)
+
+    def __neg__(self):
+        return type(self)(-self.x, -self.y)
+
+    def __eq__(self, other):
+        return self.x == other.x and self.y == other.y
+
 class Polygon(object):
     def __init__(self, vertices):
         self.vertices = [tuple(v) for v in vertices]
