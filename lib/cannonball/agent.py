@@ -22,8 +22,7 @@ class Agent(object):
         if self.display_list is None:
             self.display_list = glGenLists(1)
             glNewList(self.display_list, GL_COMPILE)
-            for shape in self.body.shapeList:
-                self.draw_shape(shape)
+            self.draw_geometry()
             glEndList()
         glCallList(self.display_list)
         if self.id == 'cannonball':
@@ -38,6 +37,10 @@ class Agent(object):
             self.level.draw_circle()
             glPopMatrix()
         glPopMatrix()
+
+    def draw_geometry(self):
+        for shape in self.body.shapeList:
+            self.draw_shape(shape)
 
     def draw_shape(self, shape):
         data = shape.GetUserData() or {}
