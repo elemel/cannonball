@@ -134,28 +134,25 @@ class Color(object):
         """
         return '#%2x%2x%2x' % (self.r, self.g, self.b)
 
+def parse_path(s):
+    s = s.strip()
+    if not s.startswith('M'):
+        raise SVGError('Path must start with "M" command')
+    if not s.endswith('z'):
+        raise SVGError('Path must end with "z" command')
+    s = s.strip('Mz')
+    s = s.replace(',', ' ')
+    s = s.replace('L', 'C')
+    points = s.split('C')
+    points = [p.split()[-2:] for p in points]
+    points = [(float(x), float(y)) for x, y in points]
+    if points[0] == points[-1]:
+        points.pop()
+    return Path(points)
+
 class Path(object):
     def __init__(self, points):
-        if type(points) in (str, unicode):
-            self.points = self._parse(points)
-        else:
-            self.points = list(points)
-
-    def _parse(self, points):
-        points = points.strip()
-        if not points.startswith('M'):
-            raise SVGError('Path must start with "M" command')
-        if not points.endswith('z'):
-            raise SVGError('Path must end with "z" command')
-        points = points.strip('Mz')
-        points = points.replace(',', ' ')
-        points = points.replace('L', 'C')
-        points = points.split('C')
-        points = [p.split()[-2:] for p in points]
-        points = [(float(x), float(y)) for x, y in points]
-        if points[0] == points[-1]:
-            points.pop()
-        return points
+        self.points = list(tuple(p) for p in points)
 
     def __str__(self):
         return 'M %s z' % (' L '.join('%g %g' % (x, y)
