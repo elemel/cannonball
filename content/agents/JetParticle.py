@@ -21,7 +21,7 @@ class JetParticle(Agent):
 
     def create_body(self, position, linear_velocity):
         self.creation_time = self.level.time
-        self.destruction_time = self.level.time + 0.5 + 0.5 * random.random()
+        self.destruction_time = self.level.time + 1 + random.random()
         self.level.queue_destroy(self, self.destruction_time -
                                  self.creation_time)
         

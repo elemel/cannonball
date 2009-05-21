@@ -4,6 +4,8 @@ import random
 from cannonball.agent import Agent
 
 class GrenadeParticle(Agent):
+    z = 0.1
+
     @property
     def progress(self):
         return ((self.level.time - self.creation_time) /
@@ -11,7 +13,7 @@ class GrenadeParticle(Agent):
 
     @property
     def radius(self):
-        return 0.5 + self.progress
+        return 0.5 + 2 * self.progress
 
     @property
     def color(self):
