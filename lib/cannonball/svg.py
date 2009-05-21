@@ -38,6 +38,8 @@ class Polygon(object):
         self.vertices = [tuple(v) for v in vertices]
 
     def contains(self, point):
+        if len(self.vertices) != 3:
+            raise SVGError('only implemented for triangles')
         p1, p2, p3 = self.vertices
         for a, b in [(p1, p2), (p2, p3), (p3, p1)]:
             if Polygon([a, b, point]).area < 0:
