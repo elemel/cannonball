@@ -36,6 +36,8 @@ class Vector(object):
 class Polygon(object):
     def __init__(self, vertices):
         self.vertices = [tuple(v) for v in vertices]
+        if self.vertices[-1] == self.vertices[0]:
+            self.vertices.pop()
 
     def contains(self, point):
         if len(self.vertices) != 3:
@@ -50,6 +52,25 @@ class Polygon(object):
         return 'Polygon(%r)' % self.vertices
 
     @property
+    def clockwise(self):
+        return self.area >= 0
+
+    def normalize(self):
+        if not self.clockwise:
+            self.reverse()
+
+    def normalized(self):
+        result = Polygon(self)
+        result.normalize()
+        return result
+
+    def __iter__(self):
+        return iter(self.vertices)
+
+    def reverse(self):
+        self.vertices.reverse()
+
+    @property
     def area(self):
         """
         http://local.wasp.uwa.edu.au/~pbourke/geometry/clockwise/
@@ -61,6 +82,26 @@ class Polygon(object):
             nx, ny = self.vertices[j]
             result += x * ny - nx * y
         return result / 2.0
+
+    def triangulate(self):
+        vertices = list(self.vertices)
+        if not self.clockwise:
+            raise SVGError('Cannot triangulate counter-clockwise polygon')
+        triangles = []
+        while len(vertices) >= 3:
+            for i in xrange(len(vertices)):
+                triangle = Polygon([vertices[(i - 1) % len(vertices)],
+                                    vertices[i],
+                                    vertices[(i + 1) % len(vertices)]])
+                if triangle.clockwise and all(not triangle.contains(v)
+                                              for v in vertices
+                                              if v not in triangle.vertices):
+                    del vertices[i]
+                    triangles.append(triangle)
+                    break
+            else:
+                raise SVGError('Cannot triangulate polygon')
+        return triangles
 
 def linearize_path(path):
     """
@@ -163,7 +204,7 @@ class Path(object):
 
     def triangulate(self):
         for subpath in self.subpaths:
-            for triangle in subpath.triangulate():
+            for triangle in subpath.linearize().normalized().triangulate():
                 yield triangle
 
 class Subpath(object):
@@ -173,27 +214,8 @@ class Subpath(object):
     def __str__(self):
         return ' '.join(str(c) for c in self.commands)
 
-    def triangulate(self):
-        points = [tuple(c.args[-2:]) for c in self.commands if c.args]
-        if points[0] == points[-1]:
-            points.pop()
-        if Polygon(points).area < 0:
-            points.reverse()
-        triangles = []
-        while len(points) > 2:
-            n = len(points)
-            for i in xrange(n):
-                triangle = Polygon([points[(i - 1) % n], points[i],
-                                    points[(i + 1) % n]])
-                if triangle.area > 0 and all(not triangle.contains(p)
-                                             for p in points
-                                             if p not in triangle.vertices):
-                    del points[i]
-                    triangles.append(triangle)
-                    break
-            else:
-                raise SVGError('Cannot triangulate path')
-        return triangles
+    def linearize(self):
+        return Polygon(tuple(c.args[-2:]) for c in self.commands if c.args)
 
 class Command(object):
     def __init__(self, name, args):
