@@ -4,11 +4,24 @@ import random
 from cannonball.agent import Agent
 
 class GrenadeParticle(Agent):
-    color = 1, 0, 0
-    radius = 1
+    @property
+    def progress(self):
+        return ((self.level.time - self.creation_time) /
+                (self.destruction_time - self.creation_time))
+
+    @property
+    def radius(self):
+        return 0.5 + self.progress
+
+    @property
+    def color(self):
+        return 1, 0, 0, 1 - self.progress
 
     def create_body(self, position):
-        self.level.queue_destroy(self, 0.5 + 0.5 * random.random())
+        self.creation_time = self.level.time
+        self.destruction_time = self.level.time + 0.5 + 0.5 * random.random()
+        self.level.queue_destroy(self, self.destruction_time -
+                                 self.creation_time)
         
         body_def = b2BodyDef()
         body_def.position = position
@@ -27,14 +40,19 @@ class GrenadeParticle(Agent):
         shape = self.body.CreateShape(shape_def)
         shape.SetUserData({'color': (1, 0, 0)})
 
+    def draw(self):
+        super(GrenadeParticle, self).draw()
+        if random.random() < 0.1:
+            self.dirty_display_list = True
+
     def draw_geometry(self):
-        glColor3d(*self.color)
+        glColor4d(*self.color)
         texture = self.level.textures['particle']
         glEnable(texture.target)
         glBindTexture(texture.target, texture.id)
         glBegin(GL_QUADS)
         for x, y in [(0, 0), (1, 0), (1, 1), (0, 1)]:
             glTexCoord2d(x, y)
-            glVertex2d(self.radius * (x - 0.5), self.radius * (y - 0.5))
+            glVertex2d(self.radius * (2 * x - 1), self.radius * (2 * y - 1))
         glEnd()
         glDisable(texture.target)

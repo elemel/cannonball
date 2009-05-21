@@ -8,6 +8,7 @@ from math import cos, pi, sin
 class Level(object):
     def __init__(self, world):
         self.world = world
+        self.time = 0
         self.agents = {}        
         self.agent_factories = {}
         self.background_color = 0, 0, 0
@@ -28,6 +29,7 @@ class Level(object):
         glEndList()
 
     def step(self, dt):
+        self.time += dt
         cannonball = self.agents.get('cannonball')
         if cannonball:
             cannonball.step(dt)
