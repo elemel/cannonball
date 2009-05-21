@@ -1,9 +1,11 @@
 from __future__ import division
 
-import pyglet
-import math
-from pyglet.gl import *
 from Box2D import *
+import pyglet
+from pyglet.gl import *
+
+import math
+from operator import attrgetter
 
 class Camera(object):
     min_scale = 10
@@ -66,7 +68,7 @@ class Camera(object):
         query_aabb.upperBound = max_x, max_y
         count, shapes = self.level.world.Query(query_aabb, 1000)
         agents = set(s.GetBody().userData for s in shapes)
-        for agent in agents:
+        for agent in sorted(agents, key=attrgetter('z')):
             agent.draw()
 
     def on_key_press(self, symbol, modifiers):

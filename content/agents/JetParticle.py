@@ -4,6 +4,8 @@ import random
 from cannonball.agent import Agent
 
 class JetParticle(Agent):
+    z = 0.1
+
     @property
     def progress(self):
         return ((self.level.time - self.creation_time) /
@@ -11,7 +13,7 @@ class JetParticle(Agent):
 
     @property
     def radius(self):
-        return 0.5 + 5 * self.progress
+        return 1 + 5 * self.progress
 
     @property
     def color(self):

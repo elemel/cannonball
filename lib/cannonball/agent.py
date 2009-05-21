@@ -4,6 +4,8 @@ import math
 import random
 
 class Agent(object):
+    z = 0
+
     def __init__(self, level):
         self.level = level
         self.id = None

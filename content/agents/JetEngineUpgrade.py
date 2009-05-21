@@ -30,7 +30,7 @@ class JetEngine(object):
         level = self.cannonball.level
         angle = self.cannonball.body.angle
         unit = b2Vec2(math.cos(angle), math.sin(angle))
-        position = self.cannonball.body.position
+        position = self.cannonball.body.position + 0.5 * unit
         linear_velocity = self.cannonball.body.linearVelocity + 10 * unit
         linear_velocity += 10 * b2Vec2(random.random() - 0.5,
                                        random.random() - 0.5)
