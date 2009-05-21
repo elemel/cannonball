@@ -31,9 +31,9 @@ class JetEngine(object):
         angle = self.cannonball.body.angle
         unit = b2Vec2(math.cos(angle), math.sin(angle))
         position = self.cannonball.body.position
-        linear_velocity = self.cannonball.body.linearVelocity + 5 * unit
-        linear_velocity += 5 * b2Vec2(random.random() - 0.5,
-                                      random.random() - 0.5)
+        linear_velocity = self.cannonball.body.linearVelocity + 10 * unit
+        linear_velocity += 10 * b2Vec2(random.random() - 0.5,
+                                       random.random() - 0.5)
         factory = level.agent_factories['JetParticle']
         agent = factory(level)
         agent.create_body(position, linear_velocity)
