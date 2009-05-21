@@ -13,7 +13,7 @@ def load_textures(root):
     for dir_name, _, file_names in os.walk(root):
         for file_name in file_names:
             texture_name, ext = os.path.splitext(file_name)
-            if ext == '.jpg':
+            if ext in ('.jpg', '.png'):
                 path = os.path.join(dir_name, file_name)
                 image = pyglet.image.load(path)
                 textures[texture_name] = image.get_texture()
