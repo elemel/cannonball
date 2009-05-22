@@ -95,7 +95,7 @@ class Cannonball(Agent):
         shape_def.restitution = 0.5
         shape_def.filter.groupIndex = -1
         shape = self.body.CreateShape(shape_def)
-        shape.SetUserData({'color': (0, 0, 0)})
+        shape.SetUserData({'color': (0.3, 0.3, 0.3)})
 
     def on_key_press(self, symbol, modifiers):
         if symbol == pyglet.window.key.LEFT:

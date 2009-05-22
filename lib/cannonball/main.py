@@ -1,16 +1,18 @@
 from __future__ import division
 
-from cannonball.svg import *
-from cannonball.content import *
-from cannonball import config
 from cannonball.Camera import *
+from cannonball import config
+from cannonball.content import *
+from cannonball.svg import *
 
-import pyglet
-import sys
-import random
-import os
-from pyglet.gl import *
 from Box2D import *
+import pyglet
+from pyglet.gl import *
+
+import ctypes
+import os
+import random
+import sys
 
 class CannonballWindow(pyglet.window.Window):
     def __init__(self, level):
@@ -18,10 +20,35 @@ class CannonballWindow(pyglet.window.Window):
         pyglet.window.Window.__init__(self, fullscreen=True,
                                       caption="Cannonball")
         self.set_mouse_visible(False)
+
         glEnable(GL_BLEND)
         glEnable(GL_LINE_SMOOTH)
         glHint(GL_LINE_SMOOTH_HINT, GL_NICEST)
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
+
+        glEnable(GL_LIGHTING)
+        glEnable(GL_COLOR_MATERIAL)
+        glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE)
+        Float3 = ctypes.c_float * 3
+        Float4 = ctypes.c_float * 4
+
+        # primary light        
+        glEnable(GL_LIGHT0)
+        glLightfv(GL_LIGHT0, GL_POSITION, Float4(-1, 1, 1, 0))
+        glLightfv(GL_LIGHT0, GL_AMBIENT, Float3(0.3, 0.3, 0.3))
+        glLightfv(GL_LIGHT0, GL_DIFFUSE, Float3(0.3, 0.3, 0.3))
+
+        # fill light
+        glEnable(GL_LIGHT1)
+        glLightfv(GL_LIGHT1, GL_POSITION, Float4(0, 0, 1, 0))
+        glLightfv(GL_LIGHT1, GL_AMBIENT, Float3(0.2, 0.2, 0.2))
+        glLightfv(GL_LIGHT1, GL_DIFFUSE, Float3(0.2, 0.2, 0.2))
+
+        # ring light
+        glEnable(GL_LIGHT2)
+        glLightfv(GL_LIGHT2, GL_POSITION, Float4(1, 0, -1, 0))
+        glLightfv(GL_LIGHT2, GL_AMBIENT, Float3(0.1, 0.1, 0.1))
+        glLightfv(GL_LIGHT2, GL_DIFFUSE, Float3(0.1, 0.1, 0.1))
 
         start = self.level.agents['start']
         start_shapes = start.body.shapeList

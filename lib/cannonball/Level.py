@@ -68,12 +68,20 @@ class Level(object):
 
     def _draw_circle(self):
         triangle_count = 256
-        for t in (GL_POLYGON, GL_LINE_STRIP):
-            glBegin(t)
-            for i in xrange(triangle_count + 1):
-                angle = 2 * pi * i / triangle_count
-                glVertex2d(cos(angle), sin(angle))
-            glEnd()
+        glBegin(GL_TRIANGLE_FAN)
+        glNormal3d(0, 0, 1)
+        glVertex2d(0, 0)
+        for i in xrange(triangle_count + 1):
+            angle = 2 * pi * i / triangle_count
+            glNormal3d(cos(angle), sin(angle), 0)
+            glVertex2d(cos(angle), sin(angle))
+        glEnd()
+        glBegin(GL_LINE_STRIP)
+        for i in xrange(triangle_count + 1):
+            angle = 2 * pi * i / triangle_count
+            glNormal3d(cos(angle), sin(angle), 0)
+            glVertex2d(cos(angle), sin(angle))
+        glEnd()
 
 class CannonballContactListener(b2ContactListener):
     def __init__(self, level):

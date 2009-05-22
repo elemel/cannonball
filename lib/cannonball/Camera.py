@@ -69,6 +69,7 @@ class Camera(object):
         count, shapes = self.level.world.Query(query_aabb, 1000)
         agents = set(s.GetBody().userData for s in shapes)
         for agent in sorted(agents, key=attrgetter('z')):
+            glNormal3d(0, 0, 1)
             agent.draw()
 
     def on_key_press(self, symbol, modifiers):
