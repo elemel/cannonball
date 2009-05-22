@@ -30,4 +30,4 @@ class Grenade(Agent):
     def create_grenade_particle(self):
         factory = self.level.agent_factories['GrenadeParticle']
         agent = factory(self.level)
-        agent.create_body(self.body.position)
+        agent.create_body(self.body.position, self.body.linearVelocity)
