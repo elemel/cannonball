@@ -24,10 +24,11 @@ class Agent(object):
         glRotated(a * 180 / math.pi, 0, 0, 1)
         if self.dirty_display_list:
             self.dirty_display_list = False
-            glNewList(self.display_list, GL_COMPILE)
+            glNewList(self.display_list, GL_COMPILE_AND_EXECUTE)
             self.draw_geometry()
             glEndList()
-        glCallList(self.display_list)
+        else:
+            glCallList(self.display_list)
         glPopMatrix()
 
     def draw_geometry(self):

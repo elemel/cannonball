@@ -45,8 +45,7 @@ class GrenadeParticle(Agent):
 
     def draw(self):
         super(GrenadeParticle, self).draw()
-        if random.random() < 0.1:
-            self.dirty_display_list = True
+        self.dirty_display_list = True
 
     def draw_geometry(self):
         glColor4d(*self.color)

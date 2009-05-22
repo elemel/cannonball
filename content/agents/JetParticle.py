@@ -45,8 +45,7 @@ class JetParticle(Agent):
 
     def draw(self):
         super(JetParticle, self).draw()
-        if random.random() < 0.1:
-            self.dirty_display_list = True
+        self.dirty_display_list = True
 
     def draw_geometry(self):
         glColor4d(*self.color)
