@@ -32,23 +32,21 @@ class CannonballWindow(pyglet.window.Window):
         Float3 = ctypes.c_float * 3
         Float4 = ctypes.c_float * 4
 
-        # primary light        
+        # Set up key light.
         glEnable(GL_LIGHT0)
         glLightfv(GL_LIGHT0, GL_POSITION, Float4(-1, 1, 1, 0))
-        glLightfv(GL_LIGHT0, GL_AMBIENT, Float3(0.3, 0.3, 0.3))
+        glLightfv(GL_LIGHT0, GL_AMBIENT, Float3(0.5, 0.5, 0.5))
         glLightfv(GL_LIGHT0, GL_DIFFUSE, Float3(0.3, 0.3, 0.3))
 
-        # fill light
+        # Set up the fill light.
         glEnable(GL_LIGHT1)
-        glLightfv(GL_LIGHT1, GL_POSITION, Float4(0, 0, 1, 0))
-        glLightfv(GL_LIGHT1, GL_AMBIENT, Float3(0.2, 0.2, 0.2))
-        glLightfv(GL_LIGHT1, GL_DIFFUSE, Float3(0.2, 0.2, 0.2))
+        glLightfv(GL_LIGHT1, GL_POSITION, Float4(1, 0, 1, 0))
+        glLightfv(GL_LIGHT1, GL_DIFFUSE, Float3(0.1, 0.1, 0.1))
 
-        # ring light
-        glEnable(GL_LIGHT2)
-        glLightfv(GL_LIGHT2, GL_POSITION, Float4(1, 0, -1, 0))
-        glLightfv(GL_LIGHT2, GL_AMBIENT, Float3(0.1, 0.1, 0.1))
-        glLightfv(GL_LIGHT2, GL_DIFFUSE, Float3(0.1, 0.1, 0.1))
+        # Set up the rim light.
+        # glEnable(GL_LIGHT2)
+        # glLightfv(GL_LIGHT2, GL_POSITION, Float4(1, 1, -1, 0))
+        # glLightfv(GL_LIGHT2, GL_DIFFUSE, Float3(0.5, 0.5, 0.5))
 
         start = self.level.agents['start']
         start_shapes = start.body.shapeList
