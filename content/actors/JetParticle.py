@@ -1,9 +1,11 @@
+from cannonball.Actor import Actor
+
 from Box2D import *
 from pyglet.gl import *
-import random
-from cannonball.agent import Agent
 
-class GrenadeParticle(Agent):
+import random
+
+class JetParticle(Actor):
     z = 0.1
 
     @property
@@ -13,38 +15,38 @@ class GrenadeParticle(Agent):
 
     @property
     def radius(self):
-        return 0.5 + 2 * self.progress
+        return 1 + 5 * self.progress
 
     @property
     def color(self):
-        return 1, 0, 0, 1 - self.progress
+        return 1, 1, 1, 1 - self.progress
 
     def create_body(self, position, linear_velocity):
         self.creation_time = self.level.time
-        self.destruction_time = self.level.time + 0.5 + 0.5 * random.random()
+        self.destruction_time = self.level.time + 1 + random.random()
         self.level.queue_destroy(self, self.destruction_time -
                                  self.creation_time)
         
         body_def = b2BodyDef()
         body_def.position = position
+        body_def.linearDamping = 2
         self.body = self.level.world.CreateBody(body_def)
         self.body.userData = self
-        self.body.linearVelocity = (linear_velocity +
-                                    100 * b2Vec2(random.random() - 0.5,
-                                                 random.random() - 0.5))
+        self.body.linearVelocity = linear_velocity
         self.create_shapes()
         self.body.SetMassFromShapes()
 
     def create_shapes(self):
         shape_def = b2CircleDef()
         shape_def.radius = 0.1
-        shape_def.density = 500
-        shape_def.restitution = 0.5
+        shape_def.density = 100
+        shape_def.restitution = 0.1
+        shape_def.filter.groupIndex = -1
         shape = self.body.CreateShape(shape_def)
-        shape.SetUserData({'color': (1, 0, 0)})
+        shape.SetUserData({'color': (1, 1, 1)})
 
     def draw(self):
-        super(GrenadeParticle, self).draw()
+        super(JetParticle, self).draw()
         self.dirty_display_list = True
 
     def draw_geometry(self):

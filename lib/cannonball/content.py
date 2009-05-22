@@ -1,8 +1,12 @@
-from cannonball.agent import Agent
+# Project imports.
+from cannonball.Actor import Actor
 from cannonball.Level import *
 from cannonball.svg import *
 
+# Third party imports.
 from Box2D import *
+
+# Standard library imports.
 import imp
 import os
 import pyglet
@@ -19,8 +23,8 @@ def load_textures(root):
                 textures[texture_name] = image.get_texture()
     return textures
 
-def load_agent_factories(root):
-    agent_factories = {}
+def load_actor_factories(root):
+    actor_factories = {}
     for dir_path, _, file_names in os.walk(root):
         for file_name in file_names:
             module_name, ext = os.path.splitext(file_name)
@@ -28,10 +32,10 @@ def load_agent_factories(root):
                 module_info = imp.find_module(module_name, [dir_path])
                 module = imp.load_module(module_name, *module_info)
                 cls = getattr(module, module_name)
-                agent_factories[module_name] = cls
-    return agent_factories
+                actor_factories[module_name] = cls
+    return actor_factories
 
-def load_level(path, agent_factories, scale=0.2):
+def load_level(path, actor_factories, scale=0.2):
     doc = minidom.parse(path)
     root = [n for n in doc.childNodes if n.nodeName == 'svg'][0]
     named_view = root.getElementsByTagName('sodipodi:namedview')[0]
@@ -45,7 +49,7 @@ def load_level(path, agent_factories, scale=0.2):
     doSleep = True
     world = b2World(aabb, gravity, doSleep)
     level = Level(world)
-    level.agent_factories = agent_factories
+    level.actor_factories = actor_factories
     level.background_color = tuple(page_color)
     transform = parse_transform('translate(0 %g) scale(%g) scale(1 -1)' %
                                 (height, scale))
@@ -62,30 +66,30 @@ def load_layers(level, root, transform):
 
 def load_body(level, node, transform):
     data = parse_element_data(node)
-    if data.get('agent'):
-        agent_factory = level.agent_factories[data['agent']]
-        agent = agent_factory(level)
+    if data.get('actor'):
+        actor_factory = level.actor_factories[data['actor']]
+        actor = actor_factory(level)
     else:
-        agent = Agent(level)
-    agent.id = node.getAttribute('id')
-    agent.static = data.get('static') != 'false'
-    level.agents[agent.id] = agent
+        actor = Actor(level)
+    actor.id = node.getAttribute('id')
+    actor.static = data.get('static') != 'false'
+    level.actors[actor.id] = actor
     body_def = b2BodyDef()
-    agent.body = level.world.CreateBody(body_def)
-    agent.body.SetUserData(agent)
-    load_shapes(level, agent, node, transform)
-    agent.body.SetMassFromShapes()
+    actor.body = level.world.CreateBody(body_def)
+    actor.body.SetUserData(actor)
+    load_shapes(level, actor, node, transform)
+    actor.body.SetMassFromShapes()
 
-def load_shapes(level, agent, node, transform):
+def load_shapes(level, actor, node, transform):
     transform = transform * parse_transform(node.getAttribute('transform'))
     if node.nodeName == 'g':
         for child in node.childNodes:
             if child.nodeName in ('g', 'path'):
-                load_shapes(level, agent, child, transform)
+                load_shapes(level, actor, child, transform)
     elif node.nodeName == 'path':
-        load_shape(level, agent, node, transform)
+        load_shape(level, actor, node, transform)
 
-def load_shape(level, agent, node, transform):
+def load_shape(level, actor, node, transform):
     data = parse_element_data(node)
     color = Color(data.get('fill', '#ffffff'))
     material = data.get('material')
@@ -98,14 +102,14 @@ def load_shape(level, agent, node, transform):
         shape_def.vertices = triangle
         if data.get('sensor') == 'true':
             shape_def.isSensor = True
-        if agent.static:
+        if actor.static:
             density = 0
         elif material:
             density = level.materials[material].density
         else:
             density = 100
         shape_def.density = density
-        shape = agent.body.CreateShape(shape_def)
+        shape = actor.body.CreateShape(shape_def)
         shape.SetUserData({'color': tuple(color), 'material': material})
 
 def parse_data(s):

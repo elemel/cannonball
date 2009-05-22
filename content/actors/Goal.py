@@ -1,8 +1,10 @@
-from Box2D import *
-import random
-from cannonball.agent import Agent
+from cannonball.Actor import Actor
 
-class Goal(Agent):
+from Box2D import *
+
+import random
+
+class Goal(Actor):
     def collide(self, other):
         if not self in self.level.destroying and other.id == 'cannonball':
             self.level.destroying.add(self)

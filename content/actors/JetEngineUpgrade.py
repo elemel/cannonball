@@ -1,10 +1,12 @@
-from Box2D import *
-import math
-import time
-import random
-from cannonball.agent import Agent
+from cannonball.Actor import Actor
 
-class JetEngineUpgrade(Agent):
+from Box2D import *
+
+import math
+import random
+import time
+
+class JetEngineUpgrade(Actor):
     def collide(self, other):
         if not self in self.level.destroying and other.id == 'cannonball':
             self.level.destroying.add(self)
@@ -34,9 +36,9 @@ class JetEngine(object):
         linear_velocity = self.cannonball.body.linearVelocity + 10 * unit
         linear_velocity += 10 * b2Vec2(random.random() - 0.5,
                                        random.random() - 0.5)
-        factory = level.agent_factories['JetParticle']
-        agent = factory(level)
-        agent.create_body(position, linear_velocity)
+        factory = level.actor_factories['JetParticle']
+        actor = factory(level)
+        actor.create_body(position, linear_velocity)
 
         self.cannonball.body.ApplyImpulse(-unit * 200,
                                           self.cannonball.body.GetWorldCenter())

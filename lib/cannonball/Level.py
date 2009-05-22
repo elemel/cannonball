@@ -9,8 +9,8 @@ class Level(object):
     def __init__(self, world):
         self.world = world
         self.time = 0
-        self.agents = {}        
-        self.agent_factories = {}
+        self.actors = {}        
+        self.actor_factories = {}
         self.background_color = 0, 0, 0
         self.materials = dict(stone=Stone(), metal=Metal())
         self.textures = {}
@@ -30,7 +30,7 @@ class Level(object):
 
     def step(self, dt):
         self.time += dt
-        cannonball = self.agents.get('cannonball')
+        cannonball = self.actors.get('cannonball')
         if cannonball:
             cannonball.step(dt)
 
@@ -38,30 +38,30 @@ class Level(object):
         positionIterations = 8
         self.contacts.clear()
         self.world.Step(dt, velocityIterations, positionIterations)
-        for agent_1, agent_2 in self.contacts:
-            agent_1.collide(agent_2)
-            agent_2.collide(agent_1)
-        for agent in self.destroying:
-            if agent.body:
-                self.world.DestroyBody(agent.body)
-                agent.body = None
-                if agent.id:
-                    del self.agents[agent.id]
-            if agent.display_list is not None:
-                glDeleteLists(agent.display_list, 1)
-                agent.display_list = None
+        for actor_1, actor_2 in self.contacts:
+            actor_1.collide(actor_2)
+            actor_2.collide(actor_1)
+        for actor in self.destroying:
+            if actor.body:
+                self.world.DestroyBody(actor.body)
+                actor.body = None
+                if actor.id:
+                    del self.actors[actor.id]
+            if actor.display_list is not None:
+                glDeleteLists(actor.display_list, 1)
+                actor.display_list = None
         self.destroying.clear()
 
-    def queue_destroy(self, agent, delay):
+    def queue_destroy(self, actor, delay):
         def destroy(dt):
-            self.destroying.add(agent)
+            self.destroying.add(actor)
         pyglet.clock.schedule_once(destroy, delay)
 
     def add_contact(self, point):
-        agent_1 = point.shape1.GetBody().GetUserData()
-        agent_2 = point.shape2.GetBody().GetUserData()
-        if agent_1 and agent_2:
-            self.contacts.add((agent_1, agent_2))
+        actor_1 = point.shape1.GetBody().GetUserData()
+        actor_2 = point.shape2.GetBody().GetUserData()
+        if actor_1 and actor_2:
+            self.contacts.add((actor_1, actor_2))
 
     def draw_circle(self):
         glCallList(self.circle_display_list)
@@ -106,5 +106,5 @@ class CannonballBoundaryListener(b2BoundaryListener):
         self.level = level
 
     def Violation(self, body):
-        agent = body.userData
-        self.level.destroying.add(agent)
+        actor = body.userData
+        self.level.destroying.add(actor)

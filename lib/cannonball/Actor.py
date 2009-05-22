@@ -3,7 +3,7 @@ from pyglet.gl import *
 import math
 import random
 
-class Agent(object):
+class Actor(object):
     z = 0
 
     def __init__(self, level):

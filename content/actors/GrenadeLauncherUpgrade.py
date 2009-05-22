@@ -1,9 +1,11 @@
+from cannonball.Actor import Actor
+
 from Box2D import *
+
 import math
 import random
-from cannonball.agent import Agent
 
-class GrenadeLauncherUpgrade(Agent):
+class GrenadeLauncherUpgrade(Actor):
     def collide(self, other):
         if not self in self.level.destroying and other.id == 'cannonball':
             self.level.destroying.add(self)
@@ -31,6 +33,6 @@ class GrenadeLauncher(object):
         unit = b2Vec2(math.cos(angle), math.sin(angle))
         position = self.cannonball.body.position
         linear_velocity = self.cannonball.body.linearVelocity + 15 * unit
-        grenade_factory = level.agent_factories['Grenade']
+        grenade_factory = level.actor_factories['Grenade']
         grenade = grenade_factory(level)
         grenade.create_body(position, linear_velocity)

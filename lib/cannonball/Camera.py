@@ -30,7 +30,7 @@ class Camera(object):
         self.scale = max(self.scale, self.min_scale)
         self.scale = min(self.scale, self.max_scale)
 
-        cannonball = self.level.agents.get('cannonball')
+        cannonball = self.level.actors.get('cannonball')
         if cannonball:
             self.position = cannonball.body.position.tuple()
 
@@ -67,10 +67,10 @@ class Camera(object):
         query_aabb.lowerBound = min_x, min_y
         query_aabb.upperBound = max_x, max_y
         count, shapes = self.level.world.Query(query_aabb, 1000)
-        agents = set(s.GetBody().userData for s in shapes)
-        for agent in sorted(agents, key=attrgetter('z')):
+        actors = set(s.GetBody().userData for s in shapes)
+        for actor in sorted(actors, key=attrgetter('z')):
             glNormal3d(0, 0, 1)
-            agent.draw()
+            actor.draw()
 
     def on_key_press(self, symbol, modifiers):
         if symbol == pyglet.window.key.PLUS:

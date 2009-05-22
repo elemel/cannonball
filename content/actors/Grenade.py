@@ -1,8 +1,10 @@
-from Box2D import *
-import random
-from cannonball.agent import Agent
+from cannonball.Actor import Actor
 
-class Grenade(Agent):
+from Box2D import *
+
+import random
+
+class Grenade(Actor):
     def collide(self, other):
         if not self in self.level.destroying:
             self.level.destroying.add(self)
@@ -28,6 +30,6 @@ class Grenade(Agent):
         shape.SetUserData({'color': (1, 0, 0)})
 
     def create_grenade_particle(self):
-        factory = self.level.agent_factories['GrenadeParticle']
-        agent = factory(self.level)
-        agent.create_body(self.body.position, self.body.linearVelocity)
+        factory = self.level.actor_factories['GrenadeParticle']
+        actor = factory(self.level)
+        actor.create_body(self.body.position, self.body.linearVelocity)

@@ -1,21 +1,22 @@
-from cannonball.agent import Agent
+from cannonball.Actor import Actor
 
 from Box2D import *
 import pyglet
 from pyglet.gl import *
+
 import random
 
 def sign(x):
     return x / abs(x) if x else 0
 
-class Cannonball(Agent):
+class Cannonball(Actor):
     max_angular_velocity = 15
     max_angular_acceleration = 10
 
     def __init__(self, level):
         super(Cannonball, self).__init__(level)
         self.id = 'cannonball'
-        self.level.agents[self.id] = self
+        self.level.actors[self.id] = self
         self.won = False
         self.lost = False
 

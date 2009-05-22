@@ -44,7 +44,7 @@ class CannonballWindow(pyglet.window.Window):
         glLightfv(GL_LIGHT0, GL_AMBIENT, Float3(0.1, 0.1, 0.1))
         glLightfv(GL_LIGHT1, GL_DIFFUSE, Float3(0.2, 0.2, 0.2))
 
-        start = self.level.agents['start']
+        start = self.level.actors['start']
         start_shapes = start.body.shapeList
         start_position = b2Vec2()
         for shape in start_shapes:
@@ -68,7 +68,7 @@ class CannonballWindow(pyglet.window.Window):
             self.camera.step(self.physics_dt)
             self.level.step(self.physics_dt)
  
-            cannonball = self.level.agents.get('cannonball')
+            cannonball = self.level.actors.get('cannonball')
             if cannonball and cannonball.won:
                 print 'You Win'
                 self.on_close()
@@ -91,28 +91,28 @@ class CannonballWindow(pyglet.window.Window):
         if symbol == pyglet.window.key.ESCAPE:
             self.on_close()
         self.camera.on_key_press(symbol, modifiers)
-        cannonball = self.level.agents.get('cannonball')
+        cannonball = self.level.actors.get('cannonball')
         if cannonball:
             cannonball.on_key_press(symbol, modifiers)
 
     def on_key_release(self, symbol, modifiers):
         self.camera.on_key_release(symbol, modifiers)
-        cannonball = self.level.agents.get('cannonball')
+        cannonball = self.level.actors.get('cannonball')
         if cannonball:
             cannonball.on_key_release(symbol, modifiers)
 
     def create_cannonball(self, position):
-        factory = self.level.agent_factories['Cannonball']
-        agent = factory(self.level)
-        agent.create_body(position)
+        factory = self.level.actor_factories['Cannonball']
+        actor = factory(self.level)
+        actor.create_body(position)
  
 def main():
     if len(sys.argv) != 2:
         print 'Usage: cannonball <level>'
         sys.exit(1)
-    agent_root = os.path.join(config.root, 'content', 'agents')
-    agent_factories = load_agent_factories(agent_root)
-    level = load_level(sys.argv[1], agent_factories)
+    actor_root = os.path.join(config.root, 'content', 'actors')
+    actor_factories = load_actor_factories(actor_root)
+    level = load_level(sys.argv[1], actor_factories)
     window = CannonballWindow(level)
     pyglet.app.run()
 
