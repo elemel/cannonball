@@ -21,7 +21,7 @@ class Cannonball(Agent):
 
         self.cannon_dict = {}
         self.cannon_list = []
-        self.cannon_index = -1
+        self.cannon_index = 0
 
         self.rolling_left = False
         self.rolling_right = False
@@ -69,12 +69,12 @@ class Cannonball(Agent):
     def add_cannon(self, name, cannon):
         self.cannon_dict[name] = cannon
         self.cannon_list.append(cannon)
-        self.cannon_index = len(self.cannon_list) - 1
         self.dirty_display_list = True
 
     def switch_cannon(self):
-        self.cannon_index = (self.cannon_index + 1) % len(self.cannon_list)
-        self.dirty_display_list = True
+        if self.cannon_list:
+            self.cannon_index = (self.cannon_index + 1) % len(self.cannon_list)
+            self.dirty_display_list = True
 
     def create_body(self, position):
         body_def = b2BodyDef()
