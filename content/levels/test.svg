@@ -32,7 +32,7 @@
      borderopacity="1"
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
-     inkscape:zoom="1"
+     inkscape:zoom="0.35355339"
      inkscape:cx="592.10783"
      inkscape:cy="513.11716"
      inkscape:current-layer="layer1"
@@ -70,7 +70,7 @@
     </g>
     <g
        id="start"
-       transform="translate(354.11183,-199.0898)"
+       transform="translate(550.11183,-155.0898)"
        inkscape:label="#g2393"
        style="fill:#000000;fill-opacity:1">
       <path
@@ -92,7 +92,7 @@
     </g>
     <g
        id="goal"
-       transform="translate(84.118582,-49.03307)"
+       transform="translate(106.40285,323.69189)"
        inkscape:label="agent: Goal">
       <path
          d="M 745.11984,205.12064 L 741.379,200.99697 L 735.86128,201.74081 L 738.62714,196.90877 L 736.21464,191.89097 L 741.66487,193.02828 L 745.69159,189.18327 L 746.29415,194.7182 L 751.1953,197.35966 L 746.11747,199.64312 L 745.11984,205.12064 z"
@@ -399,7 +399,7 @@
     </g>
     <g
        id="g2439"
-       transform="matrix(0.7053186,0,0,0.7053186,442.87302,-91.3782)"
+       transform="matrix(0.7053186,0,0,0.7053186,638.87302,-43.3782)"
        inkscape:label="agent: JetEngineUpgrade"
        style="fill:#ffffff;fill-opacity:1">
       <path
