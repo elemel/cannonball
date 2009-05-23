@@ -1,5 +1,3 @@
-from cannonball.material import *
-
 import pyglet
 from pyglet.gl import *
 from Box2D import *
@@ -12,7 +10,6 @@ class Level(object):
         self.actors = {}        
         self.actor_factories = {}
         self.background_color = 0, 0, 0
-        self.materials = dict(stone=Stone(), metal=Metal())
         self.textures = {}
         self.destroying = set()
 

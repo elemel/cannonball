@@ -72,7 +72,6 @@ def load_body(level, node, transform):
     else:
         actor = Actor(level)
     actor.id = node.getAttribute('id')
-    actor.static = data.get('static') != 'false'
     level.actors[actor.id] = actor
     body_def = b2BodyDef()
     actor.body = level.world.CreateBody(body_def)
@@ -91,11 +90,14 @@ def load_shapes(level, actor, node, transform):
 
 def load_shape(level, actor, node, transform):
     data = parse_element_data(node)
-    try:
-        color = Color(data['fill'])
-    except:
-        color = Color('#ffffff')    
-    material = data.get('material')
+    color = Color('#ffffff')
+    texture = None
+    fill = data.get('fill')
+    if fill.startswith('#'):
+        color = Color(fill)
+    elif fill.startswith('url(#') and fill.endswith(')'):
+        pattern_id = fill.lstrip('url(#').rstrip(')')
+        texture = get_image_name(node.ownerDocument, pattern_id)
     path = node.getAttribute('d')
     path = linearize_path(path)
     path = parse_path(path)
@@ -105,15 +107,24 @@ def load_shape(level, actor, node, transform):
         shape_def.vertices = triangle
         if data.get('sensor') == 'true':
             shape_def.isSensor = True
-        if actor.static:
-            density = 0
-        elif material:
-            density = level.materials[material].density
-        else:
-            density = 100
-        shape_def.density = density
+        shape_def.density = float(data.get('density', '0'))
         shape = actor.body.CreateShape(shape_def)
-        shape.SetUserData({'color': tuple(color), 'material': material})
+        shape.SetUserData({'color': tuple(color), 'texture': texture})
+
+def get_image_name(document, pattern_id):
+    pattern_elements = document.getElementsByTagName('pattern')
+    pattern_element = [e for e in pattern_elements
+                       if e.getAttribute('id') == pattern_id][0]
+    if pattern_element.getAttribute('xlink:href'):
+        pattern_id = pattern_element.getAttribute('xlink:href').lstrip('#')
+        return get_image_name(document, pattern_id)
+    image_elements = pattern_element.getElementsByTagName('image')
+    if image_elements:
+        image_name = image_elements[0].getAttribute('xlink:href')
+        image_name = os.path.split(image_name)[1]
+        image_name = os.path.splitext(image_name)[0]
+        return image_name
+    return None
 
 def parse_data(s):
     try:
