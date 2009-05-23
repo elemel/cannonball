@@ -91,7 +91,10 @@ def load_shapes(level, actor, node, transform):
 
 def load_shape(level, actor, node, transform):
     data = parse_element_data(node)
-    color = Color(data.get('fill', '#ffffff'))
+    try:
+        color = Color(data['fill'])
+    except:
+        color = Color('#ffffff')    
     material = data.get('material')
     path = node.getAttribute('d')
     path = linearize_path(path)
