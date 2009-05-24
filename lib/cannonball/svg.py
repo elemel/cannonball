@@ -102,33 +102,30 @@ class Polygon(object):
                 raise SVGError('Cannot triangulate polygon')
         return triangles
 
-def bezier_points(p, steps=5):
-    def bezier_iter(p, steps):
-        """
-        http://www.niksula.cs.hut.fi/~hkankaan/Homepages/bezierfast.html
-        """
-        t = 1.0 / steps
-        t2 = t*t
-    
-        p0, p1, p2, p3 = p
-        f = p0
-        fd = 3 * (p1 - p0) * t
-        fdd_per_2 = 3 * (p0 - 2 * p1 + p2) * t2
-        fddd_per_2 = 3 * (3 * (p1 - p2) + p3 - p0) * t2 * t
-    
-        fddd = fddd_per_2 + fddd_per_2
-        fdd = fdd_per_2 + fdd_per_2
-        fddd_per_6 = fddd_per_2 * (1.0 / 3)
-    
-        for x in xrange(steps):
-            f += fd + fdd_per_2 + fddd_per_6
-            yield f
-            fd += fdd + fddd_per_2
-            fdd += fddd
-            fdd_per_2 += fddd_per_2
+def bezier_points(points, steps=5):
+    """
+    http://www.niksula.cs.hut.fi/~hkankaan/Homepages/bezierfast.html
+    """
 
-    p = [Vector(t) for t in p]
-    return ((p.x, p.y) for p in bezier_iter(p, steps))
+    t = 1 / steps
+    t2 = t *t
+
+    p0, p1, p2, p3 = points
+    f = p0
+    fd = 3 * (p1 - p0) * t
+    fdd_per_2 = 3 * (p0 - 2 * p1 + p2) * t2
+    fddd_per_2 = 3 * (3 * (p1 - p2) + p3 - p0) * t2 * t
+
+    fddd = fddd_per_2 + fddd_per_2
+    fdd = fdd_per_2 + fdd_per_2
+    fddd_per_6 = fddd_per_2 * (1 / 3)
+
+    for x in xrange(steps):
+        f += fd + fdd_per_2 + fddd_per_6
+        yield f
+        fd += fdd + fddd_per_2
+        fdd += fddd
+        fdd_per_2 += fddd_per_2
 
 class Color(object):
     def __init__(self, s):
@@ -190,17 +187,18 @@ class Subpath(object):
 
     def linearize(self):
         vertices = []
-        start_point = 0, 0
+        start_point = Vector([0, 0])
         for command in self.commands:
             if command.name == 'M':
-                start_point = tuple(command.args)
+                start_point = Vector(command.args)
                 vertices.append(command.args)
             elif command.name == 'L':
-                start_point = tuple(command.args)
+                start_point = Vector(command.args)
                 vertices.append(command.args)
             elif command.name == 'C':
-                control_points = [start_point, command.args[0:2],
-                                  command.args[2:4], command.args[4:6]]
+                control_points = [start_point, Vector(command.args[0:2]),
+                                  Vector(command.args[2:4]),
+                                  Vector(command.args[4:6])]
                 vertices.extend(bezier_points(control_points))
                 start_point = control_points[-1]
             elif command.name == 'z':
