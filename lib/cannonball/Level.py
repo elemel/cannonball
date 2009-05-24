@@ -11,6 +11,7 @@ class Level(object):
         self.actor_factories = {}
         self.background_color = 0, 0, 0
         self.textures = {}
+        self.joints = []
         self.destroying = set()
 
         self.contacts = set()

@@ -57,6 +57,17 @@ def load_level(path, actor_factories):
     transform = Transform('translate(0 %g) scale(%g) scale(1 -1)' %
                           (height, scale))
     load_layers(level, root, transform)
+    for joint_position in level.joints:
+        joint_aabb = b2AABB()
+        joint_aabb.lowerBound = joint_position
+        joint_aabb.upperBound = joint_position
+        count, shapes = world.Query(joint_aabb, 1000)
+        bodies = set(s.GetBody() for s in shapes)
+        if len(bodies) == 2:
+            body_1, body_2 = bodies
+            joint_def = b2RevoluteJointDef()
+            joint_def.Initialize(body_1, body_2, joint_position)
+            world.CreateJoint(joint_def)
     return level
 
 def get_scale(document):
@@ -92,6 +103,12 @@ def load_layers(level, root, transform):
 def load_body(level, node, transform):
     data = parse_element_data(node)
     if data.get('actor'):
+        if data['actor'] == 'RevoluteJoint':
+            transform = transform * Transform(node.getAttribute('transform'))
+            center = (float(node.getAttribute('sodipodi:cx')),
+                      float(node.getAttribute('sodipodi:cy')))
+            level.joints.append(transform * center)
+            return
         actor_factory = level.actor_factories[data['actor']]
         actor = actor_factory(level)
     else:
