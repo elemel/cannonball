@@ -175,7 +175,10 @@ def parse_command(s):
 
 class Path(object):
     def __init__(self, subpaths):
-        self.subpaths = list(subpaths)
+        if isinstance(subpaths, basestring):
+            self.subpaths = parse_path(subpaths).subpaths
+        else:
+            self.subpaths = list(subpaths)
 
     def __str__(self):
         return ' '.join(str(s) for s in self.subpaths)
@@ -285,7 +288,10 @@ def create_skew_y_transform(self, a):
 
 class Transform(object):
     def __init__(self, matrix=(1, 0, 0, 1, 0, 0)):
-        self.matrix = tuple(float(x) for x in matrix)
+        if isinstance(matrix, basestring):
+            self.matrix = parse_transform(matrix).matrix
+        else:
+            self.matrix = tuple(float(x) for x in matrix)
 
     def __mul__(self, other):
         a, b, c, d, e, f = self.matrix

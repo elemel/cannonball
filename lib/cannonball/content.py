@@ -51,8 +51,8 @@ def load_level(path, actor_factories, scale=0.2):
     level = Level(world)
     level.actor_factories = actor_factories
     level.background_color = tuple(page_color)
-    transform = parse_transform('translate(0 %g) scale(%g) scale(1 -1)' %
-                                (height, scale))
+    transform = Transform('translate(0 %g) scale(%g) scale(1 -1)' %
+                          (height, scale))
     load_layers(level, root, transform)
     return level
 
@@ -80,7 +80,7 @@ def load_body(level, node, transform):
     actor.body.SetMassFromShapes()
 
 def load_shapes(level, actor, node, transform):
-    transform = transform * parse_transform(node.getAttribute('transform'))
+    transform = transform * Transform(node.getAttribute('transform'))
     if node.nodeName == 'g':
         for child in node.childNodes:
             if child.nodeName in ('g', 'path'):
@@ -98,7 +98,7 @@ def load_shape(level, actor, node, transform):
     elif fill.startswith('url(#') and fill.endswith(')'):
         pattern_id = fill.lstrip('url(#').rstrip(')')
         texture = get_image_name(node.ownerDocument, pattern_id)
-    path = parse_path(node.getAttribute('d'))
+    path = Path(node.getAttribute('d'))
     for triangle in path.triangulate():
         triangle = [transform * (x, y) for x, y in reversed(triangle.vertices)]
         shape_def = b2PolygonDef()
