@@ -15,21 +15,21 @@ class Vector(object):
         self.y = float(y)
 
     def __add__(self, other):
-        return type(self)([self.x + other.x, self.y + other.y])
+        return Vector([self.x + other.x, self.y + other.y])
 
     def __sub__(self, other):
-        return type(self)([self.x - other.x, self.y - other.y])
+        return Vector([self.x - other.x, self.y - other.y])
 
     def __mul__(self, k):
-        return type(self)([k * self.x, k * self.y])
+        return Vector([k * self.x, k * self.y])
 
     __rmul__ = __mul__
 
     def __div__(self, k):
-        return type(self)([self.x / k, self.y / k])
+        return Vector([self.x / k, self.y / k])
 
     def __neg__(self):
-        return type(self)([-self.x, -self.y])
+        return Vector([-self.x, -self.y])
 
     def __eq__(self, other):
         return self.x == other.x and self.y == other.y
