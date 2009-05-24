@@ -98,9 +98,7 @@ def load_shape(level, actor, node, transform):
     elif fill.startswith('url(#') and fill.endswith(')'):
         pattern_id = fill.lstrip('url(#').rstrip(')')
         texture = get_image_name(node.ownerDocument, pattern_id)
-    path = node.getAttribute('d')
-    path = linearize_path(path)
-    path = parse_path(path)
+    path = parse_path(node.getAttribute('d'))
     for triangle in path.triangulate():
         triangle = [transform * (x, y) for x, y in reversed(triangle.vertices)]
         shape_def = b2PolygonDef()

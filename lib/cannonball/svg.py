@@ -103,28 +103,6 @@ class Polygon(object):
                 raise SVGError('Cannot triangulate polygon')
         return triangles
 
-def linearize_path(path):
-    """
-    Creates a path with only M and L. 
-    In path can contain M, L and C. 
-    """
-    new_path = []
-    for type, cs in get_path(path):
-        if type == 'M':
-            last_p = cs.next()
-            new_path.append('M %f,%f' % (last_p))
-        elif type == 'L':
-            last_p = cs.next()
-            new_path.append('L %f,%f' % (last_p))
-        elif type == 'C':
-            control_points = [last_p] + list(cs)
-            for p in bezier_points(control_points):
-                new_path.append('L %f,%f' % (p))
-            last_p = control_points[-1]
-        elif type == 'z':
-            new_path.append('z')
-    return ' '.join(new_path)
-
 def bezier_points(p, steps=5):
     def bezier_iter(p, steps):
         """
@@ -215,7 +193,23 @@ class Subpath(object):
         return ' '.join(str(c) for c in self.commands)
 
     def linearize(self):
-        return Polygon(tuple(c.args[-2:]) for c in self.commands if c.args)
+        vertices = []
+        start_point = 0, 0
+        for command in self.commands:
+            if command.name == 'M':
+                start_point = tuple(command.args)
+                vertices.append(command.args)
+            elif command.name == 'L':
+                start_point = tuple(command.args)
+                vertices.append(command.args)
+            elif command.name == 'C':
+                control_points = [start_point, command.args[0:2],
+                                  command.args[2:4], command.args[4:6]]
+                vertices.extend(bezier_points(control_points))
+                start_point = control_points[-1]
+            elif command.name == 'z':
+                pass
+        return Polygon(vertices)
 
 class Command(object):
     def __init__(self, name, args):
