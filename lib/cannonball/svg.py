@@ -9,7 +9,8 @@ class SVGError(Exception):
 class Vector(object):
     __slots__ = '__x', '__y'
 
-    def __init__(self, x, y):
+    def __init__(self, iterable):
+        x, y = iterable
         self.__x = float(x)
         self.__y = float(y)
 
@@ -22,24 +23,31 @@ class Vector(object):
         return self.__y
 
     def __add__(self, other):
-        return type(self)(self.x + other.x, self.y + other.y)
+        return type(self)([self.x + other.x, self.y + other.y])
 
     def __sub__(self, other):
-        return type(self)(self.x - other.x, self.y - other.y)
+        return type(self)([self.x - other.x, self.y - other.y])
 
     def __mul__(self, k):
-        return type(self)(k * self.x, k * self.y)
+        return type(self)([k * self.x, k * self.y])
 
     __rmul__ = __mul__
 
     def __div__(self, k):
-        return type(self)(self.x / k, self.y / k)
+        return type(self)([self.x / k, self.y / k])
 
     def __neg__(self):
-        return type(self)(-self.x, -self.y)
+        return type(self)([-self.x, -self.y])
 
     def __eq__(self, other):
         return self.x == other.x and self.y == other.y
+
+    def __len__(self):
+        return 2
+
+    def __iter__(self):
+        yield self.x
+        yield self.y
 
 class Polygon(object):
     def __init__(self, vertices):
@@ -136,7 +144,7 @@ def bezier_points(p, steps=5):
             fdd += fddd
             fdd_per_2 += fddd_per_2
 
-    p = [Vector(*t) for t in p]
+    p = [Vector(t) for t in p]
     return ((p.x, p.y) for p in bezier_iter(p, steps))
 
 def get_path(path):
