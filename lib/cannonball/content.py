@@ -35,11 +35,12 @@ def load_actor_factories(root):
                 actor_factories[module_name] = cls
     return actor_factories
 
-def load_level(path, actor_factories, scale=0.2):
-    doc = minidom.parse(path)
-    root = [n for n in doc.childNodes if n.nodeName == 'svg'][0]
+def load_level(path, actor_factories):
+    document = minidom.parse(path)
+    root = [n for n in document.childNodes if n.nodeName == 'svg'][0]
     named_view = root.getElementsByTagName('sodipodi:namedview')[0]
     page_color = Color(named_view.getAttribute('pagecolor') or '#000000')
+    scale = get_scale(document)
     width = float(root.getAttribute('width')) * scale
     height = float(root.getAttribute('height')) * scale
     aabb = b2AABB()
@@ -55,6 +56,28 @@ def load_level(path, actor_factories, scale=0.2):
                           (height, scale))
     load_layers(level, root, transform)
     return level
+
+def get_scale(document):
+    text_elements = document.getElementsByTagName('text')
+    scale_elements = [e for e in text_elements
+                      if e.getAttribute('id') == 'scale']
+    if scale_elements:
+        scale_text = get_text(scale_elements[0]).strip()
+        scale_text = scale_text.lstrip('page-width').rstrip('m').strip()
+        scale_text = scale_text.lstrip(':').strip()
+        scale_width = float(scale_text) if scale_text else 1
+        svg_element = document.getElementsByTagName('svg')[0]
+        document_width = float(svg_element.getAttribute('width'))
+        return scale_width / document_width
+    return 1
+
+def get_text(element):
+    for node in element.childNodes:
+        if node.nodeType == node.TEXT_NODE:
+            return node.nodeValue
+        elif node.nodeType == node.ELEMENT_NODE:
+            return get_text(node)
+    return ''
 
 def load_layers(level, root, transform):
     for layer in root.childNodes:
