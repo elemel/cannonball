@@ -7,20 +7,12 @@ class SVGError(Exception):
     pass
 
 class Vector(object):
-    __slots__ = '__x', '__y'
+    __slots__ = 'x', 'y'
 
     def __init__(self, iterable):
         x, y = iterable
-        self.__x = float(x)
-        self.__y = float(y)
-
-    @property
-    def x(self):
-        return self.__x
-
-    @property
-    def y(self):
-        return self.__y
+        self.x = float(x)
+        self.y = float(y)
 
     def __add__(self, other):
         return type(self)([self.x + other.x, self.y + other.y])
@@ -51,7 +43,7 @@ class Vector(object):
 
 class Polygon(object):
     def __init__(self, vertices):
-        self.vertices = [tuple(v) for v in vertices]
+        self.vertices = [Vector(v) for v in vertices]
         if self.vertices[-1] == self.vertices[0]:
             self.vertices.pop()
 
@@ -72,19 +64,10 @@ class Polygon(object):
         return self.area >= 0
 
     def normalize(self):
-        if not self.clockwise:
-            self.reverse()
-
-    def normalized(self):
-        result = Polygon(self)
-        result.normalize()
-        return result
+        return self if self.clockwise else Polygon(reversed(self.vertices))
 
     def __iter__(self):
         return iter(self.vertices)
-
-    def reverse(self):
-        self.vertices.reverse()
 
     @property
     def area(self):
@@ -202,7 +185,7 @@ class Path(object):
 
     def triangulate(self):
         for subpath in self.subpaths:
-            for triangle in subpath.linearize().normalized().triangulate():
+            for triangle in subpath.linearize().normalize().triangulate():
                 yield triangle
 
 class Subpath(object):
