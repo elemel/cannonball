@@ -108,7 +108,7 @@ def bezier_points(points, steps=5):
     """
 
     t = 1 / steps
-    t2 = t *t
+    t2 = t ** 2
 
     p0, p1, p2, p3 = points
     f = p0
@@ -147,7 +147,6 @@ class Color(object):
         '#abcdef'
         """
         return '#%2x%2x%2x' % (self.red, self.green, self.blue)
-
 
 def parse_command(s):
     s = s.replace(',', ' ')
