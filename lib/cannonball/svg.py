@@ -157,22 +157,23 @@ def get_path(path):
 class Color(object):
     def __init__(self, s):
         if s[0] ==  '#':
-            self.r, self.g, self.b = (int(s[1:3], 16), int(s[3:5], 16),
-                                      int(s[5:7], 16))
+            self.red = int(s[1:3], 16)
+            self.green = int(s[3:5], 16)
+            self.blue = int(s[5:7], 16)
         else:
             raise SVGError('invalid color: %s' % s)
 
     def __iter__(self):
-        yield self.r / 255
-        yield self.g / 255
-        yield self.b / 255
+        yield self.red
+        yield self.green
+        yield self.blue
 
     def __str__(self):
         """
         >>> str(Color('#abcdef'))
         '#abcdef'
         """
-        return '#%2x%2x%2x' % (self.r, self.g, self.b)
+        return '#%2x%2x%2x' % (self.red, self.green, self.blue)
 
 subpath_re = re.compile('M[^M]*')
 command_re = re.compile('[A-Za-z][^A-Za-z]*')

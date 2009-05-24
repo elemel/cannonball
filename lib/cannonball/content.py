@@ -1,3 +1,5 @@
+from __future__ import division
+
 # Project imports.
 from cannonball.Actor import Actor
 from cannonball.Level import *
@@ -51,7 +53,7 @@ def load_level(path, actor_factories):
     world = b2World(aabb, gravity, doSleep)
     level = Level(world)
     level.actor_factories = actor_factories
-    level.background_color = tuple(page_color)
+    level.background_color = tuple(c / 255 for c in page_color)
     transform = Transform('translate(0 %g) scale(%g) scale(1 -1)' %
                           (height, scale))
     load_layers(level, root, transform)
@@ -130,7 +132,8 @@ def load_shape(level, actor, node, transform):
             shape_def.isSensor = True
         shape_def.density = float(data.get('density', '0'))
         shape = actor.body.CreateShape(shape_def)
-        shape.SetUserData({'color': tuple(color), 'texture': texture})
+        shape.SetUserData({'color': tuple(c / 255 for c in color),
+                           'texture': texture})
 
 def get_image_name(document, pattern_id):
     pattern_elements = document.getElementsByTagName('pattern')
