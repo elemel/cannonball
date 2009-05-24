@@ -130,13 +130,6 @@ def bezier_points(p, steps=5):
     p = [Vector(t) for t in p]
     return ((p.x, p.y) for p in bezier_iter(p, steps))
 
-def get_path(path):
-    regex = re.compile('([MLCz])([-\d., ]*)')
-    return ((match.group(1),
-            (tuple(float(c) for c in p.split(','))
-             for p in match.group(2).split()))
-             for match in regex.finditer(path))
-
 class Color(object):
     def __init__(self, s):
         if s[0] ==  '#':
@@ -158,14 +151,6 @@ class Color(object):
         """
         return '#%2x%2x%2x' % (self.red, self.green, self.blue)
 
-subpath_re = re.compile('M[^M]*')
-command_re = re.compile('[A-Za-z][^A-Za-z]*')
-
-def parse_path(s):
-    return Path(parse_subpath(p) for p in subpath_re.findall(s))
-
-def parse_subpath(s):
-    return Subpath(parse_command(c) for c in command_re.findall(s))
 
 def parse_command(s):
     s = s.replace(',', ' ')
@@ -174,9 +159,11 @@ def parse_command(s):
     return Command(name, args)
 
 class Path(object):
+    subpath_re = re.compile('M[^M]*')
+
     def __init__(self, subpaths):
         if isinstance(subpaths, basestring):
-            self.subpaths = parse_path(subpaths).subpaths
+            self.subpaths = map(Subpath, self.subpath_re.findall(subpaths))
         else:
             self.subpaths = list(subpaths)
 
@@ -189,8 +176,14 @@ class Path(object):
                 yield triangle
 
 class Subpath(object):
+    command_re = re.compile('[A-Za-z][^A-Za-z]*')
+
     def __init__(self, commands):
-        self.commands = list(commands)
+        if isinstance(commands, basestring):
+            self.commands = map(parse_command,
+                                self.command_re.findall(commands))
+        else:
+            self.commands = list(commands)
 
     def __str__(self):
         return ' '.join(str(c) for c in self.commands)
