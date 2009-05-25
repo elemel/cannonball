@@ -92,7 +92,7 @@
        id="path2440"
        sodipodi:nodetypes="cssssssssssssssssss" />
     <path
-       inkscape:label="sensor: true; actor: cannonball.actors.Goal"
+       inkscape:label="sensor: true; actor: cannonball.actors.Goal.Goal"
        sodipodi:type="star"
        style="fill:#f2ff00;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-linecap:square;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        id="path2391"
@@ -245,7 +245,7 @@
        sodipodi:nodetypes="ccccc"
        inkscape:label="density: 200" />
     <path
-       inkscape:label="sensor: true; actor: cannonball.actors.GrenadeLauncherUpgrade"
+       inkscape:label="sensor: true; actor: cannonball.actors.GrenadeLauncherUpgrade.GrenadeLauncherUpgrade"
        sodipodi:type="star"
        style="fill:#ff0000;fill-opacity:1;stroke:#000000;stroke-width:1.41779899;stroke-linecap:square;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        id="path2443"
@@ -276,7 +276,7 @@
        id="path2504"
        style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:1.41779899;stroke-linecap:square;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        sodipodi:type="star"
-       inkscape:label="sensor: true; actor: cannonball.actors.JetEngineUpgrade"
+       inkscape:label="sensor: true; actor: cannonball.actors.JetEngineUpgrade.JetEngineUpgrade"
        transform="matrix(0.7053186,0,0,0.7053186,638.75189,-41.648254)" />
     <path
        transform="translate(549.80783,-153.39627)"

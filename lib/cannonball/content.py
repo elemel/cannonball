@@ -90,17 +90,17 @@ def load_layers(level, root, transform):
 
 def load_body(level, node, transform):
     data = parse_element_data(node)
-    module_name = data.get('actor')
-    if module_name:
-        if module_name == 'RevoluteJoint':
+    actor_name = data.get('actor')
+    if actor_name:
+        if actor_name == 'RevoluteJoint':
             transform = transform * Transform(node.getAttribute('transform'))
             center = (float(node.getAttribute('sodipodi:cx')),
                       float(node.getAttribute('sodipodi:cy')))
             level.joints.append(transform * center)
             return
+        module_name, class_name = actor_name.rsplit('.', 1)
         __import__(module_name)
         module = sys.modules[module_name]
-        class_name = module_name.split('.')[-1]
         cls = getattr(module, class_name)
         actor = cls(level)
     else:
