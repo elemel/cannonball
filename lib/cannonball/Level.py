@@ -3,6 +3,7 @@ from __future__ import division
 
 # Project imports.
 from cannonball.Actor import Actor
+from cannonball import config
 from cannonball.svg import *
 
 # Third party imports.
@@ -21,10 +22,12 @@ class Level(object):
         self.time = 0
         self.actors = {}        
         self.background_color = 0, 0, 0
-        self.textures = {}
         self.joints = []
         self.destroying = set()
         self.contacts = set()
+
+        texture_root = os.path.join(config.root, 'content', 'textures')
+        self.textures = load_textures(texture_root)
 
         self.load(path)
         

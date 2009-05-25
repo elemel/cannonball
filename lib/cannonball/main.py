@@ -53,8 +53,6 @@ class CannonballWindow(pyglet.window.Window):
         start_position *= 1 / len(start_shapes)
         self.create_cannonball(start_position)
 
-        texture_root = os.path.join(config.root, 'content', 'textures')
-        level.textures = load_textures(texture_root)
         self.camera = Camera(self, self.level)
 
         self.time = 0
