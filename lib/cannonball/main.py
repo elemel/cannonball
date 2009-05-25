@@ -1,9 +1,9 @@
 from __future__ import division
 
+from cannonball.actors.Cannonball import *
 from cannonball.Camera import *
 from cannonball import config
-from cannonball.actors.Cannonball import *
-from cannonball.content import *
+from cannonball.Level import *
 from cannonball.svg import *
 
 from Box2D import *
@@ -110,7 +110,7 @@ def main():
     if len(sys.argv) != 2:
         print 'Usage: cannonball <level>'
         sys.exit(1)
-    level = load_level(sys.argv[1])
+    level = Level(sys.argv[1])
     window = CannonballWindow(level)
     pyglet.app.run()
 
