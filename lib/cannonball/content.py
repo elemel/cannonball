@@ -12,6 +12,7 @@ from Box2D import *
 import imp
 import os
 import pyglet
+import sys
 from xml.dom import minidom
 
 def load_textures(root):
@@ -25,19 +26,7 @@ def load_textures(root):
                 textures[texture_name] = image.get_texture()
     return textures
 
-def load_actor_factories(root):
-    actor_factories = {}
-    for dir_path, _, file_names in os.walk(root):
-        for file_name in file_names:
-            module_name, ext = os.path.splitext(file_name)
-            if ext == '.py':
-                module_info = imp.find_module(module_name, [dir_path])
-                module = imp.load_module(module_name, *module_info)
-                cls = getattr(module, module_name)
-                actor_factories[module_name] = cls
-    return actor_factories
-
-def load_level(path, actor_factories):
+def load_level(path):
     document = minidom.parse(path)
     root = [n for n in document.childNodes if n.nodeName == 'svg'][0]
     named_view = root.getElementsByTagName('sodipodi:namedview')[0]
@@ -52,7 +41,6 @@ def load_level(path, actor_factories):
     doSleep = True
     world = b2World(aabb, gravity, doSleep)
     level = Level(world)
-    level.actor_factories = actor_factories
     level.background_color = tuple(c / 255 for c in page_color)
     transform = Transform('translate(0 %g) scale(%g) scale(1 -1)' %
                           (height, scale))
@@ -102,15 +90,19 @@ def load_layers(level, root, transform):
 
 def load_body(level, node, transform):
     data = parse_element_data(node)
-    if data.get('actor'):
-        if data['actor'] == 'RevoluteJoint':
+    module_name = data.get('actor')
+    if module_name:
+        if module_name == 'RevoluteJoint':
             transform = transform * Transform(node.getAttribute('transform'))
             center = (float(node.getAttribute('sodipodi:cx')),
                       float(node.getAttribute('sodipodi:cy')))
             level.joints.append(transform * center)
             return
-        actor_factory = level.actor_factories[data['actor']]
-        actor = actor_factory(level)
+        __import__(module_name)
+        module = sys.modules[module_name]
+        class_name = module_name.split('.')[-1]
+        cls = getattr(module, class_name)
+        actor = cls(level)
     else:
         actor = Actor(level)
     actor.id = node.getAttribute('id')

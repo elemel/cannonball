@@ -1,3 +1,4 @@
+from cannonball.actors.GrenadeParticle import GrenadeParticle
 from cannonball.Actor import Actor
 
 from Box2D import *
@@ -30,6 +31,5 @@ class Grenade(Actor):
         shape.SetUserData({'color': (1, 0, 0)})
 
     def create_grenade_particle(self):
-        factory = self.level.actor_factories['GrenadeParticle']
-        actor = factory(self.level)
+        actor = GrenadeParticle(self.level)
         actor.create_body(self.body.position, self.body.linearVelocity)

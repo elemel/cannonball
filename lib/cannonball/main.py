@@ -2,6 +2,7 @@ from __future__ import division
 
 from cannonball.Camera import *
 from cannonball import config
+from cannonball.actors.Cannonball import *
 from cannonball.content import *
 from cannonball.svg import *
 
@@ -102,17 +103,14 @@ class CannonballWindow(pyglet.window.Window):
             cannonball.on_key_release(symbol, modifiers)
 
     def create_cannonball(self, position):
-        factory = self.level.actor_factories['Cannonball']
-        actor = factory(self.level)
+        actor = Cannonball(self.level)
         actor.create_body(position)
  
 def main():
     if len(sys.argv) != 2:
         print 'Usage: cannonball <level>'
         sys.exit(1)
-    actor_root = os.path.join(config.root, 'content', 'actors')
-    actor_factories = load_actor_factories(actor_root)
-    level = load_level(sys.argv[1], actor_factories)
+    level = load_level(sys.argv[1])
     window = CannonballWindow(level)
     pyglet.app.run()
 

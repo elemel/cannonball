@@ -1,3 +1,4 @@
+from cannonball.actors.Grenade import Grenade
 from cannonball.Actor import Actor
 
 from Box2D import *
@@ -33,6 +34,5 @@ class GrenadeLauncher(object):
         unit = b2Vec2(math.cos(angle), math.sin(angle))
         position = self.cannonball.body.position
         linear_velocity = self.cannonball.body.linearVelocity + 15 * unit
-        grenade_factory = level.actor_factories['Grenade']
-        grenade = grenade_factory(level)
+        grenade = Grenade(level)
         grenade.create_body(position, linear_velocity)

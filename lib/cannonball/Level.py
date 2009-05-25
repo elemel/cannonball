@@ -8,7 +8,6 @@ class Level(object):
         self.world = world
         self.time = 0
         self.actors = {}        
-        self.actor_factories = {}
         self.background_color = 0, 0, 0
         self.textures = {}
         self.joints = []
