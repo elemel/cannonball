@@ -51,7 +51,7 @@ class GrenadeParticle(Actor):
 
     def draw_geometry(self):
         glColor4d(*self.color)
-        texture = self.level.textures['particle']
+        texture = self.level.get_texture('../textures/particle.png')
         glEnable(texture.target)
         glBindTexture(texture.target, texture.id)
         glBegin(GL_QUADS)

@@ -2,7 +2,6 @@ from __future__ import division
 
 from cannonball.actors.Cannonball import *
 from cannonball.Camera import *
-from cannonball import config
 from cannonball.Level import *
 from cannonball.svg import *
 

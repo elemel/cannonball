@@ -3,7 +3,6 @@ from __future__ import division
 
 # Project imports.
 from cannonball.Actor import Actor
-from cannonball import config
 from cannonball.svg import *
 
 # Third party imports.
@@ -19,16 +18,14 @@ from xml.dom import minidom
 
 class Level(object):
     def __init__(self, path):
+        self.path = path
         self.time = 0
         self.actors = {}        
         self.background_color = 0, 0, 0
         self.joints = []
         self.destroying = set()
         self.contacts = set()
-
-        texture_root = os.path.join(config.root, 'content', 'textures')
-        self.textures = load_textures(texture_root)
-
+        self.textures = {}
         self.load(path)
         
         self.contact_listener = CannonballContactListener(self)
@@ -71,6 +68,15 @@ class Level(object):
                 joint_def = b2RevoluteJointDef()
                 joint_def.Initialize(body_1, body_2, joint_position)
                 world.CreateJoint(joint_def)
+
+    def get_texture(self, path):
+        if path not in self.textures:
+            p = path
+            if not os.path.isabs(p):
+                p = os.path.join(os.path.dirname(self.path), p)
+            image = pyglet.image.load(p)
+            self.textures[path] = image.get_texture()
+        return self.textures[path]
 
     def step(self, dt):
         self.time += dt
@@ -153,17 +159,6 @@ class CannonballBoundaryListener(b2BoundaryListener):
         actor = body.userData
         self.level.destroying.add(actor)
 
-def load_textures(root):
-    textures = {}
-    for dir_name, _, file_names in os.walk(root):
-        for file_name in file_names:
-            texture_name, ext = os.path.splitext(file_name)
-            if ext in ('.jpg', '.png'):
-                path = os.path.join(dir_name, file_name)
-                image = pyglet.image.load(path)
-                textures[texture_name] = image.get_texture()
-    return textures
-
 def get_scale(document):
     text_elements = document.getElementsByTagName('text')
     scale_elements = [e for e in text_elements
@@ -237,7 +232,8 @@ def load_shape(level, actor, node, transform):
         color = Color(fill)
     elif fill.startswith('url(#') and fill.endswith(')'):
         pattern_id = fill.lstrip('url(#').rstrip(')')
-        texture = get_image_name(node.ownerDocument, pattern_id)
+        image_path = get_image_path(node.ownerDocument, pattern_id)
+        texture = level.get_texture(image_path)
     path = Path(node.getAttribute('d'))
     for triangle in path.triangulate():
         triangle = [transform * (x, y) for x, y in reversed(triangle.vertices)]
@@ -250,19 +246,16 @@ def load_shape(level, actor, node, transform):
         shape.SetUserData({'color': tuple(c / 255 for c in color),
                            'texture': texture})
 
-def get_image_name(document, pattern_id):
+def get_image_path(document, pattern_id):
     pattern_elements = document.getElementsByTagName('pattern')
     pattern_element = [e for e in pattern_elements
                        if e.getAttribute('id') == pattern_id][0]
     if pattern_element.getAttribute('xlink:href'):
         pattern_id = pattern_element.getAttribute('xlink:href').lstrip('#')
-        return get_image_name(document, pattern_id)
+        return get_image_path(document, pattern_id)
     image_elements = pattern_element.getElementsByTagName('image')
     if image_elements:
-        image_name = image_elements[0].getAttribute('xlink:href')
-        image_name = os.path.split(image_name)[1]
-        image_name = os.path.splitext(image_name)[0]
-        return image_name
+        return image_elements[0].getAttribute('xlink:href')
     return None
 
 def parse_data(s):

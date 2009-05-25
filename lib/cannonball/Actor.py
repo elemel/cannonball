@@ -37,9 +37,8 @@ class Actor(object):
 
     def draw_shape(self, shape):
         data = shape.GetUserData() or {}
-        texture_name = data.get('texture')
-        if texture_name:
-            texture = self.level.textures[texture_name]
+        texture = data.get('texture')
+        if texture:
             glColor3d(1, 1, 1)
         else:
             texture = None
