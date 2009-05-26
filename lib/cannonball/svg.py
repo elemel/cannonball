@@ -7,39 +7,45 @@ class SVGError(Exception):
     pass
 
 class Vector(object):
-    __slots__ = 'x', 'y'
+    def __init__(self, comps):
+        self.__comps = tuple(comps)
 
-    def __init__(self, iterable):
-        x, y = iterable
-        self.x = float(x)
-        self.y = float(y)
+    @property
+    def x(self):
+        return self.__comps[0]
+
+    @property
+    def y(self):
+        return self.__comps[1]
 
     def __add__(self, other):
-        return Vector([self.x + other.x, self.y + other.y])
+        return Vector(a + b for a, b in zip(self, other))
 
     def __sub__(self, other):
-        return Vector([self.x - other.x, self.y - other.y])
+        return Vector(a - b for a, b in zip(self, other))
 
     def __mul__(self, k):
-        return Vector([k * self.x, k * self.y])
+        return Vector(a * k for a in self)
 
     __rmul__ = __mul__
 
     def __div__(self, k):
-        return Vector([self.x / k, self.y / k])
+        return Vector(a / k for a in self)
 
     def __neg__(self):
-        return Vector([-self.x, -self.y])
+        return Vector(-a for a in self)
 
     def __eq__(self, other):
-        return self.x == other.x and self.y == other.y
+        return all(a == b for a, b in zip(self, other))
 
     def __len__(self):
-        return 2
+        return len(self.__comps)
 
     def __iter__(self):
-        yield self.x
-        yield self.y
+        return iter(self.__comps)
+
+    def __abs__(self):
+        return sqrt(a ** 2 for a in self)
 
 class Polygon(object):
     def __init__(self, vertices):
