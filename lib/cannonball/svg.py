@@ -19,6 +19,10 @@ class Vector(object):
         return self.__comps[1]
 
     def __add__(self, other):
+        """
+        >>> Vector([1, 2]) + Vector([3, 5])
+        Vector([4, 7])
+        """
         return Vector(a + b for a, b in zip(self, other))
 
     def __sub__(self, other):
@@ -47,13 +51,24 @@ class Vector(object):
     def __abs__(self):
         return sqrt(a ** 2 for a in self)
 
+    def __str__(self):
+        return str(list(self))
+
+    def __repr__(self):
+        return 'Vector(%s)' % self
+
     @property
     def norm(self):
         return self / abs(self)
 
     @property
     def perp(self):
-        return Vector([-self.y, self.x])
+        """
+        >>> Vector([1, 2]).perp
+        Vector([-2, 1])
+        """
+        x, y = self
+        return Vector([-y, x])
 
 class Polygon(object):
     def __init__(self, vertices):
