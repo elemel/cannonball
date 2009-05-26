@@ -1,3 +1,5 @@
+from __future__ import division
+
 from cannonball.svg import *
 
 from Box2D import *
