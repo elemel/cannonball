@@ -1,5 +1,8 @@
+from cannonball.svg import *
+
 from Box2D import *
 from pyglet.gl import *
+
 import math
 import random
 
@@ -12,7 +15,47 @@ class Actor(object):
         self.body = None
         self.display_list = glGenLists(1)
         self.dirty_display_list = True
-        
+
+    def load(self, element, transform):
+        body_def = b2BodyDef()
+        self.body = self.level.world.CreateBody(body_def)
+        self.body.SetUserData(self)
+        self.load_shapes(element, transform)
+        self.body.SetMassFromShapes()
+
+    def load_shapes(self, element, transform):
+        transform = transform * Transform(element.getAttribute('transform'))
+        if element.nodeName == 'g':
+            for child in node.childNodes:
+                if child.nodeName in ('g', 'path'):
+                    self.load_shapes(child, transform)
+        elif element.nodeName == 'path':
+            self.load_shape(element, transform)
+
+    def load_shape(self, element, transform):
+        data = self.level.parse_element_data(element)
+        color = Color('#ffffff')
+        texture = None
+        fill = data.get('fill')
+        if fill.startswith('#'):
+            color = Color(fill)
+        elif fill.startswith('url(#') and fill.endswith(')'):
+            pattern_id = fill.lstrip('url(#').rstrip(')')
+            image_path = get_image_path(element.ownerDocument, pattern_id)
+            texture = self.level.get_texture(image_path)
+        path = Path(element.getAttribute('d'))
+        for triangle in path.triangulate():
+            triangle = [transform * (x, y)
+                        for x, y in reversed(triangle.vertices)]
+            shape_def = b2PolygonDef()
+            shape_def.vertices = triangle
+            if data.get('sensor') == 'true':
+                shape_def.isSensor = True
+            shape_def.density = float(data.get('density', '0'))
+            shape = self.body.CreateShape(shape_def)
+            shape.SetUserData({'color': tuple(c / 255 for c in color),
+                               'texture': texture})
+
     def collide(self, other):
         pass
 
@@ -77,3 +120,14 @@ class Actor(object):
         if texture:
             glDisable(texture.target)
 
+def get_image_path(document, pattern_id):
+    pattern_elements = document.getElementsByTagName('pattern')
+    pattern_element = [e for e in pattern_elements
+                       if e.getAttribute('id') == pattern_id][0]
+    if pattern_element.getAttribute('xlink:href'):
+        pattern_id = pattern_element.getAttribute('xlink:href').lstrip('#')
+        return get_image_path(document, pattern_id)
+    image_elements = pattern_element.getElementsByTagName('image')
+    if image_elements:
+        return image_elements[0].getAttribute('xlink:href')
+    return None

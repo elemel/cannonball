@@ -301,6 +301,12 @@ class Transform(object):
     def __repr__(self):
         return 'Transform((%g, %g, %g, %g, %g, %g))' % self.matrix
 
+def parse_style(style):
+    def parse_pair(pair):
+        key, value = pair.split(':')
+        return key.strip(), value.strip()
+    return dict(parse_pair(pair) for pair in style.split(';') if pair.strip())
+
 def _test():
     import doctest
     doctest.testmod()

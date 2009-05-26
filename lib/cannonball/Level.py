@@ -133,6 +133,13 @@ class Level(object):
             glVertex2d(cos(angle), sin(angle))
         glEnd()
 
+    def parse_element_data(self, element):
+        data = {}
+        for name in ('style', 'inkscape:label'):
+            value = element.getAttribute(name)
+            data.update(parse_style(value))
+        return data
+    
 class CannonballContactListener(b2ContactListener):
     def __init__(self, level):
         super(CannonballContactListener, self).__init__() 
@@ -190,7 +197,7 @@ def load_layers(level, root, transform):
                     load_body(level, node, transform)
 
 def load_body(level, node, transform):
-    data = parse_element_data(node)
+    data = level.parse_element_data(node)
     actor_name = data.get('actor')
     if actor_name:
         if actor_name == 'RevoluteJoint':
@@ -208,68 +215,4 @@ def load_body(level, node, transform):
         actor = Actor(level)
     actor.id = node.getAttribute('id')
     level.actors[actor.id] = actor
-    body_def = b2BodyDef()
-    actor.body = level.world.CreateBody(body_def)
-    actor.body.SetUserData(actor)
-    load_shapes(level, actor, node, transform)
-    actor.body.SetMassFromShapes()
-
-def load_shapes(level, actor, node, transform):
-    transform = transform * Transform(node.getAttribute('transform'))
-    if node.nodeName == 'g':
-        for child in node.childNodes:
-            if child.nodeName in ('g', 'path'):
-                load_shapes(level, actor, child, transform)
-    elif node.nodeName == 'path':
-        load_shape(level, actor, node, transform)
-
-def load_shape(level, actor, node, transform):
-    data = parse_element_data(node)
-    color = Color('#ffffff')
-    texture = None
-    fill = data.get('fill')
-    if fill.startswith('#'):
-        color = Color(fill)
-    elif fill.startswith('url(#') and fill.endswith(')'):
-        pattern_id = fill.lstrip('url(#').rstrip(')')
-        image_path = get_image_path(node.ownerDocument, pattern_id)
-        texture = level.get_texture(image_path)
-    path = Path(node.getAttribute('d'))
-    for triangle in path.triangulate():
-        triangle = [transform * (x, y) for x, y in reversed(triangle.vertices)]
-        shape_def = b2PolygonDef()
-        shape_def.vertices = triangle
-        if data.get('sensor') == 'true':
-            shape_def.isSensor = True
-        shape_def.density = float(data.get('density', '0'))
-        shape = actor.body.CreateShape(shape_def)
-        shape.SetUserData({'color': tuple(c / 255 for c in color),
-                           'texture': texture})
-
-def get_image_path(document, pattern_id):
-    pattern_elements = document.getElementsByTagName('pattern')
-    pattern_element = [e for e in pattern_elements
-                       if e.getAttribute('id') == pattern_id][0]
-    if pattern_element.getAttribute('xlink:href'):
-        pattern_id = pattern_element.getAttribute('xlink:href').lstrip('#')
-        return get_image_path(document, pattern_id)
-    image_elements = pattern_element.getElementsByTagName('image')
-    if image_elements:
-        return image_elements[0].getAttribute('xlink:href')
-    return None
-
-def parse_data(s):
-    try:
-        def parse_kv(kv):
-            k, v = kv.split(':')
-            return k.strip(), v.strip()
-        return dict(parse_kv(kv) for kv in s.split(';') if kv.strip())
-    except:
-        return {}
-
-def parse_element_data(element):
-    data = {}
-    for name in ('style', 'inkscape:label'):
-        value = element.getAttribute(name)
-        data.update(parse_data(value))
-    return data
+    actor.load(node, transform)
