@@ -27,7 +27,13 @@ class Level(object):
         self.contacts = set()
         self.textures = {}
         self.load(path)
-        
+        background_path = os.path.dirname(os.path.dirname(self.path))
+        background_path = os.path.join(background_path, 'textures',
+                          'background.jpg')
+        try:
+            self.background = pyglet.image.load(background_path).get_texture()
+        except:
+            self.background = None
         self.contact_listener = CannonballContactListener(self)
         self.world.SetContactListener(self.contact_listener)
 
