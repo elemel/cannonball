@@ -47,6 +47,14 @@ class Vector(object):
     def __abs__(self):
         return sqrt(a ** 2 for a in self)
 
+    @property
+    def norm(self):
+        return self / abs(self)
+
+    @property
+    def perp(self):
+        return Vector([-self.y, self.x])
+
 class Polygon(object):
     def __init__(self, vertices):
         self.vertices = [Vector(v) for v in vertices]
