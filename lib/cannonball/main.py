@@ -27,6 +27,7 @@ class CannonballWindow(pyglet.window.Window):
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
 
         glEnable(GL_LIGHTING)
+        glEnable(GL_NORMALIZE)
         glEnable(GL_COLOR_MATERIAL)
         glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE)
         Float3 = ctypes.c_float * 3
