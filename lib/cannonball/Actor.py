@@ -50,15 +50,24 @@ class Actor(object):
             polygon = subpath.linearize()
             polygon = Polygon(transform * v for v in polygon.vertices)
             polygon = polygon.normalize()
+            normal_dict = {}
+            vertices = list(polygon)
+            for i, vertex in enumerate(vertices):
+                before = vertex - vertices[(i - 1) % len(vertices)]
+                after = vertices[(i + 1) % len(vertices)] - vertex
+                normal = (before.perp.norm + after.perp.norm).norm
+                normal = Vector(tuple(normal) + (0.001,)).norm
+                normal_dict[vertex] = normal
             for triangle in polygon.triangulate():
+                normals = [normal_dict[v] for v in triangle]
                 shape_def = b2PolygonDef()
                 shape_def.vertices = map(tuple, triangle)
                 if data.get('sensor') == 'true':
                     shape_def.isSensor = True
                 shape_def.density = float(data.get('density', '0'))
                 shape = self.body.CreateShape(shape_def)
-                shape.SetUserData({'color': tuple(c / 255 for c in color),
-                                   'texture': texture})
+                shape.SetUserData(dict(color=tuple(c / 255 for c in color),
+                                       texture=texture, normals=normals))
 
     def collide(self, other):
         pass
@@ -94,7 +103,7 @@ class Actor(object):
         polygon = shape.asPolygon()
         circle = shape.asCircle()
         if polygon:
-            self.draw_polygon(polygon, texture)
+            self.draw_polygon(polygon, data.get('normals'), texture)
         elif circle:
             glPushMatrix()
             p = circle.localPosition
@@ -103,23 +112,32 @@ class Actor(object):
             self.level.draw_circle()
             glPopMatrix()
 
-    def draw_polygon(self, polygon, texture):
+    def draw_polygon(self, polygon, normals, texture):
         if texture:
             glEnable(texture.target)
             glBindTexture(texture.target, texture.id)
         vertices = list(polygon.vertices)
         vertices.append(vertices[0])
+        if not normals:
+            normals = [(0, 0, 1)] * len(polygon.vertices)
+        else:
+            normals = list(normals)
+            normals.append(normals[0])
         glBegin(GL_POLYGON)
-        for x, y in vertices:
+        for vertex, normal in zip(vertices, normals):
             if texture:
+                x, y = vertex
                 glTexCoord2d(x * 0.1, y * 0.1)
-            glVertex2d(x, y)
+            glNormal3d(*normal)
+            glVertex2d(*vertex)
         glEnd()
         glBegin(GL_LINE_STRIP)
-        for x, y in vertices:
+        for vertex, normal in zip(vertices, normals):
             if texture:
+                x, y = vertex
                 glTexCoord2d(x * 0.1, y * 0.1)
-            glVertex2d(x, y)
+            glNormal3d(*normal)
+            glVertex2d(*vertex)
         glEnd()
         if texture:
             glDisable(texture.target)
