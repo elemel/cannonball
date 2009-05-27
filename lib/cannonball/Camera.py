@@ -82,6 +82,7 @@ class Camera(object):
             world_ratio = world_width / world_height
             weight = 0.2
 
+            glDisable(GL_LIGHTING)
             glEnable(self.level.background.target)
             glBindTexture(self.level.background.target,
                           self.level.background.id)
@@ -101,6 +102,7 @@ class Camera(object):
                        min_y / (weight + 1))
             glEnd()
             glDisable(self.level.background.target)
+            glEnable(GL_LIGHTING)
 
     def on_key_press(self, symbol, modifiers):
         if symbol == pyglet.window.key.PLUS:
