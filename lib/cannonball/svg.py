@@ -1,6 +1,6 @@
 from __future__ import division
 
-from math import cos, pi, sin, tan
+from math import *
 import re
 
 class SVGError(Exception):
@@ -33,7 +33,7 @@ class Vector(object):
 
     __rmul__ = __mul__
 
-    def __div__(self, k):
+    def __truediv__(self, k):
         return Vector(a / k for a in self)
 
     def __neg__(self):
@@ -42,6 +42,9 @@ class Vector(object):
     def __eq__(self, other):
         return all(a == b for a, b in zip(self, other))
 
+    def __hash__(self):
+        return hash(self.__comps)
+
     def __len__(self):
         return len(self.__comps)
 
@@ -49,7 +52,7 @@ class Vector(object):
         return iter(self.__comps)
 
     def __abs__(self):
-        return sqrt(a ** 2 for a in self)
+        return sqrt(sum(a ** 2 for a in self))
 
     def __str__(self):
         return str(list(self))
@@ -65,10 +68,10 @@ class Vector(object):
     def perp(self):
         """
         >>> Vector([1, 2]).perp
-        Vector([-2, 1])
+        Vector([2, -1])
         """
         x, y = self
-        return Vector([-y, x])
+        return Vector([y, -x])
 
 class Polygon(object):
     def __init__(self, vertices):
