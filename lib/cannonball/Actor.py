@@ -46,17 +46,19 @@ class Actor(object):
             image_path = get_image_path(element.ownerDocument, pattern_id)
             texture = self.level.get_texture(image_path)
         path = Path(element.getAttribute('d'))
-        for triangle in path.triangulate():
-            triangle = [transform * (x, y)
-                        for x, y in reversed(triangle.vertices)]
-            shape_def = b2PolygonDef()
-            shape_def.vertices = triangle
-            if data.get('sensor') == 'true':
-                shape_def.isSensor = True
-            shape_def.density = float(data.get('density', '0'))
-            shape = self.body.CreateShape(shape_def)
-            shape.SetUserData({'color': tuple(c / 255 for c in color),
-                               'texture': texture})
+        for subpath in path.subpaths:
+            polygon = subpath.linearize()
+            polygon = Polygon(transform * v for v in polygon.vertices)
+            polygon = polygon.normalize()
+            for triangle in polygon.triangulate():
+                shape_def = b2PolygonDef()
+                shape_def.vertices = map(tuple, triangle)
+                if data.get('sensor') == 'true':
+                    shape_def.isSensor = True
+                shape_def.density = float(data.get('density', '0'))
+                shape = self.body.CreateShape(shape_def)
+                shape.SetUserData({'color': tuple(c / 255 for c in color),
+                                   'texture': texture})
 
     def collide(self, other):
         pass
