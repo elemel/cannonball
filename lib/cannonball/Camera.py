@@ -70,7 +70,9 @@ class Camera(object):
         query_aabb.upperBound = max_x, max_y
         count, shapes = self.level.world.Query(query_aabb, 1000)
         actors = set(s.GetBody().userData for s in shapes)
-        for actor in sorted(actors, key=attrgetter('z')):
+        def key(actor):
+            return actor.z, id(actor)
+        for actor in sorted(actors, key=key):
             glNormal3d(0, 0, 1)
             actor.draw()
 
