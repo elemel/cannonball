@@ -1,5 +1,5 @@
-from cannonball.actors.JetParticle import JetParticle
 from cannonball.Actor import Actor
+from cannonball.actors.Smoke import Smoke
 
 from Box2D import *
 
@@ -37,7 +37,7 @@ class JetEngine(object):
         linear_velocity = self.cannonball.body.linearVelocity + 10 * unit
         linear_velocity += 10 * b2Vec2(random.random() - 0.5,
                                        random.random() - 0.5)
-        actor = JetParticle(level)
+        actor = Smoke(level)
         actor.create_body(position, linear_velocity)
 
         self.cannonball.body.ApplyImpulse(-unit * 200,

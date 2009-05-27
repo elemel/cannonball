@@ -5,7 +5,7 @@ from pyglet.gl import *
 
 import random
 
-class JetParticle(Actor):
+class Smoke(Actor):
     z = 0.1
 
     @property
@@ -46,7 +46,7 @@ class JetParticle(Actor):
         shape.SetUserData({'color': (1, 1, 1)})
 
     def draw(self):
-        super(JetParticle, self).draw()
+        super(Smoke, self).draw()
         self.dirty_display_list = True
 
     def draw_geometry(self):
