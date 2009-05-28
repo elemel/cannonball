@@ -1,4 +1,5 @@
 from cannonball.actors.GrenadeParticle import GrenadeParticle
+from cannonball.actors.Smoke import Smoke
 from cannonball.Actor import Actor
 
 from Box2D import *
@@ -11,6 +12,8 @@ class Grenade(Actor):
             self.level.destroying.add(self)
             for _ in xrange(20):
                 self.create_grenade_particle()
+            for _ in xrange(10):
+                self.create_smoke()
 
     def create_body(self, position, velocity):
         body_def = b2BodyDef()
@@ -33,3 +36,9 @@ class Grenade(Actor):
     def create_grenade_particle(self):
         actor = GrenadeParticle(self.level)
         actor.create_body(self.body.position, self.body.linearVelocity)
+
+    def create_smoke(self):
+        actor = Smoke(self.level)
+        linear_velocity = b2Vec2(random.random() - 0.5,
+                                 random.random() - 0.5)
+        actor.create_body(self.body.position, linear_velocity)
