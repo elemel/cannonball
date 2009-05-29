@@ -67,13 +67,13 @@ class Level(object):
             joint_aabb = b2AABB()
             joint_aabb.lowerBound = joint_position
             joint_aabb.upperBound = joint_position
-            count, shapes = world.Query(joint_aabb, 1000)
+            count, shapes = self.world.Query(joint_aabb, 1000)
             bodies = set(s.GetBody() for s in shapes)
             if len(bodies) == 2:
                 body_1, body_2 = bodies
                 joint_def = b2RevoluteJointDef()
                 joint_def.Initialize(body_1, body_2, joint_position)
-                world.CreateJoint(joint_def)
+                self.world.CreateJoint(joint_def)
 
     def get_texture(self, path):
         if path not in self.textures:
@@ -206,12 +206,6 @@ def load_body(level, node, transform):
     data = level.parse_element_data(node)
     actor_name = data.get('actor')
     if actor_name:
-        if actor_name == 'RevoluteJoint':
-            transform = transform * Transform(node.getAttribute('transform'))
-            center = (float(node.getAttribute('sodipodi:cx')),
-                      float(node.getAttribute('sodipodi:cy')))
-            level.joints.append(transform * center)
-            return
         module_name, class_name = actor_name.rsplit('.', 1)
         __import__(module_name)
         module = sys.modules[module_name]

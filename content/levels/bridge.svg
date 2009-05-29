@@ -19,6 +19,13 @@
    version="1.0">
   <defs
      id="defs2459">
+    <inkscape:perspective
+       sodipodi:type="inkscape:persp3d"
+       inkscape:vp_x="0 : 500 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_z="1000 : 500 : 1"
+       inkscape:persp3d-origin="500 : 333.33333 : 1"
+       id="perspective4003" />
     <pattern
        inkscape:collect="always"
        xlink:href="#pattern4906"
@@ -85,8 +92,8 @@
      objecttolerance="10"
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.24748737"
-     inkscape:cx="120.77592"
+     inkscape:zoom="0.98994948"
+     inkscape:cx="399.57803"
      inkscape:cy="546.22677"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
@@ -141,7 +148,7 @@
        sodipodi:type="star"
        inkscape:label="sensor: true" />
     <path
-       inkscape:label="sensor: true; actor: Goal"
+       inkscape:label="sensor: true; actor: cannonball.actors.Goal.Goal"
        sodipodi:type="star"
        style="fill:#f2ff00;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-linecap:square;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        id="path2391"
@@ -182,7 +189,7 @@
        sodipodi:ry="7.0710678"
        d="M 314.15743,471.69022 A 7.0710678,7.0710678 0 1 1 300.0153,471.69022 A 7.0710678,7.0710678 0 1 1 314.15743,471.69022 z"
        transform="matrix(0.7574069,0,0,0.6378323,77.219603,157.52441)"
-       inkscape:label="actor: RevoluteJoint" />
+       inkscape:label="actor: cannonball.actors.RevoluteJoint.RevoluteJoint" />
     <path
        style="fill:url(#pattern5025);fill-opacity:1;stroke:#000000;stroke-width:0.41593778;stroke-linecap:square;stroke-miterlimit:4;stroke-opacity:1"
        d="M 398.78536,475.73472 L 519.898,485.95715 L 516.79183,500.55094 L 395.67919,490.3285 L 398.78536,475.73472 z"
@@ -200,7 +207,7 @@
        sodipodi:ry="7.0710678"
        d="M 314.15743,471.69022 A 7.0710678,7.0710678 0 1 1 300.0153,471.69022 A 7.0710678,7.0710678 0 1 1 314.15743,471.69022 z"
        transform="matrix(0.6847407,-6.4249395e-2,6.9084556e-2,0.6368161,164.40009,202.8565)"
-       inkscape:label="actor: RevoluteJoint" />
+       inkscape:label="actor: cannonball.actors.RevoluteJoint.RevoluteJoint" />
     <path
        style="fill:url(#pattern5013);fill-opacity:1;stroke:#000000;stroke-width:0.42010239;stroke-linecap:square;stroke-miterlimit:4;stroke-opacity:1"
        d="M 493.35822,485.35437 L 617.0956,475.46298 L 620.03063,490.06183 L 496.29325,499.95322 L 493.35822,485.35437 z"
@@ -218,7 +225,7 @@
        sodipodi:ry="7.0710678"
        d="M 314.15743,471.69022 A 7.0710678,7.0710678 0 1 1 300.0153,471.69022 A 7.0710678,7.0710678 0 1 1 314.15743,471.69022 z"
        transform="matrix(0.7070745,-0.2287288,0.2716264,0.5954072,160.09191,281.02885)"
-       inkscape:label="actor: RevoluteJoint"
+       inkscape:label="actor: cannonball.actors.RevoluteJoint.RevoluteJoint"
        inkscape:transform-center-x="-0.77967589"
        inkscape:transform-center-y="-0.15146107" />
     <path
@@ -238,7 +245,7 @@
        sodipodi:ry="7.0710678"
        d="M 314.15743,471.69022 A 7.0710678,7.0710678 0 1 1 300.0153,471.69022 A 7.0710678,7.0710678 0 1 1 314.15743,471.69022 z"
        transform="matrix(0.6404126,-0.2962616,0.3351595,0.5660878,249.93547,307.26828)"
-       inkscape:label="actor: RevoluteJoint"
+       inkscape:label="actor: cannonball.actors.RevoluteJoint.RevoluteJoint"
        inkscape:transform-center-x="1.0416574"
        inkscape:transform-center-y="1.0936416" />
     <path
@@ -251,7 +258,7 @@
        sodipodi:ry="7.0710678"
        d="M 314.15743,471.69022 A 7.0710678,7.0710678 0 1 1 300.0153,471.69022 A 7.0710678,7.0710678 0 1 1 314.15743,471.69022 z"
        transform="matrix(0.6097674,-0.2967821,0.3191214,0.5670824,365.168,284.37443)"
-       inkscape:label="actor: RevoluteJoint"
+       inkscape:label="actor: cannonball.actors.RevoluteJoint.RevoluteJoint"
        inkscape:transform-center-x="0.99180159"
        inkscape:transform-center-y="1.0955865" />
   </g>
