@@ -29,6 +29,9 @@ class JetEngine(object):
                 self.create_jet_particle()
         self.cooldown = max(self.cooldown, 0)
 
+    def draw(self):
+        pass
+
     def create_jet_particle(self):
         level = self.cannonball.level
         angle = self.cannonball.body.angle

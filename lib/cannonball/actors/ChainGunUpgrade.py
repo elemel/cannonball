@@ -1,7 +1,7 @@
 from cannonball.Actor import Actor
-from cannonball.actors.Chain import Chain
 
 from Box2D import *
+from pyglet.gl import *
 
 from math import *
 import random
@@ -17,15 +17,32 @@ class ChainGun(object):
 
     def __init__(self, cannonball):
         self.cannonball = cannonball
-        self.chain = None
+        self.anchor = None
+        self.distance = 0
 
     def step(self, dt):
         if self.cannonball.firing and self.cannonball.cannon is self:
-            if self.chain is None:
+            if self.anchor is None:
                 self.create_chain()
         else:
-            if self.chain is not None:
-                self.destroy_chain()
+            self.anchor = None
+        if self.anchor:
+            body = self.cannonball.body
+            v = self.anchor - body.position
+            distance = v.Normalize() - self.distance
+            if distance > 0:
+                body.ApplyForce(v * distance * 10000 -
+                                v * b2Dot(v, body.GetLinearVelocity()) * 1000,
+                                body.position)
+
+    def draw(self):
+        if self.anchor is not None:
+            glColor3d(1, 1, 1)
+            glNormal3d(0, 0, 1)
+            glBegin(GL_LINES)
+            glVertex2d(*self.cannonball.body.position.tuple())
+            glVertex2d(*self.anchor.tuple())
+            glEnd()
 
     def create_chain(self):
         angle = self.cannonball.body.angle
@@ -35,12 +52,7 @@ class ChainGun(object):
         segment.p2 = segment.p1 + 20 * unit
         world = self.cannonball.level.world
         fraction, normal, shape = world.RaycastOne(segment, False, None)
-        if shape:
-            anchor = segment.p1 + fraction * (segment.p2 - segment.p1)
-            self.chain = Chain(self.cannonball.level, self.cannonball,
-                               shape.GetBody().userData,
-                               self.cannonball.body.position, anchor)
-
-    def destroy_chain(self):
-        self.chain.destroy()
-        self.chain = None
+        if (shape is not None and not shape.IsSensor() and
+            shape.GetBody().IsStatic()):
+            self.anchor = segment.p1 + fraction * (segment.p2 - segment.p1)
+            self.distance = (self.anchor - segment.p1).Length()

@@ -28,6 +28,9 @@ class GrenadeLauncher(object):
                 self.create_grenade()
         self.cooldown = max(self.cooldown, 0)
 
+    def draw(self):
+        pass
+
     def create_grenade(self):
         level = self.cannonball.level
         angle = self.cannonball.body.angle

@@ -47,6 +47,11 @@ class Cannonball(Actor):
         for cannon in self.cannon_list:
             cannon.step(dt)
 
+    def draw(self):
+        for cannon in self.cannon_list:
+            cannon.draw()
+        super(Cannonball, self).draw()
+
     def draw_geometry(self):
         super(Cannonball, self).draw_geometry()
         glPushMatrix()
