@@ -1,3 +1,5 @@
+from __future__ import division
+
 from cannonball.Actor import Actor
 from cannonball.actors.Link import *
 
@@ -8,10 +10,18 @@ class Chain(Actor):
         self.level = level
         self.actor_1 = actor_1
         self.actor_2 = actor_2
-        self.links = [Link(level, anchor_1, anchor_2)]
+        self.links = [Link(level, anchor_1, 0.5 * (anchor_1 + anchor_2)),
+                      Link(level, 0.5 * (anchor_1 + anchor_2), anchor_2)]
+
         joint_def = b2RevoluteJointDef()
         joint_def.Initialize(actor_1.body, self.links[0].body, anchor_1)
         level.world.CreateJoint(joint_def)
+
+        joint_def = b2RevoluteJointDef()
+        joint_def.Initialize(self.links[0].body, self.links[-1].body,
+                             0.5 * (anchor_1 + anchor_2))
+        level.world.CreateJoint(joint_def)
+
         joint_def = b2RevoluteJointDef()
         joint_def.Initialize(self.links[-1].body, actor_2.body, anchor_2)
         level.world.CreateJoint(joint_def)
