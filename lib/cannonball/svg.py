@@ -73,6 +73,9 @@ class Vector(object):
         x, y = self
         return Vector([y, -x])
 
+    def dot(self, other):
+        return sum(a * b for a, b in zip(self, other))
+
 class Polygon(object):
     def __init__(self, vertices):
         self.vertices = [Vector(v) for v in vertices]
@@ -96,7 +99,18 @@ class Polygon(object):
         return self.area >= 0
 
     def normalize(self):
-        return self if self.clockwise else Polygon(reversed(self.vertices))
+        vertices = list(self.vertices)
+        if not self.clockwise:
+            vertices.reverse()
+        i = 0
+        while i < len(vertices):
+            before = vertices[i] - vertices[(i - 1) % len(vertices)]
+            after = vertices[(i + 1) % len(vertices)] - vertices[i]
+            if before.norm.dot(after.norm) > 0.999:
+                del vertices[i]
+            else:
+                i += 1
+        return Polygon(vertices)
 
     def __iter__(self):
         return iter(self.vertices)
