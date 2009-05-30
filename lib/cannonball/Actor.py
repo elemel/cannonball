@@ -55,8 +55,8 @@ class Actor(object):
             for i, vertex in enumerate(vertices):
                 before = vertex - vertices[(i - 1) % len(vertices)]
                 after = vertices[(i + 1) % len(vertices)] - vertex
-                normal = (before.perp.norm + after.perp.norm).norm
-                normal = Vector(tuple(normal) + (0.001,)).norm
+                normal = (before.perp().norm() + after.perp().norm()).norm()
+                normal = Vector(tuple(normal) + (0.001,)).norm()
                 normal_dict[vertex] = normal
             for triangle in polygon.triangulate():
                 normals = [normal_dict[v] for v in triangle]

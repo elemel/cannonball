@@ -60,11 +60,9 @@ class Vector(object):
     def __repr__(self):
         return 'Vector(%s)' % self
 
-    @property
     def norm(self):
         return self / abs(self)
 
-    @property
     def perp(self):
         """
         >>> Vector([1, 2]).perp
@@ -106,7 +104,7 @@ class Polygon(object):
         while i < len(vertices):
             before = vertices[i] - vertices[(i - 1) % len(vertices)]
             after = vertices[(i + 1) % len(vertices)] - vertices[i]
-            if before.norm.dot(after.norm) > 0.999:
+            if before.norm().dot(after.norm()) > 0.999:
                 del vertices[i]
             else:
                 i += 1
