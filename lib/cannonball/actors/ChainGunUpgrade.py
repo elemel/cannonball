@@ -21,14 +21,11 @@ class ChainGun(object):
 
     def step(self, dt):
         if self.cannonball.firing and self.cannonball.cannon is self:
-            self.cannonball.firing = False
-            self.toggle_chain()
-
-    def toggle_chain(self):
-        if self.chain is None:
-            self.create_chain()
+            if self.chain is None:
+                self.create_chain()
         else:
-            self.destroy_chain()
+            if self.chain is not None:
+                self.destroy_chain()
 
     def create_chain(self):
         angle = self.cannonball.body.angle
