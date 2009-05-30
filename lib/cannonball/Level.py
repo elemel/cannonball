@@ -119,6 +119,19 @@ class Level(object):
         if actor_1 and actor_2:
             self.contacts.add((actor_1, actor_2))
 
+    def persist_contact(self, point):
+        pass
+
+    def remove_contact(self, point):
+        pass
+
+    def contact_result(self, point):
+        pass
+
+    def boundary_violation(self, body):
+        actor = body.userData
+        self.destroying.add(actor)
+
     def draw_circle(self):
         glCallList(self.circle_display_list)
 
@@ -155,13 +168,13 @@ class CannonballContactListener(b2ContactListener):
         self.level.add_contact(point)
 
     def Persist(self, point):
-        pass
+        self.level.persist_contact(point)
 
     def Remove(self, point):
-        pass
+        self.level.remove_contact(point)
 
     def Result(self, point):
-        pass
+        self.level.contact_result(point)
 
 class CannonballBoundaryListener(b2BoundaryListener):
     def __init__(self, level):
@@ -169,8 +182,7 @@ class CannonballBoundaryListener(b2BoundaryListener):
         self.level = level
 
     def Violation(self, body):
-        actor = body.userData
-        self.level.destroying.add(actor)
+        self.level.boundary_violation(body)
 
 def get_scale(document):
     text_elements = document.getElementsByTagName('text')
