@@ -37,9 +37,9 @@ class ChainGun(object):
         fraction, normal, shape = world.RaycastOne(segment, False, None)
         if shape:
             anchor = segment.p1 + fraction * (segment.p2 - segment.p1)
-            self.chain = Chain(self.cannonball.level, self.cannonball.body,
-                               shape.GetBody(), self.cannonball.body.position,
-                               anchor)
+            self.chain = Chain(self.cannonball.level, self.cannonball,
+                               shape.GetBody().userData,
+                               self.cannonball.body.position, anchor)
 
     def destroy_chain(self):
         self.chain.destroy()
