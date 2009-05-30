@@ -148,7 +148,7 @@ class Polygon(object):
                 raise SVGError('Cannot triangulate polygon')
         return triangles
 
-def bezier_points(points, steps=5):
+def bezier_points(points, steps=10):
     """
     http://www.niksula.cs.hut.fi/~hkankaan/Homepages/bezierfast.html
     """
