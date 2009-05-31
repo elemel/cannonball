@@ -14,11 +14,16 @@ class GrapplingGunUpgrade(Actor):
 
 class GrapplingGun(object):
     color = 0, 1, 0
+    min_distance = 2
+    max_distance = 20
+    k = 10000
+    linear_damping = 1000
 
     def __init__(self, cannonball):
         self.cannonball = cannonball
         self.anchor = None
         self.distance = 0
+        self.angle = 0
 
     def step(self, dt):
         if self.cannonball.firing and self.cannonball.cannon is self:
@@ -28,13 +33,23 @@ class GrapplingGun(object):
             self.anchor = None
         if self.anchor:
             body = self.cannonball.body
+            delta_angle = body.GetAngle() - self.angle
+            if delta_angle < -pi:
+                delta_angle += 2 * pi
+            elif delta_angle > pi:
+                delta_angle -= 2 * pi
+            self.distance += 0.5 * delta_angle
+            self.distance = max(self.distance, self.min_distance)
+            self.distance = min(self.distance, self.max_distance)
+            self.angle = body.GetAngle()
             unit = b2Vec2(cos(body.angle), sin(body.angle))
             local_anchor = body.position + 0.5 * unit
             v = self.anchor - local_anchor
             distance = v.Normalize() - self.distance
             if distance > 0:
-                body.ApplyForce(v * distance * 10000 -
-                                v * b2Dot(v, body.GetLinearVelocity()) * 1000,
+                body.ApplyForce(v * distance * self.k -
+                                v * b2Dot(v, body.GetLinearVelocity()) *
+                                self.linear_damping,
                                 local_anchor)
 
     def draw(self):
@@ -53,10 +68,11 @@ class GrapplingGun(object):
         unit = b2Vec2(cos(angle), sin(angle))
         segment = b2Segment()
         segment.p1 = self.cannonball.body.position + 0.5 * unit
-        segment.p2 = segment.p1 + 30 * unit
+        segment.p2 = segment.p1 + self.max_distance * unit
         world = self.cannonball.level.world
         fraction, normal, shape = world.RaycastOne(segment, False, None)
         if (shape is not None and not shape.IsSensor() and
             shape.GetBody().IsStatic()):
             self.anchor = segment.p1 + fraction * (segment.p2 - segment.p1)
             self.distance = (self.anchor - segment.p1).Length()
+            self.angle = angle
