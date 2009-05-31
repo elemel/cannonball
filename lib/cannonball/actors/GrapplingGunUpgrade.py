@@ -16,7 +16,7 @@ class GrapplingGun(object):
     color = 0, 1, 0
     min_distance = 2
     max_distance = 50
-    k = 10000
+    spring_constant = 10000
     linear_damping = 1000
     reel_radius = 1
 
@@ -47,7 +47,7 @@ class GrapplingGun(object):
             v = self.anchor - local_anchor
             distance = v.Normalize() - self.distance
             if distance > 0:
-                body.ApplyForce(v * distance * self.k -
+                body.ApplyForce(v * distance * self.spring_constant -
                                 v * b2Dot(v, body.GetLinearVelocity()) *
                                 self.linear_damping,
                                 local_anchor)
