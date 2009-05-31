@@ -61,7 +61,7 @@
      inkscape:pageshadow="2"
      inkscape:zoom="1"
      inkscape:cx="426.02761"
-     inkscape:cy="454.90491"
+     inkscape:cy="433.92001"
      inkscape:current-layer="layer1"
      id="namedview2407"
      showgrid="false"
@@ -281,7 +281,7 @@
        inkscape:label="sensor: true; actor: cannonball.actors.GrapplingGunUpgrade.GrapplingGunUpgrade"
        transform="matrix(0.7053186,0,0,0.7053186,638.75189,-39.648254)" />
     <path
-       transform="translate(549.80783,-155.39627)"
+       transform="translate(51.80783,-76.39627)"
        d="M 307.49148,290.343 L 302.03171,287.92051 L 296.94089,291.0448 L 297.55765,285.10365 L 293.01313,281.22746 L 298.85408,279.97811 L 301.13623,274.45821 L 304.12938,279.62721 L 310.08434,280.09192 L 306.09326,284.53588 L 307.49148,290.343 z"
        inkscape:randomized="0"
        inkscape:rounded="0"
@@ -324,6 +324,6 @@
        style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:1.417799;stroke-linecap:square;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        sodipodi:type="star"
        inkscape:label="sensor: true; actor: cannonball.actors.JetEngineUpgrade.JetEngineUpgrade"
-       transform="matrix(0.7053186,0,0,0.7053186,237.31207,338.66459)" />
+       transform="matrix(0.7053186,0,0,0.7053186,141.31207,36.664589)" />
   </g>
 </svg>

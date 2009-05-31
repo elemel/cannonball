@@ -38,7 +38,6 @@ class Grenade(Actor):
         actor.create_body(self.body.position, self.body.linearVelocity)
 
     def create_smoke(self):
-        actor = Smoke(self.level)
         linear_velocity = b2Vec2(random.random() - 0.5,
                                  random.random() - 0.5)
-        actor.create_body(self.body.position, linear_velocity)
+        actor = Smoke(self.level, self.body.position, linear_velocity)

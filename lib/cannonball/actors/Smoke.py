@@ -8,6 +8,10 @@ import random
 class Smoke(Actor):
     z = 0.1
 
+    def __init__(self, level, position, linear_velocity):
+        super(Smoke, self).__init__(level)
+        self._create_body(position, linear_velocity)
+    
     @property
     def progress(self):
         return ((self.level.time - self.creation_time) /
@@ -21,9 +25,9 @@ class Smoke(Actor):
     def color(self):
         return 1, 1, 1, 1 - self.progress
 
-    def create_body(self, position, linear_velocity):
+    def _create_body(self, position, linear_velocity):
         self.creation_time = self.level.time
-        self.destruction_time = self.level.time + 1 + random.random()
+        self.destruction_time = self.level.time + 0.5 + 0.5 * random.random()
         self.level.queue_destroy(self, self.destruction_time -
                                  self.creation_time)
         
@@ -38,7 +42,7 @@ class Smoke(Actor):
 
     def create_shapes(self):
         shape_def = b2CircleDef()
-        shape_def.radius = 0.1
+        shape_def.radius = 0.2
         shape_def.density = 1
         shape_def.restitution = 0.1
         shape_def.filter.groupIndex = -1
