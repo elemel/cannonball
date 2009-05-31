@@ -96,7 +96,7 @@ class Cannonball(Actor):
     def create_shapes(self):
         shape_def = b2CircleDef()
         shape_def.radius = 1
-        shape_def.density = 100
+        shape_def.density = 2
         shape_def.friction = 5
         shape_def.restitution = 0.5
         shape_def.filter.groupIndex = -1

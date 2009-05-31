@@ -16,8 +16,8 @@ class GrapplingGun(object):
     color = 0, 1, 0
     min_distance = 2
     max_distance = 50
-    spring_constant = 10000
-    linear_damping = 1000
+    spring_constant = 1000
+    linear_damping = 100
     reel_radius = 1
 
     def __init__(self, cannonball):

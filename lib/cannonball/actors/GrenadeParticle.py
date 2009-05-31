@@ -40,7 +40,7 @@ class GrenadeParticle(Actor):
     def create_shapes(self):
         shape_def = b2CircleDef()
         shape_def.radius = 0.1
-        shape_def.density = 500
+        shape_def.density = 2
         shape_def.restitution = 0.5
         shape = self.body.CreateShape(shape_def)
         shape.SetUserData({'color': (1, 0, 0)})

@@ -27,7 +27,7 @@ class Grenade(Actor):
     def create_shapes(self):
         shape_def = b2CircleDef()
         shape_def.radius = 0.25
-        shape_def.density = 200
+        shape_def.density = 2
         shape_def.restitution = 0.5
         shape_def.filter.groupIndex = -1
         shape = self.body.CreateShape(shape_def)
