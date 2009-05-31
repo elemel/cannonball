@@ -15,9 +15,10 @@ class GrapplingGunUpgrade(Actor):
 class GrapplingGun(object):
     color = 0, 1, 0
     min_distance = 2
-    max_distance = 20
+    max_distance = 50
     k = 10000
     linear_damping = 1000
+    reel_radius = 1
 
     def __init__(self, cannonball):
         self.cannonball = cannonball
@@ -38,12 +39,11 @@ class GrapplingGun(object):
                 delta_angle += 2 * pi
             elif delta_angle > pi:
                 delta_angle -= 2 * pi
-            self.distance += 0.5 * delta_angle
+            self.distance += self.reel_radius * delta_angle
             self.distance = max(self.distance, self.min_distance)
             self.distance = min(self.distance, self.max_distance)
             self.angle = body.GetAngle()
-            unit = b2Vec2(cos(body.angle), sin(body.angle))
-            local_anchor = body.position + 0.5 * unit
+            local_anchor = body.position
             v = self.anchor - local_anchor
             distance = v.Normalize() - self.distance
             if distance > 0:
@@ -57,9 +57,7 @@ class GrapplingGun(object):
             glColor3d(0, 1, 0)
             glNormal3d(0, 0, 1)
             glBegin(GL_LINES)
-            angle = self.cannonball.body.angle
-            unit = b2Vec2(cos(angle), sin(angle))
-            glVertex2d(*(self.cannonball.body.position + 0.5 * unit).tuple())
+            glVertex2d(*self.cannonball.body.position.tuple())
             glVertex2d(*self.anchor.tuple())
             glEnd()
 
@@ -67,7 +65,7 @@ class GrapplingGun(object):
         angle = self.cannonball.body.angle
         unit = b2Vec2(cos(angle), sin(angle))
         segment = b2Segment()
-        segment.p1 = self.cannonball.body.position + 0.5 * unit
+        segment.p1 = self.cannonball.body.position
         segment.p2 = segment.p1 + self.max_distance * unit
         world = self.cannonball.level.world
         fraction, normal, shape = world.RaycastOne(segment, False, None)
