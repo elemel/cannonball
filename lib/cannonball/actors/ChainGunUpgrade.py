@@ -13,7 +13,7 @@ class ChainGunUpgrade(Actor):
             other.add_cannon('ChainGun', ChainGun(other))
 
 class ChainGun(object):
-    color = 1, 0.5, 0
+    color = 0, 1, 0
 
     def __init__(self, cannonball):
         self.cannonball = cannonball
@@ -28,19 +28,23 @@ class ChainGun(object):
             self.anchor = None
         if self.anchor:
             body = self.cannonball.body
-            v = self.anchor - body.position
+            unit = b2Vec2(cos(body.angle), sin(body.angle))
+            local_anchor = body.position + unit
+            v = self.anchor - local_anchor
             distance = v.Normalize() - self.distance
             if distance > 0:
                 body.ApplyForce(v * distance * 10000 -
                                 v * b2Dot(v, body.GetLinearVelocity()) * 1000,
-                                body.position)
+                                local_anchor)
 
     def draw(self):
         if self.anchor is not None:
-            glColor3d(1, 1, 1)
+            glColor3d(0, 1, 0)
             glNormal3d(0, 0, 1)
             glBegin(GL_LINES)
-            glVertex2d(*self.cannonball.body.position.tuple())
+            angle = self.cannonball.body.angle
+            unit = b2Vec2(cos(angle), sin(angle))
+            glVertex2d(*(self.cannonball.body.position + unit).tuple())
             glVertex2d(*self.anchor.tuple())
             glEnd()
 
@@ -48,7 +52,7 @@ class ChainGun(object):
         angle = self.cannonball.body.angle
         unit = b2Vec2(cos(angle), sin(angle))
         segment = b2Segment()
-        segment.p1 = self.cannonball.body.position
+        segment.p1 = self.cannonball.body.position + unit
         segment.p2 = segment.p1 + 20 * unit
         world = self.cannonball.level.world
         fraction, normal, shape = world.RaycastOne(segment, False, None)
