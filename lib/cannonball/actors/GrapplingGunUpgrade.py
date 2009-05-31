@@ -6,13 +6,13 @@ from pyglet.gl import *
 from math import *
 import random
 
-class ChainGunUpgrade(Actor):
+class GrapplingGunUpgrade(Actor):
     def collide(self, other):
         if not self in self.level.destroying and other.id == 'cannonball':
             self.level.destroying.add(self)
-            other.add_cannon('ChainGun', ChainGun(other))
+            other.add_cannon('GrapplingGun', GrapplingGun(other))
 
-class ChainGun(object):
+class GrapplingGun(object):
     color = 0, 1, 0
 
     def __init__(self, cannonball):

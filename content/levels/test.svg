@@ -276,7 +276,7 @@
        id="path2504"
        style="fill:#00ff00;fill-opacity:1;stroke:#000000;stroke-width:1.41779900000000003;stroke-linecap:square;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        sodipodi:type="star"
-       inkscape:label="sensor: true; actor: cannonball.actors.ChainGunUpgrade.ChainGunUpgrade"
+       inkscape:label="sensor: true; actor: cannonball.actors.GrapplingGunUpgrade.GrapplingGunUpgrade"
        transform="matrix(0.7053186,0,0,0.7053186,638.75189,-39.648254)" />
     <path
        transform="translate(549.80783,-155.39627)"
