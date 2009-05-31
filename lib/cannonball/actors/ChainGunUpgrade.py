@@ -29,7 +29,7 @@ class ChainGun(object):
         if self.anchor:
             body = self.cannonball.body
             unit = b2Vec2(cos(body.angle), sin(body.angle))
-            local_anchor = body.position + unit
+            local_anchor = body.position + 0.5 * unit
             v = self.anchor - local_anchor
             distance = v.Normalize() - self.distance
             if distance > 0:
@@ -44,7 +44,7 @@ class ChainGun(object):
             glBegin(GL_LINES)
             angle = self.cannonball.body.angle
             unit = b2Vec2(cos(angle), sin(angle))
-            glVertex2d(*(self.cannonball.body.position + unit).tuple())
+            glVertex2d(*(self.cannonball.body.position + 0.5 * unit).tuple())
             glVertex2d(*self.anchor.tuple())
             glEnd()
 
@@ -52,8 +52,8 @@ class ChainGun(object):
         angle = self.cannonball.body.angle
         unit = b2Vec2(cos(angle), sin(angle))
         segment = b2Segment()
-        segment.p1 = self.cannonball.body.position + unit
-        segment.p2 = segment.p1 + 20 * unit
+        segment.p1 = self.cannonball.body.position + 0.5 * unit
+        segment.p2 = segment.p1 + 30 * unit
         world = self.cannonball.level.world
         fraction, normal, shape = world.RaycastOne(segment, False, None)
         if (shape is not None and not shape.IsSensor() and
