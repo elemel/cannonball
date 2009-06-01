@@ -11,7 +11,8 @@ class JetEngineUpgrade(Actor):
     def collide(self, other):
         if not self in self.level.destroying and other.id == 'cannonball':
             self.level.destroying.add(self)
-            other.add_cannon('JetEngine', JetEngine(other))
+            if 'JetEngine' not in other.cannon_dict:
+                other.add_cannon('JetEngine', JetEngine(other))
 
 class JetEngine(object):
     max_cooldown = 0.01
