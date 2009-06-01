@@ -10,12 +10,15 @@ class GrapplingGunUpgrade(Actor):
     def collide(self, other):
         if not self in self.level.destroying and other.id == 'cannonball':
             self.level.destroying.add(self)
-            other.add_cannon('GrapplingGun', GrapplingGun(other))
+            if 'GrapplingGun' in other.cannon_dict:
+                other.cannon_dict['GrapplingGun'].max_distance += 10
+            else:
+                other.add_cannon('GrapplingGun', GrapplingGun(other))
 
 class GrapplingGun(object):
     color = 0, 1, 0
     min_distance = 2
-    max_distance = 50
+    max_distance = 10
     spring_constant = 1000
     linear_damping = 100
     reel_radius = 1
