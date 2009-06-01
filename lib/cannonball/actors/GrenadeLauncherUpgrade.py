@@ -10,9 +10,7 @@ class GrenadeLauncherUpgrade(Actor):
     def collide(self, other):
         if not self in self.level.destroying and other.id == 'cannonball':
             self.level.destroying.add(self)
-            if 'GrenadeLauncher' in other.cannon_dict:
-                other.cannon_dict['GrenadeLauncher'].max_duration += 1
-            else:
+            if 'GrenadeLauncher' not in other.cannon_dict:
                 other.add_cannon('GrenadeLauncher', GrenadeLauncher(other))
 
 class GrenadeLauncher(object):
