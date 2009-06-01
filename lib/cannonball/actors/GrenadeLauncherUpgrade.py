@@ -3,7 +3,7 @@ from cannonball.Actor import Actor
 
 from Box2D import *
 
-import math
+from math import *
 import random
 
 class GrenadeLauncherUpgrade(Actor):
@@ -34,8 +34,11 @@ class GrenadeLauncher(object):
     def create_grenade(self):
         level = self.cannonball.level
         angle = self.cannonball.body.angle
-        unit = b2Vec2(math.cos(angle), math.sin(angle))
-        position = self.cannonball.body.position
-        linear_velocity = self.cannonball.body.linearVelocity + 15 * unit
-        grenade = Grenade(level)
-        grenade.create_body(position, linear_velocity)
+        unit = b2Vec2(cos(angle), sin(angle))
+        position = self.cannonball.body.position + 0.5 * unit
+        linear_velocity = self.cannonball.body.linearVelocity
+        grenade = Grenade(level, position, linear_velocity)
+        impulse = unit * 10
+        grenade.body.ApplyImpulse(impulse, grenade.body.position)
+        self.cannonball.body.ApplyImpulse(-impulse,
+                                          self.cannonball.body.position)
