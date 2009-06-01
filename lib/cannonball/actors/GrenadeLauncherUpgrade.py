@@ -10,10 +10,15 @@ class GrenadeLauncherUpgrade(Actor):
     def collide(self, other):
         if not self in self.level.destroying and other.id == 'cannonball':
             self.level.destroying.add(self)
-            other.add_cannon('GrenadeLauncher', GrenadeLauncher(other))
+            if 'GrenadeLauncher' in other.cannon_dict:
+                other.cannon_dict['GrenadeLauncher'].max_duration += 1
+            else:
+                other.add_cannon('GrenadeLauncher', GrenadeLauncher(other))
 
 class GrenadeLauncher(object):
     color = 1, 0, 0
+    min_duration = 1
+    max_duration = 2
 
     def __init__(self, cannonball):
         self.cannonball = cannonball
@@ -39,7 +44,8 @@ class GrenadeLauncher(object):
         position = self.cannonball.body.position + 0.5 * unit
         linear_velocity = self.cannonball.body.linearVelocity
         grenade = Grenade(level, position, linear_velocity)
-        impulse = unit * 5 * min(duration + 1, 2)
+        impulse = unit * 5 * min(duration + self.min_duration,
+                                 self.max_duration)
         grenade.body.ApplyImpulse(impulse, grenade.body.position)
         self.cannonball.body.ApplyImpulse(-impulse,
                                           self.cannonball.body.position)
