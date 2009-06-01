@@ -18,7 +18,7 @@ class GrapplingGunUpgrade(Actor):
 class GrapplingGun(object):
     color = 0, 1, 0
     min_distance = 2
-    max_distance = 10
+    max_distance = 15
     spring_constant = 1000
     linear_damping = 100
     reel_radius = 1
