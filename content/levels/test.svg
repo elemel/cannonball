@@ -60,7 +60,7 @@
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
      inkscape:zoom="1"
-     inkscape:cx="426.02761"
+     inkscape:cx="558.02761"
      inkscape:cy="433.92001"
      inkscape:current-layer="layer1"
      id="namedview2407"
@@ -262,7 +262,7 @@
        inkscape:rounded="0"
        inkscape:randomized="0"
        d="M 307.49148,290.343 L 302.03171,287.92051 L 296.94089,291.0448 L 297.55765,285.10365 L 293.01313,281.22746 L 298.85408,279.97811 L 301.13623,274.45821 L 304.12938,279.62721 L 310.08434,280.09192 L 306.09326,284.53588 L 307.49148,290.343 z"
-       transform="matrix(0.7053186,0,0,0.7053186,-89.276288,131.46273)" />
+       transform="matrix(0.7053186,0,0,0.7053186,-93.276288,135.46273)" />
     <path
        d="M 307.49148,290.343 L 302.03171,287.92051 L 296.94089,291.0448 L 297.55765,285.10365 L 293.01313,281.22746 L 298.85408,279.97811 L 301.13623,274.45821 L 304.12938,279.62721 L 310.08434,280.09192 L 306.09326,284.53588 L 307.49148,290.343 z"
        inkscape:randomized="0"
@@ -276,12 +276,12 @@
        sodipodi:cx="301.73322"
        sodipodi:sides="5"
        id="path2504"
-       style="fill:#00ff00;fill-opacity:1;stroke:#000000;stroke-width:1.41779900000000003;stroke-linecap:square;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       style="fill:#00ff00;fill-opacity:1;stroke:#000000;stroke-width:1.417799;stroke-linecap:square;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        sodipodi:type="star"
        inkscape:label="sensor: true; actor: cannonball.actors.GrapplingGunUpgrade.GrapplingGunUpgrade"
-       transform="matrix(0.7053186,0,0,0.7053186,638.75189,-39.648254)" />
+       transform="matrix(0.7053186,0,0,0.7053186,648.75189,-21.648254)" />
     <path
-       transform="translate(51.80783,-76.39627)"
+       transform="translate(51.80783,-88.39627)"
        d="M 307.49148,290.343 L 302.03171,287.92051 L 296.94089,291.0448 L 297.55765,285.10365 L 293.01313,281.22746 L 298.85408,279.97811 L 301.13623,274.45821 L 304.12938,279.62721 L 310.08434,280.09192 L 306.09326,284.53588 L 307.49148,290.343 z"
        inkscape:randomized="0"
        inkscape:rounded="0"
@@ -324,40 +324,6 @@
        style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:1.417799;stroke-linecap:square;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        sodipodi:type="star"
        inkscape:label="sensor: true; actor: cannonball.actors.JetEngineUpgrade.JetEngineUpgrade"
-       transform="matrix(0.7053186,0,0,0.7053186,141.31207,36.664589)" />
-    <path
-       inkscape:label="sensor: true; actor: cannonball.actors.GrenadeLauncherUpgrade.GrenadeLauncherUpgrade"
-       sodipodi:type="star"
-       style="fill:#ff0000;fill-opacity:1;stroke:#000000;stroke-width:1.417799;stroke-linecap:square;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       id="path2789"
-       sodipodi:sides="5"
-       sodipodi:cx="301.73322"
-       sodipodi:cy="283.43307"
-       sodipodi:r1="8.9947014"
-       sodipodi:r2="4.4973507"
-       sodipodi:arg1="0.87605805"
-       sodipodi:arg2="1.5043766"
-       inkscape:flatsided="false"
-       inkscape:rounded="0"
-       inkscape:randomized="0"
-       d="M 307.49148,290.343 L 302.03171,287.92051 L 296.94089,291.0448 L 297.55765,285.10365 L 293.01313,281.22746 L 298.85408,279.97811 L 301.13623,274.45821 L 304.12938,279.62721 L 310.08434,280.09192 L 306.09326,284.53588 L 307.49148,290.343 z"
-       transform="matrix(0.7053186,0,0,0.7053186,-66.687933,132.66459)" />
-    <path
-       inkscape:label="sensor: true; actor: cannonball.actors.GrenadeLauncherUpgrade.GrenadeLauncherUpgrade"
-       sodipodi:type="star"
-       style="fill:#ff0000;fill-opacity:1;stroke:#000000;stroke-width:1.417799;stroke-linecap:square;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       id="path2791"
-       sodipodi:sides="5"
-       sodipodi:cx="301.73322"
-       sodipodi:cy="283.43307"
-       sodipodi:r1="8.9947014"
-       sodipodi:r2="4.4973507"
-       sodipodi:arg1="0.87605805"
-       sodipodi:arg2="1.5043766"
-       inkscape:flatsided="false"
-       inkscape:rounded="0"
-       inkscape:randomized="0"
-       d="M 307.49148,290.343 L 302.03171,287.92051 L 296.94089,291.0448 L 297.55765,285.10365 L 293.01313,281.22746 L 298.85408,279.97811 L 301.13623,274.45821 L 304.12938,279.62721 L 310.08434,280.09192 L 306.09326,284.53588 L 307.49148,290.343 z"
-       transform="matrix(0.7053186,0,0,0.7053186,-44.687933,132.66459)" />
+       transform="matrix(0.7053186,0,0,0.7053186,141.31207,28.664589)" />
   </g>
 </svg>

@@ -22,12 +22,12 @@
        inkscape:collect="always"
        xlink:href="#pattern2450"
        id="pattern2456"
-       patternTransform="matrix(0.6533026,-0.7570969,0.7570969,0.6533026,864.06895,219.18841)" />
+       patternTransform="matrix(0.6533026,-0.7570969,0.7570969,0.6533026,880.06895,231.18841)" />
     <pattern
        inkscape:collect="always"
        xlink:href="#pattern2450"
        id="pattern2454"
-       patternTransform="matrix(0.1546596,0.9879678,-0.9879678,0.1546596,543.87776,688.64663)" />
+       patternTransform="matrix(0.1546596,0.9879678,-0.9879678,0.1546596,565.87776,750.64663)" />
     <pattern
        inkscape:collect="always"
        xlink:href="#pattern2444"
@@ -37,7 +37,7 @@
        inkscape:collect="always"
        xlink:href="#pattern2444"
        id="pattern2448"
-       patternTransform="matrix(0.7859524,-0.6182869,0.6182869,0.7859524,1180.5288,188.12675)" />
+       patternTransform="matrix(0.9595287,-0.2816107,0.2816107,0.9595287,1211.4896,452.28695)" />
     <pattern
        inkscape:collect="always"
        xlink:href="#pattern4748"
@@ -47,12 +47,12 @@
        inkscape:collect="always"
        xlink:href="#pattern4748"
        id="pattern2442"
-       patternTransform="translate(712.85437,606.91998)" />
+       patternTransform="matrix(0.9995183,-3.1034688e-2,3.1034688e-2,0.9995183,717.95817,540.08056)" />
     <pattern
        inkscape:collect="always"
        xlink:href="#pattern4748"
        id="pattern2438"
-       patternTransform="matrix(0.7904569,-0.6125177,0.6125177,0.7904569,603.62012,443.38908)" />
+       patternTransform="matrix(0.7904569,-0.6125177,0.6125177,0.7904569,585.62012,307.38908)" />
     <inkscape:perspective
        sodipodi:type="inkscape:persp3d"
        inkscape:vp_x="0 : 372.04724 : 1"
@@ -133,10 +133,10 @@
        inkscape:rounded="0"
        inkscape:randomized="0"
        d="M 745.11984,205.12064 L 741.379,200.99697 L 735.86128,201.74081 L 738.62714,196.90877 L 736.21464,191.89097 L 741.66487,193.02828 L 745.69159,189.18327 L 746.29415,194.7182 L 751.1953,197.35966 L 746.11747,199.64312 L 745.11984,205.12064 z"
-       transform="translate(60.076948,10.807547)" />
+       transform="translate(85.076948,261.80755)" />
     <path
        style="fill:url(#pattern2456);fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       d="M 483.39196,400.57086 L 474.7341,354.28303 L 534.51665,340.63275 L 543.69086,386.63665 L 483.39196,400.57086 z"
+       d="M 499.39196,412.57086 L 490.7341,366.28303 L 550.51665,352.63275 L 559.69086,398.63665 L 499.39196,412.57086 z"
        id="path2401"
        sodipodi:nodetypes="ccccc"
        inkscape:label="" />
@@ -156,9 +156,9 @@
        style="fill:#00ff00;fill-opacity:1;stroke:#000000;stroke-width:1.417799;stroke-linecap:square;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        sodipodi:type="star"
        inkscape:label="sensor: true; actor: cannonball.actors.GrapplingGunUpgrade.GrapplingGunUpgrade"
-       transform="matrix(0.7053186,0,0,0.7053186,12.255282,258.60867)" />
+       transform="matrix(0.7053186,0,0,0.7053186,-5.744718,110.60867)" />
     <path
-       transform="translate(-76.885604,135.35099)"
+       transform="translate(-94.885604,-20.64901)"
        d="M 307.49148,290.343 L 302.03171,287.92051 L 296.94089,291.0448 L 297.55765,285.10365 L 293.01313,281.22746 L 298.85408,279.97811 L 301.13623,274.45821 L 304.12938,279.62721 L 310.08434,280.09192 L 306.09326,284.53588 L 307.49148,290.343 z"
        inkscape:randomized="0"
        inkscape:rounded="0"
@@ -187,25 +187,25 @@
          y="696.09448">page-width: 200m</tspan></text>
     <path
        style="fill:url(#pattern2438);fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       d="M 194.53546,545.68418 L 195.22807,498.59871 L 256.53026,497.07395 L 256.40004,543.98353 L 194.53546,545.68418 z"
+       d="M 176.53546,409.68418 L 177.22807,362.59871 L 238.53026,361.07395 L 238.40004,407.98353 L 176.53546,409.68418 z"
        id="path2436"
        sodipodi:nodetypes="ccccc"
        inkscape:label="" />
     <path
        style="fill:url(#pattern2442);fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       d="M 326.83302,437.20822 L 356.22119,400.41342 L 405.61187,436.75684 L 376.77599,473.75708 L 326.83302,437.20822 z"
+       d="M 326.85581,382.4306 L 355.08791,344.74147 L 405.5827,379.53456 L 377.90901,417.41189 L 326.85581,382.4306 z"
        id="path2440"
        sodipodi:nodetypes="ccccc"
        inkscape:label="" />
     <path
        style="fill:url(#pattern2448);fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       d="M 772.20381,293.41333 L 772.55177,246.32405 L 833.84116,244.35064 L 834.05429,291.2599 L 772.20381,293.41333 z"
+       d="M 793.2984,398.15139 L 811.13538,354.5697 L 868.76186,375.53331 L 851.51267,419.15658 L 793.2984,398.15139 z"
        id="path2446"
        sodipodi:nodetypes="ccccc"
        inkscape:label="" />
     <path
        style="fill:url(#pattern2454);fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       d="M 651.84565,281.02243 L 692.7429,304.36634 L 664.47551,358.78359 L 623.46072,336.01711 L 651.84565,281.02243 z"
+       d="M 673.84565,343.02243 L 714.7429,366.36634 L 686.47551,420.78359 L 645.46072,398.01711 L 673.84565,343.02243 z"
        id="path2452"
        sodipodi:nodetypes="ccccc"
        inkscape:label="" />
@@ -221,10 +221,10 @@
        sodipodi:cy="283.43307"
        sodipodi:cx="301.73322"
        sodipodi:sides="5"
-       id="path2458"
-       style="fill:#00ff00;fill-opacity:1;stroke:#000000;stroke-width:1.417799;stroke-linecap:square;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="path2793"
+       style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:1.417799;stroke-linecap:square;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        sodipodi:type="star"
-       inkscape:label="sensor: true; actor: cannonball.actors.GrapplingGunUpgrade.GrapplingGunUpgrade"
-       transform="matrix(0.7053186,0,0,0.7053186,15.31207,380.66459)" />
+       inkscape:label="sensor: true; actor: cannonball.actors.JetEngineUpgrade.JetEngineUpgrade"
+       transform="matrix(0.7053186,0,0,0.7053186,309.31207,110.66459)" />
   </g>
 </svg>
