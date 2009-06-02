@@ -1,4 +1,3 @@
-from cannonball.actors.GrenadeParticle import GrenadeParticle
 from cannonball.actors.Smoke import Smoke
 from cannonball.Actor import Actor
 
@@ -16,10 +15,10 @@ class Grenade(Actor):
     def collide(self, other):
         if not self in self.level.destroying:
             self.level.destroying.add(self)
-            for _ in xrange(20):
-                self.create_grenade_particle()
+            self._create_shock_wave(1, 50)
+            self._create_shock_wave(2, 50)
             for _ in xrange(10):
-                self.create_smoke()
+                self._create_smoke()
 
     def _create_body(self, position, linear_velocity):
         body_def = b2BodyDef()
@@ -27,10 +26,10 @@ class Grenade(Actor):
         self.body = self.level.world.CreateBody(body_def)
         self.body.userData = self
         self.body.linearVelocity = linear_velocity
-        self.create_shapes()
+        self._create_shapes()
         self.body.SetMassFromShapes()
 
-    def create_shapes(self):
+    def _create_shapes(self):
         shape_def = b2CircleDef()
         shape_def.radius = 0.3
         shape_def.density = 2
@@ -39,11 +38,18 @@ class Grenade(Actor):
         shape = self.body.CreateShape(shape_def)
         shape.SetUserData({'color': (1, 0, 0)})
 
-    def create_grenade_particle(self):
-        actor = GrenadeParticle(self.level)
-        actor.create_body(self.body.position, self.body.linearVelocity)
+    def _create_shock_wave(self, radius, impulse):
+        aabb = b2AABB()
+        aabb.lowerBound = self.body.position - b2Vec2(radius, radius)
+        aabb.upperBound = self.body.position + b2Vec2(radius, radius)
+        count, shapes = self.level.world.Query(aabb, 1000)
+        bodies = set(s.GetBody() for s in shapes)
+        for body in bodies:
+            unit = body.GetWorldCenter() - self.body.position
+            unit.Normalize()
+            body.ApplyImpulse(unit * impulse, body.GetWorldCenter())
 
-    def create_smoke(self):
-        linear_velocity = b2Vec2(random.random() - 0.5,
-                                 random.random() - 0.5)
-        actor = Smoke(self.level, self.body.position, linear_velocity)
+    def _create_smoke(self):
+        smoke = Smoke(self.level, self.body.position, self.body.linearVelocity)
+        impulse = 3 * b2Vec2(random.random() - 0.5, random.random() - 0.5)
+        smoke.body.ApplyImpulse(impulse, smoke.body.position)
