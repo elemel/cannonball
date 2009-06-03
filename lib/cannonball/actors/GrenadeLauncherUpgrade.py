@@ -15,35 +15,30 @@ class GrenadeLauncherUpgrade(Actor):
 
 class GrenadeLauncher(object):
     color = 1, 0, 0
-    min_duration = 1
-    max_duration = 2
+    cooldown = 0.5
+
 
     def __init__(self, cannonball):
         self.cannonball = cannonball
-        self.firing = False
         self.fire_time = 0
 
     def step(self, dt):
-        if self.cannonball.cannon is self and self.cannonball.firing:
-            if not self.firing:
-                self.firing = True
-                self.fire_time = self.cannonball.level.time
-        elif self.firing:
-            self.firing = False
-            self.create_grenade(self.cannonball.level.time - self.fire_time)
+        if (self.cannonball.cannon is self and self.cannonball.firing and
+            self.fire_time + self.cooldown < self.cannonball.level.time):
+            self.fire_time = self.cannonball.level.time
+            self.create_grenade()
 
     def draw(self):
         pass
 
-    def create_grenade(self, duration):
+    def create_grenade(self):
         level = self.cannonball.level
         angle = self.cannonball.body.angle
         unit = b2Vec2(cos(angle), sin(angle))
         position = self.cannonball.body.position + 0.5 * unit
         linear_velocity = self.cannonball.body.linearVelocity
         grenade = Grenade(level, position, linear_velocity)
-        impulse = unit * 5 * min(duration + self.min_duration,
-                                 self.max_duration)
+        impulse = unit * 10
         grenade.body.ApplyImpulse(impulse, grenade.body.position)
         self.cannonball.body.ApplyImpulse(-impulse,
                                           self.cannonball.body.position)
