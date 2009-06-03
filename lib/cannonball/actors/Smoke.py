@@ -55,7 +55,7 @@ class Smoke(Actor):
 
     def draw_geometry(self):
         glColor4d(*self.color)
-        texture = self.level.get_texture('../textures/particle.png')
+        texture = self.level.get_texture('../textures/smoke.png')
         glEnable(texture.target)
         glBindTexture(texture.target, texture.id)
         glBegin(GL_QUADS)

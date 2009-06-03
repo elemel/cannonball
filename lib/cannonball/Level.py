@@ -29,7 +29,7 @@ class Level(object):
         self.load(path)
         background_path = os.path.dirname(os.path.dirname(self.path))
         background_path = os.path.join(background_path, 'textures',
-                          'background.jpg')
+                          'clouds.jpg')
         try:
             self.background = pyglet.image.load(background_path).get_texture()
         except:

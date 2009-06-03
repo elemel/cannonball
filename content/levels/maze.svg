@@ -26,8 +26,7 @@
        patternTransform="translate(9.1428576,63.42857)"
        id="pattern4863">
       <image
-         xlink:href="/home/elemel/work/cannonball/content/textures/genetica/rust-peel.jpg"
-         sodipodi:absref="/home/elemel/work/cannonball/content/textures/genetica/rust-peel.jpg"
+         xlink:href="../textures/metal.jpg"
          width="256"
          height="256"
          id="image4859"
